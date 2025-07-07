@@ -5,6 +5,7 @@ import { Layout } from './components/layout'
 import { Home } from './components/home'
 import { About } from './components/about'
 import { Dashboard } from './components/dashboard'
+import { Login } from './components/login'
 
 export function AppRoutes() {
   return (
@@ -13,6 +14,8 @@ export function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="dashboard" element={<Dashboard />} />
+
+        <Route path="login" element={<Login />} />
 
         <Route path="*" element={<NoMatch />} />
       </Route>
