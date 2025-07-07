@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'react-router'
+import { Button } from './ui/button'
 
 export function Layout() {
   return (
@@ -18,6 +19,8 @@ export function Layout() {
           </li>
         </ul>
       </nav>
+
+      <Button variant={'default'}>Hellos</Button>
 
       <hr />
 
