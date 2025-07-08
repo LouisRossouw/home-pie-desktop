@@ -10,3 +10,27 @@ export function resizeApp({ width, height }: ResizeApp) {
     win.setSize(width, height)
   }
 }
+
+export function loadApp() {
+  console.log('Loading app..')
+  return 'App loaded'
+}
+
+export type WindowControl = { action: 'minimize' | 'maximize' | 'close' }
+
+export function windowControl({ action }: WindowControl) {
+  const win = BrowserWindow.getFocusedWindow()
+  if (!win) return
+
+  switch (action) {
+    case 'minimize':
+      win.minimize()
+      break
+    case 'maximize':
+      win.isMaximized() ? win.unmaximize() : win.maximize()
+      break
+    case 'close':
+      win.close()
+      break
+  }
+}

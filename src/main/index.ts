@@ -8,10 +8,15 @@ import { registerIpcHandlers } from './ipc-handlers'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 0,
+    height: 0,
     show: false,
+    transparent: true,
     autoHideMenuBar: true,
+    frame: false,
+
+    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : undefined,
+    titleBarOverlay: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

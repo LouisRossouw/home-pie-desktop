@@ -132,3 +132,98 @@
     -webkit-font-smoothing: antialiased;
   }
 } */
+
+
+
+.splash_window{
+  background-color: none;
+  color: black;
+}
+
+.splash_screen{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  height: 100vh;
+  width: 100%;
+  color: black;
+  background-color: none;
+
+  opacity: 0;
+  animation: splash_animation 4s linear;
+}
+
+.splash_screen img{
+  width: 75px;
+  margin-right: 10px;
+}
+
+@keyframes splash_animation {
+  0% {
+      opacity: 0;
+  }
+  10% {
+      opacity: 100;
+  }
+  90% {
+      opacity: 100;
+  }
+  0% {
+      opacity: 0;
+  }
+}
+
+
+
+
+.App_window{
+  opacity: 0;
+  animation: App_window 0.5s forwards;
+}
+
+@keyframes App_window {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 100;
+  }
+}
+
+
+/* Customize scrollbar styles */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgba(0,0,0,0);
+}
+
+
+
+/* * {
+  box-sizing: border-box;
+  font-weight:lighter;
+
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+ */
+
+.table-container {
+  border: 1px solid lightgray;
+  overflow-x: scroll;
+  width: 100%;
+  max-width: 960px;
+  position: relative;
+}
+
+.TopBar{
+  -webkit-app-region: drag;
+  /* -webkit-app-region: no-drag; */
+}

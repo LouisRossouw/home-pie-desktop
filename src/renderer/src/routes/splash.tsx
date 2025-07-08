@@ -1,15 +1,32 @@
 import { useEffect } from 'react'
+import logo from '../assets/LR16.png'
+
+import { AppVersion } from '~/components/app-version'
 
 export function SplashRoute() {
-  useEffect(() => {
-    // TODO; If splash screen change the width and height to be smaller.
+  // TODO; Use this route to show logo + version number
 
-    window.api.resizeApp({ width: 400, height: 600 })
+  useEffect(() => {
+    window.api.resizeApp({ width: 250, height: 250 })
+
+    const init = async () => {
+      const success = await window.api.loadApp()
+      console.log('Loaded:', success)
+    }
+
+    init()
   }, [])
 
   return (
-    <div className="bg-green-500 h-full  flex items-center justify-center">
-      <h2>Splash screen</h2>
+    <div className="splash_window">
+      <div className="splash_container">
+        <div className="splash_screen">
+          <div className="grid gap-4 p-4 text-center items-center justify-center">
+            <img src={logo} width={80} height={80}></img>
+            <AppVersion className="text-gray-400" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
