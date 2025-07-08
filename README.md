@@ -1,6 +1,14 @@
-# -
+# Home Pie Electron application
 
-An Electron application with React and TypeScript
+## What is Home Pie?
+
+Home pie is basically a side project, built to monitor/support - my side projects ....
+
+## Faqs & Stuff
+
+- This repo is built for my private use and it is unique to my independent projects.
+- This repo will always be in an unfinished state / mess, as there is no clear end goal, it is super low priority.
+- It runs on my local machines & network.
 
 ## Recommended IDE Setup
 
