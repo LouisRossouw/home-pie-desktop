@@ -23,7 +23,9 @@
     "types": ["electron-vite/node"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/renderer/src/*"]
+      "~/*": ["src/renderer/src/*"],
+      "@main/*": ["src/main/*"],
+      "@preload/*": ["src/preload/*"],
     },
   }
 }

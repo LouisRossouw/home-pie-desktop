@@ -2,10 +2,11 @@ import { Routes, Route, Link } from 'react-router'
 
 import { Layout } from './components/layout'
 
-import { Home } from './components/home'
-import { About } from './components/about'
-import { Dashboard } from './components/dashboard'
-import { Login } from './components/login'
+import { Home } from './routes/home'
+import { About } from './routes/about'
+import { Dashboard } from './routes/dashboard'
+import { Login } from './routes/login'
+import { SplashRoute } from './routes/splash'
 
 export function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export function AppRoutes() {
         <Route path="dashboard" element={<Dashboard />} />
 
         <Route path="login" element={<Login />} />
+        <Route path="splash" element={<SplashRoute />} />
 
         <Route path="*" element={<NoMatch />} />
       </Route>
