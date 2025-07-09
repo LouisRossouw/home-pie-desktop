@@ -26,12 +26,12 @@ export default function App(): JSX.Element {
   }
 
   return (
-    <>
-      <AppContextProvider>
-        <WindowFrame />
-        <AppRoutes />
-        <WindowFrameDebug />
-      </AppContextProvider>
-    </>
+    <AppContextProvider>
+      <WindowFrame />
+
+      <AppRoutes />
+
+      <WindowFrameDebug />
+    </AppContextProvider>
   )
 }

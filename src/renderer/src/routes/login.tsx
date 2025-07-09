@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '~/components/ui/button'
 
-export function Login() {
+export default function Login() {
   const navigation = useNavigate()
 
   useEffect(() => {
@@ -10,7 +10,7 @@ export function Login() {
   }, [])
 
   function handleManualLogin() {
-    navigation('/home')
+    navigation('/')
     window.api.resizeApp({ width: 900, height: 670 })
   }
 
