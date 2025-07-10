@@ -133,8 +133,6 @@
   }
 } */
 
-
-
 .splash_window{
   background-color: none;
   color: black;
@@ -174,9 +172,6 @@
   }
 }
 
-
-
-
 .App_window{
   opacity: 0;
   animation: App_window 0.5s forwards;
@@ -191,12 +186,10 @@
   }
 }
 
-
 /* Customize scrollbar styles */
 ::-webkit-scrollbar {
   width: 5px;
 }
-
 
 body {
   margin: 0;
@@ -204,8 +197,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgba(0,0,0,0);
 }
-
-
 
 /* * {
   box-sizing: border-box;
@@ -226,4 +217,13 @@ body {
 .TopBar{
   -webkit-app-region: drag;
   /* -webkit-app-region: no-drag; */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

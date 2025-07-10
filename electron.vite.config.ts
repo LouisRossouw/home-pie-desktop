@@ -10,7 +10,8 @@ export default defineConfig({
     resolve: {
       alias: {
         '@main': resolve('src/main'),
-        '@preload': resolve('src/preload')
+        '@preload': resolve('src/preload'),
+        '@shared': resolve('src/shared')
       }
     }
   },
@@ -19,14 +20,16 @@ export default defineConfig({
     resolve: {
       alias: {
         '@main': resolve('src/main'),
-        '@preload': resolve('src/preload')
+        '@preload': resolve('src/preload'),
+        '@shared': resolve('src/shared')
       }
     }
   },
   renderer: {
     resolve: {
       alias: {
-        '~': resolve('src/renderer/src')
+        '~': resolve('src/renderer/src'),
+        '@shared': resolve('src/shared')
       }
     },
     plugins: [react(), tailwindcss()]

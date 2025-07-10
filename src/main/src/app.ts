@@ -1,3 +1,4 @@
+import { getBaseURl } from '@shared/api'
 import { BrowserWindow } from 'electron'
 
 export type ResizeApp = { width: number; height: number }
@@ -13,6 +14,10 @@ export function resizeApp({ width, height }: ResizeApp) {
 
 export function loadApp() {
   console.log('Loading app..')
+
+  console.log('ENV:', import.meta.env.MODE)
+  console.log('BaseURL:', getBaseURl())
+
   return 'App loaded'
 }
 
