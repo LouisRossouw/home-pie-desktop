@@ -3,11 +3,13 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { registerIpcHandlers } from './ipc-handlers'
+import { registerIpcHandlers } from './src/ipc-handlers'
+
+export let mainWindow: BrowserWindow | undefined = undefined
 
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 0,
     height: 0,
     show: false,
@@ -25,7 +27,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
