@@ -20,7 +20,6 @@ export function AppRoutes() {
     <Routes>
       <Route path="login" element={<Login />} />
       <Route path="no-connection" element={<NoConnectionRoute />} />
-      <Route path="debug" element={<DebugRoute />} />
 
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
@@ -30,6 +29,7 @@ export function AppRoutes() {
           <Route path="time-in-progress" element={<TimeInProgressRoute />} />
           <Route path="insta-insights" element={<InstaInsightsRoute />} />
         </Route>
+        <Route path="debug" element={<DebugRoute />} />
         <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<NoMatch />} />

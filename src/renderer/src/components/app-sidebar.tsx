@@ -1,4 +1,4 @@
-import { Box, ChevronRight, Home, Settings, X } from 'lucide-react'
+import { Box, Home, Settings, X } from 'lucide-react'
 
 import {
   Sidebar,

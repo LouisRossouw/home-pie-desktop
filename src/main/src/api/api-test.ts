@@ -3,7 +3,7 @@ import { requireSession } from '@main/src/session'
 export async function apiTest() {
   const apiClient = await requireSession()
 
-  const response = await apiClient.get('/timeinprogress/api/get_overview_data', {
+  const response = await apiClient.get('/api/timeinprogress/overview-data', {
     headers: { 'Content-Type': 'application/json' }
   })
 

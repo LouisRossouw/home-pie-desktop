@@ -25,6 +25,7 @@ export function SplashRoute() {
         <div className="splash_screen">
           <div className="grid gap-4 p-4 text-center items-center justify-center">
             <img src={logo} width={80} height={80}></img>
+
             <AppVersion className="text-gray-400" />
             <p className="text-white">{JSON.stringify(ee)}</p>
           </div>

@@ -48,7 +48,12 @@ export default function Projects() {
           <div className="grid justift-center gap-2 p-2">
             {projects?.map((project) => {
               return (
-                <Button variant={'default'} size={'icon'} onClick={() => navigate(project.url)}>
+                <Button
+                  key={project.slug}
+                  variant={'default'}
+                  size={'icon'}
+                  onClick={() => navigate(project.url)}
+                >
                   {project?.img ? <img src={project.img} width={35} height={35} /> : <Lightbulb />}
                 </Button>
               )
