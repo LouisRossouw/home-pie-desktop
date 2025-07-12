@@ -1,16 +1,24 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { Button } from '~/components/ui/button'
 
-export function Login() {
+export default function Login() {
   const navigation = useNavigate()
+
+  const [searchParams] = useSearchParams()
+
+  const maybeForceLogout = searchParams.get('forceLogout')
 
   useEffect(() => {
     window.api.resizeApp({ width: 500, height: 800 })
-  }, [])
+
+    if (maybeForceLogout) {
+      // TODO?
+    }
+  }, [maybeForceLogout])
 
   function handleManualLogin() {
-    navigation('/home')
+    navigation('/')
     window.api.resizeApp({ width: 900, height: 670 })
   }
 
