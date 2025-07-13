@@ -30,7 +30,7 @@ export default function Login() {
     <div className="flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background">
       <div className="grid h-full w-full items-center justify-center p-4 gap-4">
         <div className="text-center">
-          <h1 className="font-bold text-6xl">{format(now, 'HH:MM')}</h1>
+          <h1 className="font-bold text-6xl">{format(now, 'HH:mm')}</h1>
           <h2 className="font-medium text-3xl">{format(now, 'yyyy-MM-dd')}</h2>
         </div>
         <div className="text-center w-full space-y-4">
