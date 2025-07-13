@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { Middlewear } from './libs/middlewear'
 import { AppContextProvider } from './libs/context/app'
@@ -9,7 +10,6 @@ import { LoaderRoute } from './routes/loader'
 
 import { WindowFrame } from './components/window-frame'
 import { WindowFrameDebug } from './components/window-frame-debug'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient()
 
@@ -25,9 +25,12 @@ export default function App(): JSX.Element {
     return <SplashRoute />
   }
 
+  // TODO; Skip this screen & login screen if auth & db exists etc.
   if (booted && !loaded) {
-    return <LoaderRoute loaded={loaded} setLoaded={setLoaded} />
+    return <LoaderRoute setLoaded={setLoaded} />
   }
+
+  // TODO; Add login route here?
 
   return (
     <QueryClientProvider client={queryClient}>

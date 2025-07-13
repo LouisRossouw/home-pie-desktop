@@ -10,13 +10,6 @@ export function SplashRoute() {
 
   useEffect(() => {
     window.api.resizeApp({ width: 250, height: 250 })
-
-    const init = async () => {
-      const success = await window.api.loadApp()
-      console.log('Loaded:', success)
-    }
-
-    init()
   }, [])
 
   return (

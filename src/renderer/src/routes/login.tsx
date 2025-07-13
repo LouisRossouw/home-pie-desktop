@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import { format } from 'date-fns'
+
 import { Button } from '~/components/ui/button'
 
 export default function Login() {
@@ -22,11 +24,22 @@ export default function Login() {
     window.api.resizeApp({ width: 900, height: 670 })
   }
 
+  const now = new Date()
+
   return (
     <div className="flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background">
-      <div className="grid w-full p-4 border rounded-lg gap-4">
-        <h2>Log in screen</h2>
-        <Button onClick={handleManualLogin}>Login</Button>
+      <div className="grid h-full w-full items-center justify-center p-4 gap-4">
+        <div className="text-center">
+          <h1 className="font-bold text-6xl">{format(now, 'HH:MM')}</h1>
+          <h2 className="font-medium text-3xl">{format(now, 'yyyy-MM-dd')}</h2>
+        </div>
+        <div className="text-center w-full space-y-4">
+          <div className="w-full">
+            <Button className="w-full" onClick={handleManualLogin}>
+              Sign in
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )

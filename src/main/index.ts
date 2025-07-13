@@ -6,6 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import { registerIpcHandlers } from './src/ipc-handlers'
 
 export let mainWindow: BrowserWindow | undefined = undefined
+let ipcRegistered = false
 
 function createWindow(): void {
   // Create the browser window.
@@ -58,9 +59,6 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   createWindow()
 
   app.on('activate', function () {
@@ -84,4 +82,5 @@ app.on('window-all-closed', () => {
 // ipcMain.handle('resizeApp', () => {
 //   return getThisAppData()
 // })
+
 registerIpcHandlers()

@@ -1,41 +1,52 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-export function LoaderRoute({
-  loaded,
-  setLoaded
-}: {
-  loaded: boolean
-  setLoaded: (v: boolean) => void
-}) {
-  const navigation = useNavigate()
+export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) {
+  const navigate = useNavigate()
 
-  const [loadedSettings, setLoadedSettings] = useState(false) // Temp
-  const [timeHasElapsed, setTimeHasElapsed] = useState(false)
+  const [logs, setLogs] = useState<string>('')
+  const [appLoaded, setAppLoaded] = useState(false)
 
-  function handleLoadAppSettings() {
-    // TODO; Load app settings
-    setLoadedSettings(true)
+  useEffect(() => {
+    window.api.resizeApp({ width: 400, height: 600 })
+
+    handleLoadAppSettings()
+    setupOnLoaderProgress()
+  }, [])
+
+  function setupOnLoaderProgress() {
+    const handler = (_event: any, { msg }: { msg: string }) => {
+      if (msg) {
+        setLogs(msg)
+      }
+    }
+    window.api.onLoaderProgress(handler)
+  }
+
+  async function handleLoadAppSettings() {
+    await window.api.loadApp()
+    setAppLoaded(true)
   }
 
   useEffect(() => {
-    if (!loaded) {
-      setTimeout(() => setTimeHasElapsed(true), 4000)
-      setTimeout(() => handleLoadAppSettings(), 2000) // Temp
-      window.api.resizeApp({ width: 400, height: 600 })
+    if (appLoaded) {
+      setLogs('Done..')
     }
-
-    if (loadedSettings && timeHasElapsed) {
+    if (appLoaded) {
       setLoaded(true)
-      navigation('login')
+      navigate('login')
     }
-  }, [loaded, timeHasElapsed])
+  }, [appLoaded])
 
   return (
     <div className="flex w-full h-[calc(100vh-32px)] items-center justify-center bg-background rounded-lg">
-      <div className="grid gap-4 border rounded-lg p-4 justify-center items-center">
-        <h2>Loader screen</h2>
-        <h2>{JSON.stringify(loaded)}</h2>
+      <div className="grid w-full gap-4 p-4 justify-center items-center">
+        <div className="flex w-full items-center justify-center">
+          <h2 className="font-bold">Hello...</h2>
+        </div>
+        <div className="flex w-full p-4 overflow-hidden">
+          <p className="text-muted-foreground text-sm overflow-hidden">{logs}</p>
+        </div>
       </div>
     </div>
   )
