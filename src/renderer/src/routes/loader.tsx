@@ -8,11 +8,20 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
   const [appLoaded, setAppLoaded] = useState(false)
 
   useEffect(() => {
-    window.api.resizeApp({ width: 400, height: 600 })
-
-    handleLoadAppSettings()
     setupOnLoaderProgress()
+    handleLoadAppSettings()
+    window.api.resizeApp({ width: 400, height: 600 })
   }, [])
+
+  useEffect(() => {
+    if (appLoaded) {
+      setLogs('Done..')
+    }
+    if (appLoaded) {
+      setLoaded(true)
+      navigate('login')
+    }
+  }, [appLoaded])
 
   function setupOnLoaderProgress() {
     const handler = (_event: any, { msg }: { msg: string }) => {
@@ -27,16 +36,6 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
     await window.api.loadApp()
     setAppLoaded(true)
   }
-
-  useEffect(() => {
-    if (appLoaded) {
-      setLogs('Done..')
-    }
-    if (appLoaded) {
-      setLoaded(true)
-      navigate('login')
-    }
-  }, [appLoaded])
 
   return (
     <div className="flex w-full h-[calc(100vh-32px)] items-center justify-center bg-background rounded-lg">
