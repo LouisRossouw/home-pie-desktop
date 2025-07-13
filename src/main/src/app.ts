@@ -1,5 +1,8 @@
 import { getBaseURl } from '@shared/api'
 import { BrowserWindow } from 'electron'
+import { app } from 'electron'
+import { db, checkIfDatabase } from './database'
+const fs = require('fs')
 
 export type ResizeApp = { width: number; height: number }
 
@@ -15,10 +18,20 @@ export function resizeApp({ width, height }: ResizeApp) {
 export function loadApp() {
   console.log('Loading app..')
 
+  const userPath = app.getPath('userData')
+  const maybeDatabase = checkIfDatabase()
+
   console.log('ENV:', import.meta.env.MODE)
   console.log('BaseURL:', getBaseURl())
+  console.log('UserPath:', userPath)
 
-  return 'App loaded'
+  if (!maybeDatabase) {
+    db.initDatabase()
+    db.setSetting('theme', 'dark')
+    console.log('No Database - created!')
+  }
+
+  return true
 }
 
 export type WindowControl = { action: 'minimize' | 'maximize' | 'close' }

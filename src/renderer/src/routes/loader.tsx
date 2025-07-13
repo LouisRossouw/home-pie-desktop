@@ -13,9 +13,12 @@ export function LoaderRoute({
   const [loadedSettings, setLoadedSettings] = useState(false) // Temp
   const [timeHasElapsed, setTimeHasElapsed] = useState(false)
 
-  function handleLoadAppSettings() {
+  async function handleLoadAppSettings() {
     // TODO; Load app settings
-    setLoadedSettings(true)
+
+    const success = await window.api.loadApp()
+    console.log('Loaded:', success)
+    setLoadedSettings(success)
   }
 
   useEffect(() => {

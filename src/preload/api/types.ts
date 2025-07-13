@@ -7,7 +7,7 @@ type Nav = {
 
 type AppAPI = {
   resizeApp: (v: ResizeApp) => void
-  loadApp: () => Promise<string>
+  loadApp: () => Promise<boolean>
   windowControl: (v: WindowControl) => Promise<string>
 }
 
