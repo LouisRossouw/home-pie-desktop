@@ -1,35 +1,32 @@
+import { app, BrowserWindow } from 'electron'
+
+import { mainWindow } from '@main/.'
 import { getBaseURl } from '@shared/api'
-import { BrowserWindow } from 'electron'
-import { app } from 'electron'
-import { db, checkIfDatabase } from './database'
-const fs = require('fs')
 
-export type ResizeApp = { width: number; height: number }
+import { defaultAppSettings } from './default-app-settings'
+import { initDatabase, setSetting, dbExists } from './database'
 
-export function resizeApp({ width, height }: ResizeApp) {
-  const win = BrowserWindow.getFocusedWindow()
+const envMode = import.meta.env.MODE
 
-  if (win) {
-    win.center()
-    win.setSize(width, height)
+export async function loadApp() {
+  await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms: 2000 })
+
+  if (!dbExists) {
+    initDatabase()
+    defaultAppSettings.forEach(async (setting) => {
+      setSetting(setting.key, setting.value)
+      await updateOnLoaderProgress({
+        msg: `Adding default setting:', ${setting.key} - ${setting.value}`,
+        enableDelay: false
+      })
+    })
+    await updateOnLoaderProgress({ msg: 'No database .. Created database! 👌', ms: 1000 })
   }
-}
 
-export function loadApp() {
-  console.log('Loading app..')
-
-  const userPath = app.getPath('userData')
-  const maybeDatabase = checkIfDatabase()
-
-  console.log('ENV:', import.meta.env.MODE)
-  console.log('BaseURL:', getBaseURl())
-  console.log('UserPath:', userPath)
-
-  if (!maybeDatabase) {
-    db.initDatabase()
-    db.setSetting('theme', 'dark')
-    console.log('No Database - created!')
-  }
+  await updateOnLoaderProgress({ msg: `ENV: ${envMode}` })
+  await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}` })
+  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURl()}` })
+  await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}` })
 
   return true
 }
@@ -51,4 +48,30 @@ export function windowControl({ action }: WindowControl) {
       win.close()
       break
   }
+}
+
+export type ResizeApp = { width: number; height: number }
+
+export function resizeApp({ width, height }: ResizeApp) {
+  const win = BrowserWindow.getFocusedWindow()
+
+  if (win) {
+    win.center()
+    win.setSize(width, height)
+  }
+}
+
+// Updates the renderer loader screen.
+export async function updateOnLoaderProgress({
+  msg,
+  ms = 100,
+  enableDelay = true
+}: {
+  msg: string
+  ms?: number
+  enableDelay?: boolean
+}) {
+  console.log('Loader: ', msg)
+  mainWindow?.webContents.send('loader-progress', { msg })
+  enableDelay && (await new Promise((resolve) => setTimeout(resolve, ms)))
 }

@@ -11,6 +11,9 @@ const navAPI = {
 const appAPI = {
   resizeApp: (data: ResizeApp) => electronAPI.ipcRenderer.invoke('resize-app', data),
   loadApp: async () => electronAPI.ipcRenderer.invoke('load-app'),
+  onLoaderProgress: (callback: (event: any, data: { msg: string }) => void) => {
+    ipcRenderer.on('loader-progress', callback)
+  },
   windowControl: (data: WindowControl) => {
     ipcRenderer.send('window-control', data)
   }
