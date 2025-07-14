@@ -1,4 +1,4 @@
-import { Box, Home, Settings, X } from 'lucide-react'
+import { Box, CircleDollarSign, Home, Settings, X } from 'lucide-react'
 
 import {
   Sidebar,
@@ -25,6 +25,11 @@ const items = [
     title: 'Projects',
     url: '/projects',
     icon: Box
+  },
+  {
+    title: 'My Finances',
+    url: '/my-finances',
+    icon: CircleDollarSign
   },
 
   {
