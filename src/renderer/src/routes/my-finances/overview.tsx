@@ -1,4 +1,4 @@
-export default function MyFinancesOverViewRoute() {
+export default function MyFinancesOverviewRoute() {
   return (
     <div className="flex w-full h-[calc(100vh-96px)] items-center justify-center">
       <div className="text-center">
