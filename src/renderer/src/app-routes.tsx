@@ -8,12 +8,14 @@ import Home from './routes/home'
 import { NoMatch } from './routes/no-match'
 import Settings from './routes/settings'
 import Projects from './routes/projects'
-import OverView from './routes/projects/overview'
+import ProjectsOverViewRoute from './routes/projects/overview'
 import ProjectSettings from './routes/projects/settings'
 import TimeInProgressRoute from './routes/projects/time-in-progress'
 import InstaInsightsRoute from './routes/projects/insta-insights'
 import NoConnectionRoute from './routes/no-connection'
 import DebugRoute from './routes/debug'
+import MyFinancesOverViewRoute from './routes/my-finances/overview'
+import MyFinances from './routes/my-finances'
 
 export function AppRoutes() {
   return (
@@ -24,10 +26,15 @@ export function AppRoutes() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="projects" element={<Projects />}>
-          <Route index element={<OverView />} />
+          <Route index element={<ProjectsOverViewRoute />} />
           <Route path="project-settings" element={<ProjectSettings />} />
           <Route path="time-in-progress" element={<TimeInProgressRoute />} />
           <Route path="insta-insights" element={<InstaInsightsRoute />} />
+        </Route>
+        <Route path="my-finances" element={<MyFinances />}>
+          <Route index element={<MyFinancesOverViewRoute />} />
+          <Route path="my-finances-settings" element={<ProjectSettings />} />
+          {/* <Route path="time-in-progress" element={<TimeInProgressRoute />} /> */}
         </Route>
         <Route path="debug" element={<DebugRoute />} />
         <Route path="settings" element={<Settings />} />

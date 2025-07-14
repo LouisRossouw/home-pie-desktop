@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Outlet, useNavigate } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 
 import { Lightbulb } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -24,6 +24,7 @@ const projectsAppRoutes = [
 
 export default function Projects() {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   // Fetch additional project data from the server, ie, is the project active etc.
   const { data: projectsRaw, isPending } = useQuery({
@@ -39,6 +40,9 @@ export default function Projects() {
     })
   }, [projectsRaw])
 
+  const currentSubRoutes = pathname.split('/')
+  const selectedSubRoute = currentSubRoutes[currentSubRoutes.length - 1]
+
   return (
     <div className="flex h-[calc(100vh-96px)] items-center justify-center">
       <div className="flex h-full border-r items-start">
@@ -49,10 +53,10 @@ export default function Projects() {
             {projects?.map((project) => {
               return (
                 <Button
-                  key={project.slug}
-                  variant={'default'}
                   size={'icon'}
+                  key={project.slug}
                   onClick={() => navigate(project.url)}
+                  variant={selectedSubRoute === project.slug ? 'default' : 'outline'}
                 >
                   {project?.img ? <img src={project.img} width={35} height={35} /> : <Lightbulb />}
                 </Button>
