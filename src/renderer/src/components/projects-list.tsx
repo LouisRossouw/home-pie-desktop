@@ -4,13 +4,13 @@ import { Project } from '@shared/types'
 import { Button } from '~/components/ui/button'
 
 export function ProjectsList({
-  loading,
+  isLoading,
   projects,
   isExpanded,
   selectedProject,
   handleSelectedProject
 }: {
-  loading: boolean
+  isLoading: boolean
   projects: Project[]
   isExpanded: boolean
   selectedProject: string
@@ -20,7 +20,7 @@ export function ProjectsList({
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         'Loading'
       ) : (
         <div className="grid justift-center gap-2 p-2">

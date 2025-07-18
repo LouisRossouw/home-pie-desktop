@@ -66,7 +66,7 @@ export default function ProjectsRoute() {
           onChange={(v: boolean) => setIsProjectsExpanded(v)}
           children={
             <ProjectsList
-              loading={isPending}
+              isLoading={isPending}
               projects={projects}
               isExpanded={isProjectsExpanded}
               selectedProject={selectedProject}
