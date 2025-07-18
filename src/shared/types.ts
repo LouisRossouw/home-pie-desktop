@@ -2,7 +2,7 @@
 
 export type ApiTest = { ok: boolean; data?: any }
 
-type Projects = {
+export type Projects = {
   title: string
   slug: string
   img?: string
