@@ -34,9 +34,9 @@ export default function ProjectsRoute() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  const panelMainGroupRef = useRef<ImperativePanelGroupHandle>(null)
+  const panelGroupRef = useRef<ImperativePanelGroupHandle>(null)
 
-  const projectsPanelResizeRef = useRef<ImperativePanelHandle>(null)
+  const projectsPanelRef = useRef<ImperativePanelHandle>(null)
   const outletPanelRef = useRef<ImperativePanelHandle>(null)
 
   const [isProjectsExpanded, setIsProjectsExpanded] = useState(false)
@@ -60,9 +60,9 @@ export default function ProjectsRoute() {
 
   return (
     <div className="flex h-[calc(100vh-96px)] items-center justify-center">
-      <PanelGroup direction="horizontal" ref={panelMainGroupRef}>
+      <PanelGroup direction="horizontal" ref={panelGroupRef}>
         <ProjectsPanel
-          ref={projectsPanelResizeRef}
+          ref={projectsPanelRef}
           onChange={(v: boolean) => setIsProjectsExpanded(v)}
           children={
             <ProjectsList
