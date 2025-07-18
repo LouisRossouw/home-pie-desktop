@@ -1,5 +1,5 @@
 import { Lightbulb } from 'lucide-react'
-import { Projects } from '@shared/types'
+import { Project } from '@shared/types'
 
 import { Button } from '~/components/ui/button'
 
@@ -11,7 +11,7 @@ export function ProjectsList({
   handleSelectedProject
 }: {
   loading: boolean
-  projects: Projects[]
+  projects: Project[]
   isExpanded: boolean
   selectedProject: string
   handleSelectedProject: (v: string) => void
@@ -24,7 +24,7 @@ export function ProjectsList({
         'Loading'
       ) : (
         <div className="grid justift-center gap-2 p-2">
-          {projects?.map((project: any) => {
+          {projects?.map((project: Project) => {
             const variant =
               selectedProject === project.slug ? 'default' : isExpanded ? 'outline' : 'ghost'
 

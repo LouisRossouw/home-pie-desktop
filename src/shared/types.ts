@@ -2,11 +2,11 @@
 
 export type ApiTest = { ok: boolean; data?: any }
 
-export type Projects = {
+export type Project = {
   title: string
   slug: string
   img?: string
   url: string
 }
 
-export type ApiProjectsList = { ok: boolean; data?: Projects[] }
+export type ApiProjectsList = { ok: boolean; data?: Project[] }

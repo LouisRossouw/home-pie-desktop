@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 
-import { type Projects } from '@shared/types'
+import { type Project } from '@shared/types'
 import { useQuery } from '@tanstack/react-query'
 import {
   PanelGroup,
@@ -53,7 +53,7 @@ export default function ProjectsRoute() {
 
       return { ...proj, ...foundProject, img: proj?.img ? proj.img : foundProject?.img }
     })
-  }, [projectsRaw]) as Projects[]
+  }, [projectsRaw]) as Project[]
 
   const currentSubRoutes = pathname.split('/')
   const selectedProject = currentSubRoutes[currentSubRoutes.length - 1]
