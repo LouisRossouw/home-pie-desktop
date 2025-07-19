@@ -2,6 +2,7 @@ import { useLocation } from 'react-router'
 import { Maximize, Minimize2, X } from 'lucide-react'
 
 import { Button } from './ui/button'
+import { DotSquad } from './dot-squad'
 
 export function WindowFrame() {
   const { pathname } = useLocation()
@@ -15,7 +16,13 @@ export function WindowFrame() {
     >
       {/* TODO; Turn into grid columns , or something else to center things! */}
       {isLogin ? <div></div> : <div>HomePie</div>}
-      {!isLogin ? <div>* Notifications here *</div> : <div>HomePie</div>}
+      {!isLogin ? (
+        <div className="flex" style={{ WebkitAppRegion: 'no-drag' }}>
+          <DotSquad />
+        </div>
+      ) : (
+        <div>HomePie</div>
+      )}
 
       <div className="flex" style={{ WebkitAppRegion: 'no-drag' }}>
         {!isLogin && (
