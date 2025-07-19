@@ -1,0 +1,46 @@
+.retrowave-synthwave {
+  --background: oklch(0.1 0.05 310);            /* deep cosmic purple */
+  --foreground: oklch(0.98 0.06 20);            /* soft neon cream */
+
+  --card: oklch(0.14 0.06 305);                 /* rich dark purple */
+  --card-foreground: oklch(0.95 0.05 25);       /* light yellow-orange */
+
+  --popover: oklch(0.12 0.05 300);
+  --popover-foreground: oklch(0.9 0.06 20);
+
+  --primary: oklch(0.82 0.25 340);              /* neon pink */
+  --primary-foreground: oklch(0.1 0.01 330);    /* black */
+
+  --secondary: oklch(0.75 0.23 230);            /* bright synth blue */
+  --secondary-foreground: oklch(0.1 0.01 220);
+
+  --muted: oklch(0.25 0.04 300);                /* muted dark purple */
+  --muted-foreground: oklch(0.6 0.05 300);      /* faded neon */
+
+  --accent: oklch(0.85 0.22 70);                /* hot orange-pink sunset */
+  --accent-foreground: oklch(0.1 0.01 60);
+
+  --destructive: oklch(0.75 0.25 25);           /* bright warning red-orange */
+  --destructive-foreground: oklch(0.1 0.01 10);
+
+  --border: oklch(0.22 0.03 300);               /* dark accent */
+  --input: oklch(0.15 0.03 290);
+  --ring: oklch(0.85 0.25 230);                 /* synth blue */
+
+  --chart-1: oklch(0.85 0.25 340);   /* hot pink */
+  --chart-2: oklch(0.8 0.25 230);    /* synth blue */
+  --chart-3: oklch(0.9 0.23 70);     /* sunset orange */
+  --chart-4: oklch(0.78 0.25 300);   /* violet */
+  --chart-5: oklch(0.85 0.25 180);   /* aqua glow */
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.12 0.05 310);
+  --sidebar-foreground: oklch(0.98 0.05 20);
+  --sidebar-primary: oklch(0.82 0.25 340);
+  --sidebar-primary-foreground: oklch(0.1 0.01 330);
+  --sidebar-accent: oklch(0.75 0.23 230);
+  --sidebar-accent-foreground: oklch(0.1 0.01 220);
+  --sidebar-border: oklch(0.22 0.03 300);
+  --sidebar-ring: oklch(0.85 0.25 230);
+}
