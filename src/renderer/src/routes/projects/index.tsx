@@ -9,26 +9,11 @@ import {
   ImperativePanelGroupHandle
 } from 'react-resizable-panels'
 
-import tempLogo from '../../assets/projects/logo/timeinprogress-logo-play.gif'
-
 import { ResizableHandle } from '~/components/ui/resizable'
 import { ProjectsList } from '~/components/projects-list'
 import { ProjectsPanel } from './projects-panel'
 import { OutletPanel } from './outlet-panel'
-
-// TODO; Fetch projects from the API, either on page load or during app load.
-const projectsAppRoutes = [
-  {
-    slug: 'time-in-progress',
-    img: tempLogo,
-    url: '/projects/time-in-progress'
-  },
-  {
-    slug: 'insta-insights',
-    img: undefined,
-    url: '/projects/insta-insights'
-  }
-]
+import { projectsAppRoutes } from './projects-routes-list'
 
 export default function ProjectsRoute() {
   const navigate = useNavigate()
@@ -48,11 +33,7 @@ export default function ProjectsRoute() {
   })
 
   const projects = useMemo(() => {
-    return projectsAppRoutes?.map((proj) => {
-      const foundProject = projectsRaw?.find((p) => p.slug === proj.slug)
-
-      return { ...proj, ...foundProject, img: proj?.img ? proj.img : foundProject?.img }
-    })
+    return buildProjectsList(projectsRaw)
   }, [projectsRaw]) as Project[]
 
   const currentSubRoutes = pathname.split('/')
@@ -79,6 +60,16 @@ export default function ProjectsRoute() {
       </PanelGroup>
     </div>
   )
+}
+
+function buildProjectsList(projectsRaw?: Project[]) {
+  if (!projectsRaw) return []
+
+  return projectsAppRoutes?.map((proj) => {
+    const foundProject = projectsRaw?.find((p) => p.slug === proj.slug)
+
+    return { ...proj, ...foundProject, img: proj?.img ? proj.img : foundProject?.img }
+  })
 }
 
 async function getProjects() {
