@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
+import { ApiTest } from '@shared/types'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
+import { useApp } from '~/libs/context/app'
+import { dotSquadAnims } from '~/libs/dot-squad'
+
 import { Button } from '~/components/ui/button'
-import { ApiTest } from '@shared/types'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -16,6 +19,8 @@ const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
+
+  const { handleUpdateDotSquad } = useApp()
 
   const [output, setOutput] = useState<any>()
 
@@ -83,8 +88,11 @@ export function Debug() {
         </div>
 
         {/* Test buttons go here ! */}
-        <div className="flex h-full w-full border rounded-lg justify-center items-center">
+        <div className="grid h-full w-full border rounded-lg justify-center items-center">
           <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
+          <Button onClick={() => handleUpdateDotSquad(dotSquadAnims.isNewDailies)}>
+            Test dotSquad
+          </Button>
         </div>
       </div>
     </div>
