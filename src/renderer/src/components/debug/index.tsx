@@ -6,6 +6,7 @@ import { getOAuthClients } from '@shared/auth'
 
 import { Button } from '~/components/ui/button'
 import { ApiTest } from '@shared/types'
+import { usePoll } from '~/libs/hooks/use-poll-counter'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -16,6 +17,7 @@ const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
+  const { isPolling, pollCount, state } = usePoll()
 
   const [output, setOutput] = useState<any>()
 
@@ -85,6 +87,11 @@ export function Debug() {
         {/* Test buttons go here ! */}
         <div className="flex h-full w-full border rounded-lg justify-center items-center">
           <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
+          <div>
+            <div>isPolling: {isPolling}</div>
+            <div>poll state: {JSON.stringify(state)}</div>
+            <div>pollCount: {pollCount}</div>
+          </div>
         </div>
       </div>
     </div>
