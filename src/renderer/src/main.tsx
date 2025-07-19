@@ -1,4 +1,5 @@
 import './assets/main.css'
+import './assets/themes'
 
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router'

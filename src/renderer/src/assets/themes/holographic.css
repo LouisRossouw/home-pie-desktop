@@ -1,0 +1,46 @@
+.holographic {
+  --background: oklch(0.95 0.03 260);      /* soft misty violet */
+  --foreground: oklch(0.2 0.02 300);       /* muted dark purple */
+
+  --card: oklch(0.98 0.025 280);           /* pearlescent white */
+  --card-foreground: oklch(0.25 0.03 280); /* muted blue-violet */
+
+  --popover: oklch(0.97 0.03 250);
+  --popover-foreground: oklch(0.3 0.03 260);
+
+  --primary: oklch(0.85 0.17 270);         /* neon lavender */
+  --primary-foreground: oklch(0.1 0.01 300);
+
+  --secondary: oklch(0.85 0.15 180);       /* bright aqua */
+  --secondary-foreground: oklch(0.12 0.01 190);
+
+  --muted: oklch(0.92 0.02 260);
+  --muted-foreground: oklch(0.5 0.05 260);
+
+  --accent: oklch(0.9 0.18 320);           /* hot pink shimmer */
+  --accent-foreground: oklch(0.15 0.02 320);
+
+  --destructive: oklch(0.8 0.22 25);       /* warm red pop */
+  --destructive-foreground: oklch(0.1 0.01 0);
+
+  --border: oklch(0.88 0.03 270);
+  --input: oklch(0.9 0.03 280);
+  --ring: oklch(0.85 0.18 180);            /* electric turquoise */
+
+  --chart-1: oklch(0.85 0.18 260);  /* lavender */
+  --chart-2: oklch(0.82 0.17 320);  /* pink */
+  --chart-3: oklch(0.8 0.16 190);   /* aqua */
+  --chart-4: oklch(0.75 0.15 85);   /* yellow-green */
+  --chart-5: oklch(0.7 0.15 40);    /* golden peach */
+
+  --radius: 0.75rem;
+
+  --sidebar: oklch(0.94 0.02 260);
+  --sidebar-foreground: oklch(0.25 0.02 300);
+  --sidebar-primary: oklch(0.85 0.17 270);
+  --sidebar-primary-foreground: oklch(0.1 0.01 300);
+  --sidebar-accent: oklch(0.85 0.15 180);
+  --sidebar-accent-foreground: oklch(0.12 0.01 190);
+  --sidebar-border: oklch(0.88 0.03 270);
+  --sidebar-ring: oklch(0.85 0.18 180);
+}

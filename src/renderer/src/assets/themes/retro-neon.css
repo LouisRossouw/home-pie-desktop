@@ -1,0 +1,46 @@
+.retro-neon {
+  --background: oklch(0.08 0.04 300);           /* deep violet-black */
+  --foreground: oklch(0.95 0.06 10);            /* light neon peach-white */
+
+  --card: oklch(0.12 0.05 290);                 /* dark purple card */
+  --card-foreground: oklch(0.95 0.05 15);       /* neon pastel for text */
+
+  --popover: oklch(0.1 0.05 280);
+  --popover-foreground: oklch(0.9 0.06 20);
+
+  --primary: oklch(0.82 0.25 335);              /* hot magenta */
+  --primary-foreground: oklch(0.1 0.01 330);    /* near-black */
+
+  --secondary: oklch(0.75 0.23 210);            /* electric cyan */
+  --secondary-foreground: oklch(0.1 0.01 210);
+
+  --muted: oklch(0.25 0.04 300);                /* low contrast filler */
+  --muted-foreground: oklch(0.65 0.08 300);
+
+  --accent: oklch(0.7 0.22 60);                 /* sunset gold */
+  --accent-foreground: oklch(0.12 0.02 40);
+
+  --destructive: oklch(0.7 0.25 25);            /* bright red-orange */
+  --destructive-foreground: oklch(0.1 0.01 10);
+
+  --border: oklch(0.22 0.03 300);
+  --input: oklch(0.15 0.03 290);
+  --ring: oklch(0.75 0.25 335);                 /* match hot magenta */
+
+  --chart-1: oklch(0.82 0.25 335);  /* magenta */
+  --chart-2: oklch(0.75 0.23 210);  /* cyan */
+  --chart-3: oklch(0.7 0.22 60);    /* gold */
+  --chart-4: oklch(0.78 0.2 310);   /* purple pink */
+  --chart-5: oklch(0.8 0.25 20);    /* neon red-orange */
+
+  --radius: 0.5rem;
+
+  --sidebar: oklch(0.1 0.04 300);
+  --sidebar-foreground: oklch(0.9 0.05 10);
+  --sidebar-primary: oklch(0.82 0.25 335);
+  --sidebar-primary-foreground: oklch(0.1 0.01 330);
+  --sidebar-accent: oklch(0.75 0.23 210);
+  --sidebar-accent-foreground: oklch(0.1 0.01 210);
+  --sidebar-border: oklch(0.22 0.03 300);
+  --sidebar-ring: oklch(0.75 0.25 335);
+}

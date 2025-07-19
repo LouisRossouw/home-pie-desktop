@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
+import { ApiTest } from '@shared/types'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
 import { Button } from '~/components/ui/button'
-import { ApiTest } from '@shared/types'
+import { ThemeSelector } from '~/components/theme-selector'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -85,6 +86,7 @@ export function Debug() {
         {/* Test buttons go here ! */}
         <div className="flex h-full w-full border rounded-lg justify-center items-center">
           <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
+          <ThemeSelector />
         </div>
       </div>
     </div>
