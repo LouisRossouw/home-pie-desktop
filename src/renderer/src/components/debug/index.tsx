@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
+import { ApiTest } from '@shared/types'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
 import { Button } from '~/components/ui/button'
-import { ApiTest } from '@shared/types'
-import { ThemeSelector } from '../theme-selector'
+import { ThemeSelector } from '~/components/theme-selector'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
