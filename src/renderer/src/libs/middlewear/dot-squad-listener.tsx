@@ -15,7 +15,6 @@ export function DotSquadListener() {
   function setupOnDotSquadActivity() {
     const handler = (_event: IpcRendererEvent, { activity }: { activity: string }) => {
       if (activity) {
-        console.log('++ ', dotSquadAnims[activity])
         handleUpdateDotSquad(dotSquadAnims[activity])
       }
     }
