@@ -6,9 +6,9 @@ import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
 import { useApp } from '~/libs/context/app'
-import { dotSquadAnims } from '@shared/dot-squad'
 
 import { Button } from '~/components/ui/button'
+import { ThemeSelector } from '~/components/theme-selector'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -114,6 +114,7 @@ export function Debug() {
           <label>Test buttons:</label>
           <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
           <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
+          <ThemeSelector />
         </div>
 
         <div className="border rounded-lg p-4">

@@ -1,0 +1,46 @@
+.solar-twilight {
+  --background: oklch(0.12 0.06 320);            /* deep twilight purple */
+  --foreground: oklch(0.95 0.02 40);             /* soft warm ivory */
+
+  --card: oklch(0.18 0.05 300);                  /* dusky purple card */
+  --card-foreground: oklch(0.95 0.03 50);        /* glowing ivory */
+
+  --popover: oklch(0.14 0.05 310);               /* muted purple shadow */
+  --popover-foreground: oklch(0.9 0.02 40);      /* soft warm text */
+
+  --primary: oklch(0.8 0.22 40);                  /* vibrant sunset orange */
+  --primary-foreground: oklch(0.12 0.03 320);    /* deep purple shadow */
+
+  --secondary: oklch(0.65 0.15 280);              /* dusk violet */
+  --secondary-foreground: oklch(0.15 0.02 280);  /* soft muted purple */
+
+  --muted: oklch(0.3 0.04 300);                   /* misty mauve */
+  --muted-foreground: oklch(0.55 0.05 310);       /* faded twilight */
+
+  --accent: oklch(0.85 0.2 30);                    /* golden sunset */
+  --accent-foreground: oklch(0.15 0.02 30);        /* glowing amber */
+
+  --destructive: oklch(0.6 0.2 25);                 /* warning red-orange */
+  --destructive-foreground: oklch(0.95 0.02 40);
+
+  --border: oklch(0.22 0.04 310);                   /* soft purple border */
+  --input: oklch(0.25 0.05 320);
+  --ring: oklch(0.8 0.25 40);                        /* bright sunset ring */
+
+  --chart-1: oklch(0.75 0.25 40);                   /* sunset orange */
+  --chart-2: oklch(0.65 0.18 280);                  /* dusk violet */
+  --chart-3: oklch(0.7 0.2 320);                    /* warm lavender */
+  --chart-4: oklch(0.6 0.18 310);                   /* muted purple */
+  --chart-5: oklch(0.55 0.22 30);                   /* glowing amber */
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.14 0.05 320);                   /* deep purple sidebar */
+  --sidebar-foreground: oklch(0.9 0.02 40);          /* soft ivory */
+  --sidebar-primary: oklch(0.8 0.22 40);             /* vibrant sunset orange */
+  --sidebar-primary-foreground: oklch(0.12 0.03 320);
+  --sidebar-accent: oklch(0.65 0.15 280);            /* dusk violet */
+  --sidebar-accent-foreground: oklch(0.15 0.02 280);
+  --sidebar-border: oklch(0.22 0.04 310);
+  --sidebar-ring: oklch(0.8 0.25 40);
+}
