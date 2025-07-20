@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 
 import { mainWindow } from '@main/.'
 import { getBaseURl } from '@shared/api'
+import { type DotSquadAnims } from '@shared/dot-squad'
 
 import { defaultAppSettings } from './default-app-settings'
 import { initDatabase, setSetting, dbExists } from './database'
@@ -74,4 +75,10 @@ export async function updateOnLoaderProgress({
   console.log('Loader: ', msg)
   mainWindow?.webContents.send('loader-progress', { msg })
   enableDelay && (await new Promise((resolve) => setTimeout(resolve, ms)))
+}
+
+// Updates the dot squad to play an animation pattern as a "notification".
+export async function updateDotSquadActivity({ activity }: { activity: DotSquadAnims }) {
+  console.log('Sending dot squad notification activity -', activity)
+  mainWindow?.webContents.send('dot-squad', { activity })
 }
