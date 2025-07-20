@@ -10,3 +10,5 @@ export type Frame = {
   c: string
   delay: number
 }
+
+export type DotSquadAnims = keyof typeof dotSquadAnims

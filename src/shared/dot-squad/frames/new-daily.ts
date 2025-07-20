@@ -1,4 +1,4 @@
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
 export const isNewDailies = [
   {

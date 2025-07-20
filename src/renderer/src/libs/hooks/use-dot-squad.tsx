@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { type Frame } from '~/libs/dot-squad'
-import playDotSquad from '~/libs/dot-squad/dot-squad-play'
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import playDotSquad from '@shared/dot-squad/dot-squad-play'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
+import { dotSquadAnims, type DotSquadAnims, type Frame } from '@shared/dot-squad'
 
 export function useDotSquad() {
   const [reload, setReload] = useState(0)
@@ -18,7 +18,9 @@ export function useDotSquad() {
     }
   }, [frames, reload])
 
-  function handleUpdateDotSquad(frames: Frame[]) {
+  function handleUpdateDotSquad(activity: DotSquadAnims) {
+    const frames = dotSquadAnims[activity]
+
     setReload(reload >= 100 ? 0 : reload + 1)
     setFrames(frames)
   }

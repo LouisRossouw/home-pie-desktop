@@ -1,6 +1,6 @@
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
-export const singleBlink = [
+export const checkServers = [
   {
     a: defaultDotSquadColour,
     b: defaultDotSquadColour,
@@ -8,9 +8,9 @@ export const singleBlink = [
     delay: 50
   },
   {
-    a: defaultDotSquadColour,
-    b: 'aqua',
-    c: defaultDotSquadColour,
+    a: 'green',
+    b: 'green',
+    c: 'green',
     delay: 50
   },
   {

@@ -10,6 +10,10 @@ type AppAPI = {
   loadApp: () => Promise<boolean>
   onLoaderProgress: (v: any) => Promise<any>
   windowControl: (v: WindowControl) => Promise<string>
+  updateDotSquad: (v: any) => Promise<any>
+  listenerCount: (v: any) => Promise<any>
+  removeAllListeners: (v: any) => Promise<any>
+  removeListener: (v: any, listener: string) => Promise<any>
 }
 
 type ExternalAPI = {

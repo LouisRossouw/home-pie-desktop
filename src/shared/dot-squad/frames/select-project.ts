@@ -1,16 +1,10 @@
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
-export const checkServers = [
+export const selectProject = [
   {
     a: defaultDotSquadColour,
     b: defaultDotSquadColour,
-    c: defaultDotSquadColour,
-    delay: 50
-  },
-  {
-    a: 'green',
-    b: 'green',
-    c: 'green',
+    c: 'white',
     delay: 50
   },
   {

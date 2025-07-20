@@ -1,12 +1,6 @@
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
-export const noServer = [
-  {
-    a: 'red',
-    b: defaultDotSquadColour,
-    c: defaultDotSquadColour,
-    delay: 50
-  },
+export const reconnectServer = [
   {
     a: defaultDotSquadColour,
     b: defaultDotSquadColour,
@@ -14,10 +8,10 @@ export const noServer = [
     delay: 50
   },
   {
-    a: 'red',
+    a: 'white',
     b: defaultDotSquadColour,
-    c: defaultDotSquadColour,
-    delay: 50
+    c: 'white',
+    delay: 100
   },
   {
     a: defaultDotSquadColour,

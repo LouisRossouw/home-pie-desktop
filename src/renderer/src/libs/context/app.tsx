@@ -1,8 +1,8 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react'
 
-import { Frame } from '~/libs/dot-squad'
+import { DotSquadAnims } from '@shared/dot-squad'
 import { useDotSquad } from '~/libs/hooks/use-dot-squad'
-import { defaultDotSquadColour } from '~/libs/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
 type AppContextType = {
   isAuth: boolean
@@ -10,7 +10,7 @@ type AppContextType = {
   dotA: string
   dotB: string
   dotC: string
-  handleUpdateDotSquad: (v: Frame[]) => void
+  handleUpdateDotSquad: (v: DotSquadAnims) => void
 }
 
 export const AppContext = createContext<AppContextType>({

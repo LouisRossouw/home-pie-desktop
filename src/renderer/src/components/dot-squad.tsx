@@ -6,6 +6,7 @@ import { useApp } from '~/libs/context/app'
 
 export function DotSquad() {
   const { dotA, dotB, dotC } = useApp()
+
   return (
     <div className="flex h-full items-center justify-center">
       <div className="flex items-center">
