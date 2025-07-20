@@ -35,10 +35,10 @@ export function ThemeSelector() {
 
   return (
     <Select defaultValue={defaultTheme} onValueChange={(value) => handleThemeChange(value)}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a layout" />
       </SelectTrigger>
-      <SelectContent className="h-[250px]">
+      <SelectContent className="w-full">
         <SelectGroup>
           {themesList.map((item) => {
             if (item.active) {
