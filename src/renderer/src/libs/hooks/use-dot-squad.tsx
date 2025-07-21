@@ -4,6 +4,8 @@ import playDotSquad from '@shared/dot-squad/dot-squad-play'
 import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 import { dotSquadAnims, type DotSquadAnims, type Frame } from '@shared/dot-squad'
 
+// SideNote: saving this file would cause hot reload to add more listeners ..
+
 export function useDotSquad() {
   const [reload, setReload] = useState(0)
   const [frames, setFrames] = useState<Frame[] | undefined>(undefined)
@@ -21,7 +23,7 @@ export function useDotSquad() {
   function handleUpdateDotSquad(activity: DotSquadAnims) {
     const frames = dotSquadAnims[activity]
 
-    setReload(reload >= 100 ? 0 : reload + 1)
+    setReload(reload > 99 ? 0 : reload + 1)
     setFrames(frames)
   }
 
