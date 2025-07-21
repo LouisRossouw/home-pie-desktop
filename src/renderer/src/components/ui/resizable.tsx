@@ -18,9 +18,18 @@ function ResizablePanelGroup({
   )
 }
 
-function ResizablePanel({ ...props }: React.ComponentProps<typeof ResizablePrimitive.Panel>) {
-  return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
-}
+// function ResizablePanel({ ...props }: React.ComponentProps<typeof ResizablePrimitive.Panel>) {
+//   return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
+// }
+
+// * SideNote: forwardRef is deprecated in React v19 - https://react.dev/reference/react/forwardRef
+// TODO; Upgrade to v19
+const ResizablePanel = React.forwardRef<
+  React.ElementRef<typeof ResizablePrimitive.Panel>,
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.Panel>
+>(({ ...props }, ref) => {
+  return <ResizablePrimitive.Panel data-slot="resizable-panel" ref={ref} {...props} />
+})
 
 function ResizableHandle({
   withHandle,
