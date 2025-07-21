@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
-import { ApiTest } from '@shared/types'
+import { ApiTest, Setting } from '@shared/types'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
@@ -45,6 +45,18 @@ export function Debug() {
     const routerListenerLS = await window.api.listenerCount('navigate-to')
 
     setListenersCount({ dotSquadLS, routerListenerLS })
+  }
+
+  async function handleGetSettings(setting: Setting) {
+    const result = await window.api.getAppSetting({ setting })
+
+    setOutput(JSON.parse(result))
+  }
+
+  async function handleSetSettings(setting: Setting, value: string) {
+    const success = await window.api.setAppSetting({ setting, value })
+
+    setOutput(JSON.stringify(success))
   }
 
   function clear() {
@@ -110,11 +122,33 @@ export function Debug() {
         </div>
 
         {/* Test buttons go here ! */}
-        <div className="grid h-full w-full border rounded-lg p-4">
+        <div className="grid h-full w-full border rounded-lg p-4 overflow-y-scroll">
           <label>Test buttons:</label>
-          <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
-          <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
-          <ThemeSelector />
+
+          <div className="grid gap-2 border-t py-4">
+            <label>External API:</label>
+            <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
+          </div>
+          <div className="grid gap-2 border-t py-4">
+            <label>DotSquad:</label>
+            <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
+          </div>
+          <div className="grid gap-2 border-t py-4">
+            <label>Local Database:</label>
+            <Button onClick={() => handleGetSettings('lock-screen')}>
+              GetSetting - lock-screen
+            </Button>
+            <Button onClick={() => handleGetSettings('decimals')}>GetSetting - decimals</Button>
+            <Button onClick={() => handleGetSettings('theme')}>GetSetting - theme</Button>
+            <Button onClick={() => handleGetSettings('app-height')}>GetSetting - app-height</Button>
+            <Button onClick={() => handleSetSettings('app-height', 'test')}>
+              SetSetting - app-height
+            </Button>
+          </div>
+          <div className="grid gap-2 border-t py-4">
+            <label>Theme:</label>
+            <ThemeSelector />
+          </div>
         </div>
 
         <div className="border rounded-lg p-4">
