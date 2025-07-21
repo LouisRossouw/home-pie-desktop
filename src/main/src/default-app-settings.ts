@@ -10,4 +10,4 @@ export const defaultAppSettings = [
   { label: 'Date format', slug: 'date-format', key: 'date-format', value: 'yyyy-MM-dd' },
   { label: 'App Width', slug: 'app-width', key: 'app-width', value: 900 }, // ( Update the app width & height anytime the user changes width & height)
   { label: 'App Height', slug: 'app-height', key: 'app-height', value: 670 } // ^^^
-]
+] as const

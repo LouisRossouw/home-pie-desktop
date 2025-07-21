@@ -1,8 +1,13 @@
 import { ipcMain } from 'electron'
 import { loadApp, resizeApp, windowControl } from './app'
+
+import { Setting } from '@shared/types'
+
+import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
 import { apiProjectList } from '@main/src/api/projects/api-projects-list'
-import { mainWindow } from '@main/.'
+
+import { getSetting, setSetting } from './database'
 
 function appIpcHandlers() {
   ipcMain.handle('resize-app', (_event, { width, height }) => {
@@ -30,6 +35,19 @@ function projectsIpcHandlers() {
 //   })
 // }
 
+function databaseIpcHandlers() {
+  ipcMain.handle('get-app-setting', async (_event, { setting }: { setting: Setting }) => {
+    return await getSetting(setting)
+  })
+
+  ipcMain.handle(
+    'set-app-setting',
+    async (_event, { setting, value }: { setting: Setting; value: string }) => {
+      return await setSetting(setting, value)
+    }
+  )
+}
+
 function testIpcHandlers() {
   ipcMain.handle('api-test', async (_event) => {
     return await apiTest()
@@ -41,7 +59,5 @@ function testIpcHandlers() {
 }
 
 export function registerIpcHandlers() {
-  appIpcHandlers()
-  projectsIpcHandlers()
-  testIpcHandlers()
+  ;(appIpcHandlers(), projectsIpcHandlers(), testIpcHandlers(), databaseIpcHandlers())
 }
