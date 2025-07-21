@@ -1,4 +1,4 @@
-import { type RefObject } from 'react'
+import { forwardRef } from 'react'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import { ResizablePanel } from '~/components/ui/resizable'
 
@@ -11,14 +11,24 @@ const panelOutletAttr = {
 }
 
 type Props = {
-  ref: RefObject<ImperativePanelHandle>
+  // ref: RefObject<ImperativePanelHandle>
   children: React.ReactNode
 }
 
-export function OutletPanel({ ref, children }: Props) {
+// export function OutletPanel({ ref, children }: Props) {
+//   return (
+//     <ResizablePanel ref={ref} {...panelOutletAttr}>
+//       {children}
+//     </ResizablePanel>
+//   )
+// }
+
+// * SideNote: forwardRef is deprecated in React v19 - https://react.dev/reference/react/forwardRef
+// TODO; Upgrade to v19
+export const OutletPanel = forwardRef<ImperativePanelHandle, Props>(({ children }, ref) => {
   return (
     <ResizablePanel ref={ref} {...panelOutletAttr}>
       {children}
     </ResizablePanel>
   )
-}
+})
