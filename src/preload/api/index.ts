@@ -1,6 +1,7 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+import { Setting } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 import { WindowControl, type ResizeApp } from '@main/src/app'
 
@@ -27,8 +28,11 @@ const externalAPI = {
   apiProjectList: async () => IPCR.invoke('api-projects-list')
 }
 
-const preferencesAPI = {
-  test: (data: { v: boolean }) => IPCR.invoke('test', data)
+// prettier-ignore
+const databaseAppSettingsAPI = {
+  test: (data: { v: boolean }) => IPCR.invoke('test', data),
+  getAppSetting: async (data: { setting: Setting }) => IPCR.invoke('get-app-setting', data),
+  setAppSetting: async (data: { setting: Setting; value: string }) => IPCR.invoke('set-app-setting', data)
 }
 
 const testAPI = {
@@ -37,9 +41,9 @@ const testAPI = {
 }
 
 export const api = {
-  ...appAPI,
+  ...databaseAppSettingsAPI,
   ...externalAPI,
-  ...preferencesAPI,
   ...testAPI,
+  ...appAPI,
   ...navAPI
 }

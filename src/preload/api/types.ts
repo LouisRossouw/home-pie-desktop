@@ -1,4 +1,4 @@
-import { ApiProjectsList, ApiTest } from '@shared/types'
+import { ApiProjectsList, ApiTest, Setting } from '@shared/types'
 import { WindowControl, type ResizeApp } from '@main/src/app'
 
 type Nav = {
@@ -25,8 +25,10 @@ type TestAPI = {
   apiLogoutTest: () => {}
 }
 
-type PreferencesAPI = {
+type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
+  getAppSetting: (data: { setting: Setting }) => Promise<any>
+  setAppSetting: (data: { setting: Setting; value: string }) => Promise<boolean>
 }
 
-export type Api = AppAPI & ExternalAPI & PreferencesAPI & TestAPI & Nav
+export type Api = AppAPI & ExternalAPI & DatabaseAppSettingsAPI & TestAPI & Nav
