@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { arrayToObject } from '~/libs/utils/utils'
 
 type AppSetting = Record<string, string | boolean | number> | undefined
 
@@ -35,19 +36,4 @@ export function useAppSettings() {
     setAppSettings,
     getAllAppSettings
   }
-}
-
-// TODO; Move somewhere else.
-function arrayToObject(array: Record<string, string>[]) {
-  return array.reduce(
-    (acc, { key, value }) => {
-      try {
-        acc[key] = JSON.parse(value)
-      } catch {
-        acc[key] = value
-      }
-      return acc
-    },
-    {} as Record<string, string | boolean | number>
-  )
 }
