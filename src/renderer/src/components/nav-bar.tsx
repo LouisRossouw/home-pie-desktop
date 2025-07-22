@@ -1,30 +1,9 @@
-import { Anvil, Blend, Cone, Cookie, FolderGit, Menu, Pizza, Shield } from 'lucide-react'
-import { Button } from './ui/button'
 import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
+import { Menu } from 'lucide-react'
+import { menus } from '~/libs/menus'
 
-// TODO; Maybe load dynamic menus based on what app is selected.
-const menus = [
-  {
-    title: 'A',
-    icon: Pizza,
-    route: '/',
-    subMenus: [
-      { title: 'Something-1', icon: Anvil, url: '' },
-      { title: 'Something-2', icon: Blend, url: '' },
-      { title: 'Something-3', icon: Cookie, url: '' }
-    ]
-  },
-  {
-    title: 'Projects',
-    icon: FolderGit,
-    route: 'projects',
-    subMenus: [
-      { title: 'overview', icon: Cone, url: '/projects' },
-      { title: 'projects-settings', icon: Shield, url: '/projects/project-settings' }
-    ]
-  }
-]
+import { Button } from './ui/button'
 
 export function NavBar({
   sideBarOpen,
@@ -40,6 +19,9 @@ export function NavBar({
     const firstSegment = pathname === '/' ? pathname : pathname.split('/')[1]
     return menus.find((m) => m.route === firstSegment)
   }, [pathname])
+
+  const currentSubRoutes = pathname.split('/')
+  const selectedSubRoute = currentSubRoutes[currentSubRoutes.length - 1]
 
   if (!routeMenu)
     return (
@@ -63,12 +45,11 @@ export function NavBar({
           {routeMenu?.subMenus.map((subMenu) => {
             return (
               <Button
-                key={subMenu.title}
-                variant={'ghost'}
                 size={'sm'}
+                key={subMenu.title}
+                variant={selectedSubRoute === subMenu.slug ? 'default' : 'outline'}
                 onClick={() => {
                   if (!subMenu.url) return alert('No route set')
-
                   navigate(subMenu.url)
                 }}
               >
