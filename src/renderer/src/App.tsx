@@ -13,6 +13,9 @@ import { WindowFrameDebug } from './components/window-frame-debug'
 
 const queryClient = new QueryClient()
 
+// TODO; Bypass the splash screen; only show the splash screen once based
+// on if this is first load for the day or not, if it is the first load - show the splash screen - but not a second time.
+
 export default function App(): JSX.Element {
   const [booted, setBooted] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -35,21 +38,27 @@ export default function App(): JSX.Element {
   }
 
   // TODO; Skip this screen & login screen if auth & db exists etc.
-  if (booted && !loaded) {
-    return <LoaderRoute setLoaded={setLoaded} />
-  }
+  // if (booted && !loaded) {
+  //   return <LoaderRoute setLoaded={setLoaded} />
+  // }
 
   // TODO; Add login route here?
 
   return (
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
-        <Middlewear />
-        <WindowFrame />
+        {booted && !loaded ? (
+          <LoaderRoute setLoaded={setLoaded} />
+        ) : (
+          <>
+            <Middlewear />
+            <WindowFrame />
 
-        <AppRoutes />
+            <AppRoutes />
 
-        <WindowFrameDebug />
+            <WindowFrameDebug />
+          </>
+        )}
       </AppContextProvider>
     </QueryClientProvider>
   )
