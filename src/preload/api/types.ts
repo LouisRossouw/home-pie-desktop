@@ -1,4 +1,4 @@
-import { ApiProjectsList, ApiTest } from '@shared/types'
+import { ApiProjectsList, ApiTest, Setting } from '@shared/types'
 import { WindowControl, type ResizeApp } from '@main/src/app'
 
 type Nav = {
@@ -10,6 +10,10 @@ type AppAPI = {
   loadApp: () => Promise<boolean>
   onLoaderProgress: (v: any) => Promise<any>
   windowControl: (v: WindowControl) => Promise<string>
+  updateDotSquad: (v: any) => Promise<any>
+  listenerCount: (v: any) => Promise<any>
+  removeAllListeners: (v: any) => Promise<any>
+  removeListener: (v: any, listener: string) => Promise<any>
 }
 
 type ExternalAPI = {
@@ -21,8 +25,11 @@ type TestAPI = {
   apiLogoutTest: () => {}
 }
 
-type PreferencesAPI = {
+type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
+  getAppSetting: (data: { setting: Setting }) => Promise<any>
+  setAppSetting: (data: { setting: Setting; value: string }) => Promise<boolean>
+  getAllAppSettings: () => Promise<Record<string, string>[]> // TODO; Type
 }
 
-export type Api = AppAPI & ExternalAPI & PreferencesAPI & TestAPI & Nav
+export type Api = AppAPI & ExternalAPI & DatabaseAppSettingsAPI & TestAPI & Nav

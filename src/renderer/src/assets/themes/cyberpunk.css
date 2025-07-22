@@ -1,0 +1,46 @@
+.cyberpunk {
+  --background: oklch(0.15 0.05 300); /* deep dark purple */
+  --foreground: oklch(0.95 0.05 20);  /* soft white-yellow for contrast */
+
+  --card: oklch(0.17 0.05 305);
+  --card-foreground: oklch(0.95 0.05 20);
+
+  --popover: oklch(0.2 0.04 300);
+  --popover-foreground: oklch(0.95 0.05 20);
+
+  --primary: oklch(0.8 0.25 330);      /* neon pink */
+  --primary-foreground: oklch(0.1 0 0); /* black text on neon */
+
+  --secondary: oklch(0.75 0.25 210);    /* electric blue */
+  --secondary-foreground: oklch(0.1 0 0);
+
+  --muted: oklch(0.25 0.04 300);
+  --muted-foreground: oklch(0.6 0.08 300);
+
+  --accent: oklch(0.7 0.23 150);       /* neon green */
+  --accent-foreground: oklch(0.1 0 0);
+
+  --destructive: oklch(0.6 0.22 25);   /* hot red-orange */
+  --destructive-foreground: oklch(0.95 0.05 20);
+
+  --border: oklch(0.35 0.05 300);
+  --input: oklch(0.2 0.04 300);
+  --ring: oklch(0.8 0.25 330);         /* match primary */
+
+  --chart-1: oklch(0.7 0.25 330);  /* pink */
+  --chart-2: oklch(0.65 0.2 210);  /* blue */
+  --chart-3: oklch(0.6 0.22 120);  /* green */
+  --chart-4: oklch(0.75 0.2 45);   /* yellow/orange */
+  --chart-5: oklch(0.6 0.25 275);  /* violet */
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.18 0.05 300);
+  --sidebar-foreground: oklch(0.9 0.05 20);
+  --sidebar-primary: oklch(0.8 0.25 330); /* neon pink */
+  --sidebar-primary-foreground: oklch(0.1 0 0);
+  --sidebar-accent: oklch(0.65 0.25 150); /* neon green */
+  --sidebar-accent-foreground: oklch(0.1 0 0);
+  --sidebar-border: oklch(0.35 0.05 300);
+  --sidebar-ring: oklch(0.8 0.25 330);
+}

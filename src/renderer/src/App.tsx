@@ -13,34 +13,52 @@ import { WindowFrameDebug } from './components/window-frame-debug'
 
 const queryClient = new QueryClient()
 
+// TODO; Bypass the splash screen; only show the splash screen once based
+// on if this is first load for the day or not, if it is the first load - show the splash screen - but not a second time.
+
 export default function App(): JSX.Element {
   const [booted, setBooted] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     setTimeout(() => setBooted(true), 4000)
+    handleCheckAuth()
   }, [])
+
+  function handleCheckAuth() {
+    // TODO; Check for active session;
+    // * IF access_token has not expired then skip login screen,
+    // * IF access_token has expired but refresh_token has not expired then fetch a new access_token, if success skip login screen,
+    // * If all fails then show login screen
+    // TODO; Also bypass the locked screen / screen saver? somehow if user opted out of that setting
+  }
 
   if (!booted) {
     return <SplashRoute />
   }
 
   // TODO; Skip this screen & login screen if auth & db exists etc.
-  if (booted && !loaded) {
-    return <LoaderRoute setLoaded={setLoaded} />
-  }
+  // if (booted && !loaded) {
+  //   return <LoaderRoute setLoaded={setLoaded} />
+  // }
 
   // TODO; Add login route here?
 
   return (
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
-        <Middlewear />
-        <WindowFrame />
+        {booted && !loaded ? (
+          <LoaderRoute setLoaded={setLoaded} />
+        ) : (
+          <>
+            <Middlewear />
+            <WindowFrame />
 
-        <AppRoutes />
+            <AppRoutes />
 
-        <WindowFrameDebug />
+            <WindowFrameDebug />
+          </>
+        )}
       </AppContextProvider>
     </QueryClientProvider>
   )
