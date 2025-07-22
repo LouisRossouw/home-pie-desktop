@@ -5,6 +5,7 @@ import Database from 'better-sqlite3'
 const fs = require('fs')
 import { SQL } from './sql'
 import { Setting } from '@shared/types'
+import { getAllSettingsSQL } from './sql/settings'
 
 const isDev = import.meta.env.DEV
 
@@ -38,6 +39,11 @@ async function setSetting(key: string, value: string | number | boolean) {
   db.prepare(SQL.setSettingSQL).run(key, JSON.stringify(value))
 }
 
+async function getAllSettings() {
+  logActivity(`getAllSettings`)
+  return db.prepare(getAllSettingsSQL).all()
+}
+
 function deleteSetting(key: string) {
   logActivity(`setSetting ${key}`)
   db.prepare(SQL.deleteSettingSQL).run(key)
@@ -47,4 +53,4 @@ function logActivity(value: any) {
   isDev ? console.log('DB -', value) : null
 }
 
-export { db, checkIfDatabase, initDatabase, getSetting, setSetting, deleteSetting }
+export { db, checkIfDatabase, initDatabase, getSetting, setSetting, deleteSetting, getAllSettings }

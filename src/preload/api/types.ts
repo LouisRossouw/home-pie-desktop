@@ -29,6 +29,7 @@ type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
   getAppSetting: (data: { setting: Setting }) => Promise<any>
   setAppSetting: (data: { setting: Setting; value: string }) => Promise<boolean>
+  getAllAppSettings: () => Promise<Record<string, string>[]> // TODO; Type
 }
 
 export type Api = AppAPI & ExternalAPI & DatabaseAppSettingsAPI & TestAPI & Nav

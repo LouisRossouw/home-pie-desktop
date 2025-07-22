@@ -32,7 +32,8 @@ const externalAPI = {
 const databaseAppSettingsAPI = {
   test: (data: { v: boolean }) => IPCR.invoke('test', data),
   getAppSetting: async (data: { setting: Setting }) => IPCR.invoke('get-app-setting', data),
-  setAppSetting: async (data: { setting: Setting; value: string }) => IPCR.invoke('set-app-setting', data)
+  setAppSetting: async (data: { setting: Setting; value: string }) => IPCR.invoke('set-app-setting', data),
+  getAllAppSettings: async () => IPCR.invoke('get-all-app-settings')
 }
 
 const testAPI = {

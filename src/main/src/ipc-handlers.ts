@@ -7,7 +7,7 @@ import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
 import { apiProjectList } from '@main/src/api/projects/api-projects-list'
 
-import { getSetting, setSetting } from './database'
+import { getAllSettings, getSetting, setSetting } from './database'
 
 function appIpcHandlers() {
   ipcMain.handle('resize-app', (_event, { width, height }) => {
@@ -46,6 +46,10 @@ function databaseIpcHandlers() {
       return await setSetting(setting, value)
     }
   )
+
+  ipcMain.handle('get-all-app-settings', async (_event) => {
+    return await getAllSettings()
+  })
 }
 
 function testIpcHandlers() {

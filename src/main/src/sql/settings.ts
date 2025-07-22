@@ -13,6 +13,8 @@ const setSettingSQL = `
 
 const getSettingSQL = `SELECT value FROM settings WHERE key = ?`
 
+const getAllSettingsSQL = `SELECT key, value FROM settings`
+
 const deleteSettingSQL = `DELETE FROM settings WHERE key = ?`
 
-export { initDatabaseSQL, setSettingSQL, getSettingSQL, deleteSettingSQL }
+export { initDatabaseSQL, setSettingSQL, getSettingSQL, deleteSettingSQL, getAllSettingsSQL }

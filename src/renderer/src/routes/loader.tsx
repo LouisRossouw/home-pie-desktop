@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useApp } from '~/libs/context/app'
 
 export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) {
+  const { getAllAppSettings: updateContextWithAppSettings } = useApp()
   const navigate = useNavigate()
 
   const [logs, setLogs] = useState<string>('')
@@ -32,9 +34,17 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
     window.api.onLoaderProgress(handler)
   }
 
+  // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
-    await window.api.loadApp()
-    setAppLoaded(true)
+    const success = await window.api.loadApp()
+
+    if (success) {
+      await updateContextWithAppSettings()
+      // TODO; Use app settings to resize app to the users last used width and height ?
+      return setAppLoaded(true)
+    }
+
+    console.error('App init broke!')
   }
 
   return (
