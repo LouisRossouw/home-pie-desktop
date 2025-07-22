@@ -36,8 +36,8 @@ export function useDotSquad() {
 }
 
 export type UseDotSquadType = {
-  dotA: Frame
-  dotB: Frame
-  dotC: Frame
-  handleUpdateDotSquad: (v: Frame[]) => void
+  dotA: string
+  dotB: string
+  dotC: string
+  handleUpdateDotSquad: (v: DotSquadAnims) => void
 }
