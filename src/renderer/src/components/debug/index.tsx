@@ -19,7 +19,7 @@ const authClients = getOAuthClients()
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
 
-  const { handleUpdateDotSquad } = useApp()
+  const { handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } = useApp()
 
   const [output, setOutput] = useState<any>('')
   const [listenersCount, setListenersCount] = useState<Record<string, string>>({})
@@ -53,11 +53,11 @@ export function Debug() {
     setOutput(JSON.parse(result))
   }
 
-  async function handleSetSettings(setting: Setting, value: string) {
-    const success = await window.api.setAppSetting({ setting, value })
+  // async function handleSetSettings(setting: Setting, value: string) {
+  //   const success = await window.api.setAppSetting({ setting, value })
 
-    setOutput(JSON.stringify(success))
-  }
+  //   setOutput(JSON.stringify(success))
+  // }
 
   function clear() {
     setOutput(undefined)
@@ -135,14 +135,35 @@ export function Debug() {
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>
-            <Button onClick={() => handleGetSettings('lock-screen')}>
+            <Button onClick={() => handleGetSettings('lockScreen')}>
               GetSetting - lock-screen
             </Button>
-            <Button onClick={() => handleGetSettings('decimals')}>GetSetting - decimals</Button>
-            <Button onClick={() => handleGetSettings('theme')}>GetSetting - theme</Button>
-            <Button onClick={() => handleGetSettings('app-height')}>GetSetting - app-height</Button>
-            <Button onClick={() => handleSetSettings('app-height', 'test')}>
-              SetSetting - app-height
+            <Button
+              onClick={async () => {
+                const result = await updateAppSettings([
+                  { setting: 'dateFormat', value: 'noooo' },
+                  { setting: 'appHeight', value: 99999 }
+                ])
+                setOutput(result)
+              }}
+            >
+              updateAppSettings - dateFormat
+            </Button>
+            <Button
+              onClick={async () => {
+                const result = await getAppSetting('dateFormat')
+                setOutput(result)
+              }}
+            >
+              getAppSetting - dateFormat
+            </Button>
+            <Button
+              onClick={async () => {
+                const result = await getAllAppSettings()
+                setOutput(result)
+              }}
+            >
+              getAllAppSettings
             </Button>
           </div>
           <div className="grid gap-2 border-t py-4">
