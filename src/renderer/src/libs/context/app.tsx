@@ -3,12 +3,14 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react'
 import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
 import { useDotSquad, UseDotSquadType } from '~/libs/hooks/use-dot-squad'
-import { type UseAppSettings, useAppSettings } from '~/libs/hooks/use-app-settings'
+import { type UseAppSettings, type AppSetting, useAppSettings } from '~/libs/hooks/use-app-settings'
 
-const appSettingsInit = {
+const appSettingsInit: UseAppSettings = {
   appSettings: undefined,
-  setAppSettings: () => ({}),
-  getAllAppSettings: async () => ({})
+  setAppSettings: () => {},
+  getAppSetting: async () => '',
+  updateAppSettings: async () => false,
+  getAllAppSettings: async () => ({}) as AppSetting
 }
 
 const dotSquadInit = {
