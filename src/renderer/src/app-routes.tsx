@@ -6,7 +6,6 @@ import Login from './routes/login'
 import Home from './routes/home'
 
 import { NoMatch } from './routes/no-match'
-import Settings from './routes/settings'
 
 import ProjectsOverviewRoute from './routes/sub-projects/overview'
 import ProjectSettings from './routes/sub-projects/settings'
@@ -17,6 +16,7 @@ import DebugRoute from './routes/debug'
 import MyFinancesOverviewRoute from './routes/my-finances/overview'
 import MyFinances from './routes/my-finances'
 import ProjectsRoute from './routes/projects'
+import SettingsRoute from './routes/settings'
 
 export function AppRoutes() {
   return (
@@ -38,7 +38,7 @@ export function AppRoutes() {
           {/* <Route path="time-in-progress" element={<TimeInProgressRoute />} /> */}
         </Route>
         <Route path="debug" element={<DebugRoute />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="settings" element={<SettingsRoute />} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>

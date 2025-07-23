@@ -47,6 +47,7 @@ export function Debug() {
     setListenersCount({ dotSquadLS, routerListenerLS })
   }
 
+  // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
     const result = await window.api.getAppSetting({ setting })
 
@@ -168,7 +169,7 @@ export function Debug() {
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Theme:</label>
-            <ThemeSelector />
+            <ThemeSelector handleAddNewChanges={() => console.log('TODO')} />
           </div>
         </div>
 
