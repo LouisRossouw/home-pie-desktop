@@ -44,4 +44,6 @@ export const themesList = [
     label: 'Solar Twilight',
     slug: 'solar-twilight'
   }
-]
+] as const
+
+export type Themes = (typeof themesList)[number]['slug'] | undefined
