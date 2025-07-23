@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useApp } from '~/libs/context/app'
+import { AppSetting } from '~/libs/hooks/use-app-settings'
+import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
 export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) {
   const { getAllAppSettings: updateContextWithAppSettings } = useApp()
@@ -34,13 +36,22 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
     window.api.onLoaderProgress(handler)
   }
 
+  // Maybe a good place to update any app settings?
+  function applyAppSettingsToApp(appSettings: AppSetting) {
+    const currentTheme = appSettings?.theme as string | undefined
+
+    updateThemeUi(currentTheme)
+  }
+
   // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
     const success = await window.api.loadApp()
 
     if (success) {
-      await updateContextWithAppSettings()
-      // TODO; Use app settings to resize app to the users last used width and height ?
+      const appSettings = await updateContextWithAppSettings()
+
+      applyAppSettingsToApp(appSettings)
+
       return setAppLoaded(true)
     }
 
