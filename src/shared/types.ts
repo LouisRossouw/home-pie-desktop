@@ -13,4 +13,4 @@ export type Project = {
 
 export type ApiProjectsList = { ok: boolean; data?: Project[] }
 
-export type Setting = (typeof defaultAppSettings)[number]['slug']
+export type Setting = (typeof defaultAppSettings)[number]['key']
