@@ -27,7 +27,7 @@ export function useAppSettings() {
     if (appSettings) {
       settings.forEach(async (s) => {
         appSettings[s.setting] = s.value
-        await window.api.setAppSetting({ setting: s.setting, value: JSON.stringify(s.value) })
+        await window.api.setAppSetting({ setting: s.setting, value: s.value })
       })
       return true
     }
