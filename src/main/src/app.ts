@@ -9,8 +9,15 @@ import { initDatabase, setSetting, dbExists } from './database'
 
 const envMode = import.meta.env.MODE
 
-export async function loadApp() {
-  await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms: 2000 })
+// Not sure about this, but maybe we can check if the app can skip the loadApp func.
+export async function maybeQuckStart() {
+  // TODO; Maybe add more things here, token expiry, etc?
+  return dbExists
+}
+
+export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
+  const ms = fastLoad ? 0 : 2000
+  await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms })
 
   if (!dbExists) {
     initDatabase()
@@ -24,10 +31,10 @@ export async function loadApp() {
     await updateOnLoaderProgress({ msg: 'No database .. Created database! 👌', ms: 1000 })
   }
 
-  await updateOnLoaderProgress({ msg: `ENV: ${envMode}` })
-  await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}` })
-  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURl()}` })
-  await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}` })
+  await updateOnLoaderProgress({ msg: `ENV: ${envMode}`, ms })
+  await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}`, ms })
+  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURl()}`, ms })
+  await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}`, ms })
 
   return true
 }

@@ -13,16 +13,21 @@ import { WindowFrameDebug } from './components/window-frame-debug'
 
 const queryClient = new QueryClient()
 
-// TODO; Bypass the splash screen; only show the splash screen once based
-// on if this is first load for the day or not, if it is the first load - show the splash screen - but not a second time.
-
 export default function App(): JSX.Element {
   const [booted, setBooted] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [fastLoad, setFastLoad] = useState(false)
 
   useEffect(() => {
-    setTimeout(() => setBooted(true), 4000)
-    handleCheckAuth()
+    const init = async () => {
+      const maybeSkipBoot = await window.api.maybeQuickStart()
+
+      setTimeout(() => setBooted(true), 4000)
+
+      handleCheckAuth()
+      setFastLoad(maybeSkipBoot)
+    }
+    init()
   }, [])
 
   function handleCheckAuth() {
@@ -33,22 +38,16 @@ export default function App(): JSX.Element {
     // TODO; Also bypass the locked screen / screen saver? somehow if user opted out of that setting
   }
 
+  // TODO; Skip this screen if the app has started within the last ~8-12 hours maybe?
   if (!booted) {
     return <SplashRoute />
   }
-
-  // TODO; Skip this screen & login screen if auth & db exists etc.
-  // if (booted && !loaded) {
-  //   return <LoaderRoute setLoaded={setLoaded} />
-  // }
-
-  // TODO; Add login route here?
 
   return (
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
         {booted && !loaded ? (
-          <LoaderRoute setLoaded={setLoaded} />
+          <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad} />
         ) : (
           <>
             <Middlewear />

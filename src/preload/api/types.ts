@@ -7,7 +7,8 @@ type Nav = {
 
 type AppAPI = {
   resizeApp: (v: ResizeApp) => void
-  loadApp: () => Promise<boolean>
+  loadApp: (v: { fastLoad: boolean }) => Promise<boolean>
+  maybeQuickStart: () => Promise<boolean>
   onLoaderProgress: (v: any) => Promise<any>
   windowControl: (v: WindowControl) => Promise<string>
   updateDotSquad: (v: any) => Promise<any>
