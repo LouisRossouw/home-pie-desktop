@@ -1,6 +1,20 @@
 // TODO; Move this file somewhere else ?
 
+const timestamp = Math.floor(Date.now() / 1000)
+
 export const defaultAppSettings = [
+  {
+    label: 'App start time',
+    slug: 'app-start-time',
+    key: 'appStartTime',
+    value: timestamp
+  },
+  {
+    label: 'App end time',
+    slug: 'app-end-time',
+    key: 'appEndTime',
+    value: ''
+  },
   { label: 'Theme', slug: 'theme', key: 'theme', value: 'light' },
   { label: 'Decimals', slug: 'decimals', key: 'decimals', value: 3 },
   { label: 'Debug', slug: 'debug', key: 'debug', value: false },
