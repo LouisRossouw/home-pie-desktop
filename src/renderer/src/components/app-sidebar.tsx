@@ -1,4 +1,4 @@
-import { Box, CircleDollarSign, Home, Settings, X } from 'lucide-react'
+import { Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
 
 import {
   Sidebar,
@@ -13,7 +13,8 @@ import {
   SidebarMenuItem
 } from '~/components/ui/sidebar'
 import { Button } from './ui/button'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useApp } from '~/libs/context/app'
 
 const items = [
   {
@@ -40,6 +41,9 @@ const items = [
 ]
 
 export function AppSidebar({ close }: { close: () => void }) {
+  const navigation = useNavigate()
+  const { appSettings } = useApp()
+
   return (
     <Sidebar side="right">
       <SidebarHeader className="p-4">
@@ -67,6 +71,21 @@ export function AppSidebar({ close }: { close: () => void }) {
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
+
+            <div className="py-4">
+              {appSettings?.debug && (
+                <Button
+                  className="w-full"
+                  variant={'outline'}
+                  onClick={() => {
+                    navigation('debug')
+                    close()
+                  }}
+                >
+                  <Bug />
+                </Button>
+              )}
+            </div>
           </div>
         </SidebarGroup>
       </SidebarContent>
