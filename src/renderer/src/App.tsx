@@ -20,7 +20,7 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     const init = async () => {
-      const maybeSkipBoot = await window.api.maybeQuickStart()
+      const maybeSkipBoot = await window.api.maybeFastLoad()
 
       setTimeout(() => setBooted(true), 4000)
 

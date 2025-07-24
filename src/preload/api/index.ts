@@ -15,7 +15,7 @@ const navAPI = {
 // prettier-ignore
 const appAPI = {
   resizeApp: (data: ResizeApp) => IPCR.invoke('resize-app', data),
-  maybeQuickStart: async () => IPCR.invoke('maybe-quick-start'),
+  maybeFastLoad: async () => IPCR.invoke('maybe-fast-load'),
   loadApp: async (data: {fastLoad: boolean}) => IPCR.invoke('load-app', data),
   onLoaderProgress: (callback: (event: IpcRendererEvent, data: { msg: string }) => void) => {ipcRenderer.on('loader-progress', callback)},
   windowControl: (data: WindowControl) => {ipcRenderer.send('window-control', data)},

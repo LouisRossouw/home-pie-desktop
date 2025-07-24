@@ -10,7 +10,7 @@ import { initDatabase, setSetting, dbExists } from './database'
 const envMode = import.meta.env.MODE
 
 // Not sure about this, but maybe we can check if the app can skip the loadApp func.
-export async function maybeQuckStart() {
+export async function maybeFastLoad() {
   // TODO; Maybe add more things here, token expiry, etc?
   return dbExists
 }

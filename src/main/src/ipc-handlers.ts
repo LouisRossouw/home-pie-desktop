@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { loadApp, maybeQuckStart, resizeApp, windowControl } from './app'
+import { loadApp, maybeFastLoad, resizeApp, windowControl } from './app'
 
 import { Setting } from '@shared/types'
 
@@ -14,8 +14,8 @@ function appIpcHandlers() {
     resizeApp({ width, height })
   })
 
-  ipcMain.handle('maybe-quick-start', (_event) => {
-    return maybeQuckStart()
+  ipcMain.handle('maybe-fast-load', (_event) => {
+    return maybeFastLoad()
   })
 
   ipcMain.handle('load-app', (_event, { fastLoad }) => {
