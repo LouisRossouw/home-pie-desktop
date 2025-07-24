@@ -4,7 +4,13 @@ import { useApp } from '~/libs/context/app'
 import { AppSetting } from '~/libs/hooks/use-app-settings'
 import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
-export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) {
+export function LoaderRoute({
+  fastLoad,
+  setLoaded
+}: {
+  fastLoad: boolean
+  setLoaded: (v: boolean) => void
+}) {
   const { getAllAppSettings: updateContextWithAppSettings } = useApp()
   const navigate = useNavigate()
 
@@ -12,10 +18,12 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
   const [appLoaded, setAppLoaded] = useState(false)
 
   useEffect(() => {
-    setupOnLoaderProgress()
+    if (!fastLoad) {
+      setupOnLoaderProgress()
+    }
     handleLoadAppSettings()
     window.api.resizeApp({ width: 400, height: 600 })
-  }, [])
+  }, [fastLoad])
 
   useEffect(() => {
     if (appLoaded) {
@@ -45,9 +53,14 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
 
   // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
-    const success = await window.api.loadApp()
+    const { hasLoaded, isFirstLoad } = await window.api.loadApp({ fastLoad })
 
-    if (success) {
+    // TODO; If it is the apps first load, redirect to an onboarding or welcome screen?
+    if (isFirstLoad) {
+      // intentionally left blank until i know what i want to do with this.
+    }
+
+    if (hasLoaded) {
       const appSettings = await updateContextWithAppSettings()
 
       applyAppSettingsToApp(appSettings)
@@ -56,6 +69,11 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
     }
 
     console.error('App init broke!')
+  }
+
+  // FastLoad hides the loading screen.
+  if (fastLoad) {
+    return null
   }
 
   return (
