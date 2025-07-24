@@ -1,7 +1,7 @@
 // TODO; Move this file somewhere else ?
 
 export const defaultAppSettings = [
-  { label: 'Theme', slug: 'theme', key: 'theme', value: 'dark' },
+  { label: 'Theme', slug: 'theme', key: 'theme', value: 'light' },
   { label: 'Decimals', slug: 'decimals', key: 'decimals', value: 3 },
   { label: 'Debug', slug: 'debug', key: 'debug', value: false },
   { label: 'Lock screen', slug: 'lock-screen', key: 'lockScreen', value: true },

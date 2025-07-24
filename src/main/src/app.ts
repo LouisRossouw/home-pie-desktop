@@ -16,7 +16,7 @@ export async function maybeFastLoad() {
 }
 
 export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
-  const ms = fastLoad ? 0 : 2000
+  let ms = fastLoad ? 0 : 2000
   await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms })
 
   if (!dbExists) {
@@ -30,6 +30,8 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
     })
     await updateOnLoaderProgress({ msg: 'No database .. Created database! 👌', ms: 1000 })
   }
+
+  ms = fastLoad ? 0 : 100
 
   await updateOnLoaderProgress({ msg: `ENV: ${envMode}`, ms })
   await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}`, ms })
