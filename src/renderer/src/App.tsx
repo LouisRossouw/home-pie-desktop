@@ -13,19 +13,26 @@ import { WindowFrameDebug } from './components/window-frame-debug'
 
 const queryClient = new QueryClient()
 
+type FastLoad = { skipSplash: boolean; skipLoader: boolean } | undefined
+
 export default function App(): JSX.Element {
   const [booted, setBooted] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const [fastLoad, setFastLoad] = useState(false)
+
+  const [fastLoad, setFastLoad] = useState<FastLoad>(undefined)
 
   useEffect(() => {
     const init = async () => {
-      const maybeSkipBoot = await window.api.maybeFastLoad()
+      const fastLoad = await window.api.maybeFastLoad()
 
-      setTimeout(() => setBooted(true), 4000)
+      if (fastLoad.skipSplash) {
+        setBooted(true)
+      } else {
+        setTimeout(() => setBooted(true), 4000)
+      }
 
       handleCheckAuth()
-      setFastLoad(maybeSkipBoot)
+      setFastLoad(fastLoad)
     }
     init()
   }, [])
@@ -38,8 +45,8 @@ export default function App(): JSX.Element {
     // TODO; Also bypass the locked screen / screen saver? somehow if user opted out of that setting
   }
 
-  // TODO; Skip this screen if the app has started within the last ~8-12 hours maybe?
-  if (!booted) {
+  // Skip this screen if the app has started within the last ~8-12 hours
+  if (!booted && fastLoad !== undefined) {
     return <SplashRoute />
   }
 
@@ -47,7 +54,7 @@ export default function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
         {booted && !loaded ? (
-          <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad} />
+          <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
         ) : (
           <>
             <Middlewear />
