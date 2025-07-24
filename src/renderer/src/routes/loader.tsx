@@ -53,9 +53,14 @@ export function LoaderRoute({
 
   // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
-    const success = await window.api.loadApp({ fastLoad })
+    const { hasLoaded, isFirstLoad } = await window.api.loadApp({ fastLoad })
 
-    if (success) {
+    // TODO; If it is the apps first load, redirect to an onboarding or welcome screen?
+    if (isFirstLoad) {
+      // intentionally left blank until i know what i want to do with this.
+    }
+
+    if (hasLoaded) {
       const appSettings = await updateContextWithAppSettings()
 
       applyAppSettingsToApp(appSettings)
