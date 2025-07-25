@@ -1,7 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router'
 import { AppVersion } from './app-version'
 import { useRef } from 'react'
-import { House } from 'lucide-react'
+import { Bug, House } from 'lucide-react'
+import { useApp } from '~/libs/context/app'
+import { Button } from './ui/button'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -11,11 +13,15 @@ export function WindowFrameDebug() {
   const { pathname } = useLocation()
   const navigation = useNavigate()
 
+  const { appSettings, updateAppSettings } = useApp()
+
   function handleDebugRedirect() {
     countToDebug.current += 1
 
     if (countToDebug.current >= 5) {
+      countToDebug.current = 0
       navigation('debug')
+      updateAppSettings([{ setting: 'debug', value: true }])
     }
   }
 
@@ -39,7 +45,12 @@ export function WindowFrameDebug() {
         <div className="flex justify-center items-center">
           {isDev && <p className="text-xs">{mode}</p>}
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center gap-4">
+          {appSettings?.debug && (
+            <Button variant={'outline'} className="w-6 h-6" onClick={() => navigation('debug')}>
+              <Bug />
+            </Button>
+          )}
           <div onClick={handleDebugRedirect}>
             <AppVersion />
           </div>

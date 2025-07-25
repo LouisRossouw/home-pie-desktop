@@ -7,7 +7,8 @@ type Nav = {
 
 type AppAPI = {
   resizeApp: (v: ResizeApp) => void
-  loadApp: () => Promise<boolean>
+  loadApp: (v: { fastLoad: boolean }) => Promise<{ hasLoaded: boolean; isFirstLoad: boolean }>
+  maybeFastLoad: () => Promise<{ skipSplash: boolean; skipLoader: boolean }>
   onLoaderProgress: (v: any) => Promise<any>
   windowControl: (v: WindowControl) => Promise<string>
   updateDotSquad: (v: any) => Promise<any>
@@ -28,7 +29,7 @@ type TestAPI = {
 type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
   getAppSetting: (data: { setting: Setting }) => Promise<any>
-  setAppSetting: (data: { setting: Setting; value: string }) => Promise<boolean>
+  setAppSetting: (data: { setting: Setting; value: string | number | boolean }) => Promise<boolean>
   getAllAppSettings: () => Promise<Record<string, string>[]> // TODO; Type
 }
 

@@ -24,16 +24,21 @@ export function useAppSettings() {
   }
 
   async function updateAppSettings(settings: { setting: Setting; value: Value }[]) {
-    if (appSettings) {
-      settings.forEach(async (s) => {
-        appSettings[s.setting] = s.value
-        await window.api.setAppSetting({ setting: s.setting, value: JSON.stringify(s.value) })
-      })
-      return true
+    setAppSettings((prevSettings) => {
+      const updatedSettings = { ...prevSettings } as AppSetting
+
+      for (const s of settings) {
+        updatedSettings![s.setting] = s.value
+      }
+
+      return updatedSettings
+    })
+
+    for (const s of settings) {
+      await window.api.setAppSetting({ setting: s.setting, value: s.value })
     }
 
-    console.error('appSettings is undefined!')
-    return false
+    return true
   }
 
   async function getAllAppSettings() {

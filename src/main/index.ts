@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -6,7 +6,6 @@ import icon from '../../resources/icon.png?asset'
 import { registerIpcHandlers } from './src/ipc-handlers'
 
 export let mainWindow: BrowserWindow | undefined = undefined
-let ipcRegistered = false
 
 function createWindow(): void {
   // Create the browser window.
@@ -24,6 +23,8 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
+      // contextIsolation: true,
+      // nodeIntegration: false
     }
   })
 

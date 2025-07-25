@@ -1,0 +1,26 @@
+
+
+Should add this to the readme eventually, but this is a quick way to spit out ideas, isssues, quick tips, reminders AND STUFF while keeping writing informal
+
+
+TODO & Ideas;
+
+projects
+-- Montitor and manage all projects, show user count etc
+-- Running costs; calculate each projects running cost and profit.
+
+my finances:
+
+-- networth tracker: webscrapers, apis etc to track live networth + future projections?
+
+* stocks
+--
+
+* Crypto
+-- DripDrip; api, Interact & future projections
+-- Arbitrage; only display data and opportunity, no executions needed.
+
+
+* Other
+-- Backups route; create a route purely for random and unique "backup" related processes, example: a backup for all .env files, automate fetching all .env files from project files and move them to the backup drive with versioning etc etc
+-- Config editor; fetch configs from all projects on local server as a quick way to modify and save them from this app.
