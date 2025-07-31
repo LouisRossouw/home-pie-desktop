@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -61,6 +61,7 @@ app.whenReady().then(() => {
   })
 
   createWindow()
+  createTrayIcon()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -85,3 +86,22 @@ app.on('window-all-closed', () => {
 // })
 
 registerIpcHandlers()
+
+// TODO;
+function createTrayIcon() {
+  let tray
+
+  const icon = nativeImage.createFromPath('src/renderer/src/assets/LR16.png')
+  tray = new Tray(icon)
+
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' }
+  ])
+
+  tray.setContextMenu(contextMenu)
+  tray.setToolTip('Home Pie')
+  tray.setTitle('Some title')
+}
