@@ -57,7 +57,6 @@ export default function App(): JSX.Element {
           <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
         ) : (
           <>
-            <Middlewear />
             <WindowFrame />
 
             <AppRoutes />
@@ -65,6 +64,7 @@ export default function App(): JSX.Element {
             <WindowFrameDebug />
           </>
         )}
+        <Middlewear />
       </AppContextProvider>
     </QueryClientProvider>
   )
