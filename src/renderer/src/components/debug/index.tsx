@@ -46,8 +46,9 @@ export function Debug() {
   async function getListenersCount() {
     const dotSquadLS = await window.api.listenerCount('dot-squad')
     const routerListenerLS = await window.api.listenerCount('navigate-to')
+    const ResizeListenerLS = await window.api.listenerCount('window-resized')
 
-    setListenersCount({ dotSquadLS, routerListenerLS })
+    setListenersCount({ dotSquadLS, routerListenerLS, ResizeListenerLS })
   }
 
   // Fetch setting directly from db.
