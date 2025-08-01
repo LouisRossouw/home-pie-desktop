@@ -1,5 +1,4 @@
-import { ApiProjectsList, ApiTest, Setting } from '@shared/types'
-import { WindowControl, type ResizeApp } from '@main/src/app'
+import { ApiProjectsList, ApiTest, ResizeApp, Setting, WindowControl } from '@shared/types'
 
 type Nav = {
   navigateTo: (v: any) => {}
@@ -11,6 +10,7 @@ type AppAPI = {
   maybeFastLoad: () => Promise<{ skipSplash: boolean; skipLoader: boolean }>
   onLoaderProgress: (v: any) => Promise<any>
   windowControl: (v: WindowControl) => Promise<string>
+  onWindowResize: (v: any) => Promise<any>
   updateDotSquad: (v: any) => Promise<any>
   listenerCount: (v: any) => Promise<any>
   removeAllListeners: (v: any) => Promise<any>

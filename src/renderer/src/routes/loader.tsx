@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+
 import { useApp } from '~/libs/context/app'
 import { AppSetting } from '~/libs/hooks/use-app-settings'
 import { updateThemeUi } from '~/libs/utils/update-theme-ui'
@@ -11,8 +12,8 @@ export function LoaderRoute({
   fastLoad: boolean
   setLoaded: (v: boolean) => void
 }) {
-  const { getAllAppSettings: updateContextWithAppSettings } = useApp()
   const navigate = useNavigate()
+  const { resizeApp, getAllAppSettings: updateContextWithAppSettings } = useApp()
 
   const [logs, setLogs] = useState<string>('')
   const [appLoaded, setAppLoaded] = useState(false)
@@ -22,7 +23,7 @@ export function LoaderRoute({
       setupOnLoaderProgress()
     }
     handleLoadAppSettings()
-    window.api.resizeApp({ width: 400, height: 600 })
+    resizeApp({ width: 400, height: 600 })
   }, [fastLoad])
 
   useEffect(() => {
