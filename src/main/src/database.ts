@@ -34,7 +34,7 @@ async function getSetting(key: Setting): Promise<string | undefined> {
   return db.prepare(SQL.getSettingSQL).get(key)?.value ?? undefined
 }
 
-async function setSetting(key: string, value: string | number | boolean) {
+async function setSetting(key: string, value?: string | number | boolean) {
   logActivity(`setSetting ${key} - ${value}`)
   db.prepare(SQL.setSettingSQL).run(key, JSON.stringify(value))
 }
