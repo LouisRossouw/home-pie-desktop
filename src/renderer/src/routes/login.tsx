@@ -3,8 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
 import { Button } from '~/components/ui/button'
+import { useApp } from '~/libs/context/app'
+import { windowModes } from '~/libs/hooks/use-app-window'
+import { WindowModes } from '@shared/types'
 
 export default function Login() {
+  const { appSettings, resizeApp, windowControl } = useApp()
   const navigation = useNavigate()
 
   const [searchParams] = useSearchParams()
@@ -14,7 +18,7 @@ export default function Login() {
   const maybeForceLogout = searchParams.get('forceLogout')
 
   useEffect(() => {
-    window.api.resizeApp({ width: 500, height: 800 })
+    resizeApp({ width: 500, height: 800 })
 
     if (maybeForceLogout) {
       // TODO?
@@ -25,7 +29,19 @@ export default function Login() {
     navigation('/')
 
     // TODO; Fetch app width & height from storage or app context, before resizing.
-    window.api.resizeApp({ width: 900, height: 670 })
+    const width = appSettings?.appWidth as number
+    const height = appSettings?.appHeight as number
+    const appWindowMode = appSettings?.appWindowMode as WindowModes
+
+    if (appWindowMode && windowModes.includes(appWindowMode)) {
+      return windowControl({ action: appWindowMode })
+    }
+
+    if (width && height) {
+      return resizeApp({ width, height })
+    }
+
+    resizeApp({ width: 900, height: 670 })
   }
 
   const now = new Date()
