@@ -1,11 +1,12 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen } from 'electron'
+import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
 import { getBaseURl } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
-const { differenceInHours } = require('date-fns')
+import { ResizeApp, WindowControl } from '@shared/types'
+import { defaultAppSettings } from '@shared/default-app-settings'
 
-import { defaultAppSettings } from './default-app-settings'
 import { initDatabase, setSetting, dbExists } from './database'
 import { readAppDataJson, saveTimestamps } from './utils'
 
@@ -23,7 +24,7 @@ export async function maybeFastLoad() {
   const lastOpened = maybeAppEndTime ? differenceInHours(now, new Date(maybeAppEndTime)) : undefined
   console.log('lastOpened:', lastOpened ? `${lastOpened} hour(s) ago` : '..First time!')
 
-  const skipSplash = parseInt(lastOpened) < 8 // TODO; Make it 12, or based on if it is a new day?
+  const skipSplash = lastOpened ? lastOpened < 8 : lastOpened === 0 // TODO; Make it 12, or based on if it is a new day?
 
   return { skipSplash, skipLoader: dbExists }
 }
@@ -60,11 +61,12 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
   return { hasLoaded: true, isFirstLoad }
 }
 
-export type WindowControl = { action: 'minimize' | 'maximize' | 'close' }
-
 export function windowControl({ action }: WindowControl) {
   const win = BrowserWindow.getFocusedWindow()
   if (!win) return
+
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const { width, height } = primaryDisplay.workAreaSize
 
   switch (action) {
     case 'minimize':
@@ -77,10 +79,14 @@ export function windowControl({ action }: WindowControl) {
       updateAppCloseTime()
       win.close()
       break
+    case 'sidebar-left':
+      win.setBounds({ x: 0, y: 0, width: 1000, height })
+      break
+    case 'bottom-left':
+      win.setBounds({ x: 0, y: height - 300, width: 400, height: 300 })
+      break
   }
 }
-
-export type ResizeApp = { width: number; height: number }
 
 export function resizeApp({ width, height }: ResizeApp) {
   const win = BrowserWindow.getFocusedWindow()
