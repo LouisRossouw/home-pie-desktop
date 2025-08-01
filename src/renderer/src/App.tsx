@@ -53,18 +53,16 @@ export default function App(): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
+        {booted && loaded && <Middlewear />}
         {booted && !loaded ? (
           <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
         ) : (
           <>
             <WindowFrame />
-
             <AppRoutes />
-
             <WindowFrameDebug />
           </>
         )}
-        <Middlewear />
       </AppContextProvider>
     </QueryClientProvider>
   )
