@@ -1,6 +1,7 @@
 import { ApiProjectsList, ApiTest, ResizeApp, Setting, WindowControl } from '@shared/types'
 
 type Nav = {
+  syncRoute: (v: string) => {}
   navigateTo: (v: any) => {}
 }
 
