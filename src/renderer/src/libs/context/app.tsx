@@ -8,7 +8,8 @@ import { type UseAppSettings, type AppSetting, useAppSettings } from '~/libs/hoo
 
 const appWindowInit: UseAppWindow = {
   windowControl: () => undefined,
-  resizeApp: () => undefined
+  resizeApp: () => undefined,
+  resetWindow: () => undefined
 }
 
 const appSettingsInit: UseAppSettings = {
