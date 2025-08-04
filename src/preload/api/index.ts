@@ -1,13 +1,14 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-import { ResizeApp, Setting, WindowControl } from '@shared/types'
+import type { OnResize, ResizeApp, Setting, WindowControl } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 
 const IPCR = electronAPI.ipcRenderer
 
 // prettier-ignore
 const navAPI = {
+  syncRoute: (route: string) => IPCR.invoke('sync-route', route),
   navigateTo: (callback: (event: any, data: { url: string }) => void) => ipcRenderer.on('navigate-to', callback)
 }
 
@@ -18,7 +19,7 @@ const appAPI = {
   loadApp: async (data: {fastLoad: boolean}) => IPCR.invoke('load-app', data),
   onLoaderProgress: (callback: (event: IpcRendererEvent, data: { msg: string }) => void) => {ipcRenderer.on('loader-progress', callback)},
   windowControl: (data: WindowControl) => {ipcRenderer.send('window-control', data)},
-  onWindowResize: (callback: (event: IpcRendererEvent, data: { x: number, y: number, width: number, height: number }) => void) => {ipcRenderer.on('window-resized', callback)},
+  onWindowResize: (callback: (event: IpcRendererEvent, data: OnResize) => void) => {ipcRenderer.on('window-resized', callback)},
   updateDotSquad: (callback: (event: IpcRendererEvent, data: { activity: DotSquadAnims }) => void) => {ipcRenderer.on('dot-squad', callback)},
   listenerCount: (channel: any) => ipcRenderer.listenerCount(channel),
   removeAllListeners: (channel: any) => ipcRenderer.removeAllListeners(channel),
