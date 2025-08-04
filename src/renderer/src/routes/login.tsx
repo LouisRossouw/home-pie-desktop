@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
+import { WindowModes } from '@shared/types'
+
 import { Button } from '~/components/ui/button'
 import { useApp } from '~/libs/context/app'
 import { windowModes } from '~/libs/hooks/use-app-window'
-import { WindowModes } from '@shared/types'
 
 export default function Login() {
   const { appSettings, resizeApp, windowControl } = useApp()
@@ -18,7 +19,7 @@ export default function Login() {
   const maybeForceLogout = searchParams.get('forceLogout')
 
   useEffect(() => {
-    resizeApp({ width: 500, height: 800 })
+    windowControl({ action: 'login' })
 
     if (maybeForceLogout) {
       // TODO?
@@ -34,14 +35,13 @@ export default function Login() {
     const appWindowMode = appSettings?.appWindowMode as WindowModes
 
     if (appWindowMode && windowModes.includes(appWindowMode)) {
-      return windowControl({ action: appWindowMode })
+      return windowControl({ action: appWindowMode, width, height })
     }
-
     if (width && height) {
-      return resizeApp({ width, height })
+      return resizeApp({ width, height, save: false })
     }
 
-    resizeApp({ width: 900, height: 670 })
+    resizeApp({ width: 900, height: 670, save: true })
   }
 
   const now = new Date()
