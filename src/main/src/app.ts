@@ -12,6 +12,14 @@ import { readAppDataJson, saveTimestamps } from './utils'
 
 const envMode = import.meta.env.MODE
 
+export let currentRoute = ''
+export let suppressResizeEvent = false
+
+export async function syncRoute(route: string) {
+  console.log('Route -', route)
+  currentRoute = route
+}
+
 // Not sure about this, but maybe we can check if the app can skip the loadApp func.
 export async function maybeFastLoad() {
   // TODO; Maybe add more things here, token expiry, etc?
@@ -61,12 +69,14 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
   return { hasLoaded: true, isFirstLoad }
 }
 
-export function windowControl({ action }: WindowControl) {
+export function windowControl({ action, width, height }: WindowControl) {
   const win = BrowserWindow.getFocusedWindow()
   if (!win) return
 
   const primaryDisplay = screen.getPrimaryDisplay()
-  const { width, height } = primaryDisplay.workAreaSize
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize
+
+  suppressResizeEvent = true
 
   switch (action) {
     case 'minimize':
@@ -80,20 +90,33 @@ export function windowControl({ action }: WindowControl) {
       win.close()
       break
     case 'sidebar-left':
-      win.setBounds({ x: 0, y: 0, width: 1000, height })
+      const w = width ?? 1000
+      const h = height ?? screenHeight
+
+      win.setBounds({ x: 0, y: 0, width: w, height: h })
+
+      setSetting('appWidth', w)
+      setSetting('appHeight', h)
+
       break
-    case 'bottom-left':
-      win.setBounds({ x: 0, y: height - 300, width: 400, height: 300 })
+    case 'login':
+      resizeApp({ width: 500, height: 800 })
       break
   }
+
+  // SuppressResizeEvent flag is used when the app switches between
+  // certain routes, splash, login, etc and suppresses the 'resize' event from firing.
+  setTimeout(() => {
+    suppressResizeEvent = false
+  }, 1000)
 }
 
 export function resizeApp({ width, height }: ResizeApp) {
   const win = BrowserWindow.getFocusedWindow()
 
   if (win) {
-    win.center()
     win.setSize(width, height)
+    win.center() // Leave this last so that we center on the new values
   }
 }
 
