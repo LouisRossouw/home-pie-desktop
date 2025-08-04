@@ -1,4 +1,3 @@
-import { Themes, themesList } from '~/libs/themes'
 import { Setting } from '@shared/types'
 import {
   Select,
@@ -8,33 +7,32 @@ import {
   SelectContent,
   SelectTrigger
 } from '~/components/ui/select'
-import { updateThemeUi } from '~/libs/utils/update-theme-ui'
+import { WindowUIModes, windowUIModes } from '~/libs/window-ui-modes'
 
 type SettingValue = boolean | number | string
 
-export function ThemeSelector({
-  currentTheme,
-  handleAddNewChanges
+export function WindowUIModeSelector({
+  currentUIMode,
+  handleUIModeChange
 }: {
-  currentTheme?: Themes
-  handleAddNewChanges: (v: { setting: Setting; value: SettingValue }) => void
+  currentUIMode?: WindowUIModes
+  handleUIModeChange: (v: { setting: Setting; value: SettingValue }) => void
 }) {
-  function handleThemeChange(value: string) {
-    handleAddNewChanges({ setting: 'theme', value })
-    updateThemeUi(value)
+  function handleWindowUIChange(value: string) {
+    handleUIModeChange({ setting: 'theme', value })
   }
 
   return (
     <Select
-      defaultValue={currentTheme ?? 'light'}
-      onValueChange={(value) => handleThemeChange(value)}
+      defaultValue={currentUIMode ?? 'TODO'}
+      onValueChange={(value) => handleWindowUIChange(value)}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select a theme" />
+        <SelectValue placeholder="Select a ui" />
       </SelectTrigger>
       <SelectContent className="w-full">
         <SelectGroup>
-          {themesList.map((item) => {
+          {windowUIModes.map((item) => {
             if (item.active) {
               return (
                 <SelectItem key={item.label} value={item.slug}>

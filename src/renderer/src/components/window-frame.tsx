@@ -4,6 +4,7 @@ import { Maximize, Minimize2, X } from 'lucide-react'
 import { Button } from './ui/button'
 import { DotSquad } from './dot-squad'
 import { useApp } from '~/libs/context/app'
+import { WindowUIModeSelector } from './window-ui-mode-selector'
 
 const webKit = {
   drag: { WebkitAppRegion: 'drag' },
@@ -32,6 +33,10 @@ export function WindowFrame() {
       )}
 
       <div className="flex" style={webKit.noDrag}>
+        <WindowUIModeSelector
+          handleUIModeChange={() => console.log('todo')}
+          currentUIMode={undefined}
+        />
         {!isLogin && (
           <>
             <Button
@@ -60,15 +65,6 @@ export function WindowFrame() {
           onClick={() => windowControl({ action: 'close' })}
         >
           <X size={18} />
-        </Button>
-
-        <Button
-          size={'sm'}
-          variant={'ghost'}
-          className="h-8 w-8"
-          onClick={() => windowControl({ action: 'sidebar-left' })}
-        >
-          test
         </Button>
       </div>
     </div>
