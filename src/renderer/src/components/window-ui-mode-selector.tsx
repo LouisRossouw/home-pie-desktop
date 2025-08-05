@@ -1,4 +1,5 @@
-import { Setting } from '@shared/types'
+import { WindowModes } from '@shared/types'
+import { useState } from 'react'
 import {
   Select,
   SelectItem,
@@ -7,27 +8,34 @@ import {
   SelectContent,
   SelectTrigger
 } from '~/components/ui/select'
-import { WindowUIModes, windowUIModes } from '~/libs/window-ui-modes'
+import { windowUIModes } from '~/libs/window-ui-modes'
 
-type SettingValue = boolean | number | string
+export type SettingValue = boolean | number | string
 
 export function WindowUIModeSelector({
   currentUIMode,
   handleUIModeChange
 }: {
-  currentUIMode?: WindowUIModes
-  handleUIModeChange: (v: { setting: Setting; value: SettingValue }) => void
+  currentUIMode?: WindowModes
+  handleUIModeChange: (v: { action: WindowModes }) => void
 }) {
+  const [open, setOpen] = useState(false)
+
   function handleWindowUIChange(value: string) {
-    handleUIModeChange({ setting: 'theme', value })
+    const action = value as WindowModes
+    handleUIModeChange({ action })
   }
+
+  const defaultValue = currentUIMode ? currentUIMode : 'default'
 
   return (
     <Select
-      defaultValue={currentUIMode ?? 'TODO'}
+      key={defaultValue}
+      defaultValue={defaultValue}
+      onOpenChange={() => setOpen(!open)}
       onValueChange={(value) => handleWindowUIChange(value)}
     >
-      <SelectTrigger className="w-full">
+      <SelectTrigger className="w-full border-none shadow-none">
         <SelectValue placeholder="Select a ui" />
       </SelectTrigger>
       <SelectContent className="w-full">
@@ -36,7 +44,8 @@ export function WindowUIModeSelector({
             if (item.active) {
               return (
                 <SelectItem key={item.label} value={item.slug}>
-                  {item.label}
+                  <item.icon />
+                  {open && item.label}
                 </SelectItem>
               )
             }

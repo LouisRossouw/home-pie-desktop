@@ -22,7 +22,7 @@ export type ResizeApp = {
 }
 
 export type WindowBaseActions = 'minimize' | 'maximize' | 'close' | 'login'
-export type WindowModes = 'sidebar-left' | 'bottom-left'
+export type WindowModes = 'sidebar-left' | 'bottom-left' | 'default'
 
 export type WindowControl = {
   action: WindowBaseActions | WindowModes

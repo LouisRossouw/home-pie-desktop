@@ -1,9 +1,12 @@
 import { useLocation } from 'react-router'
 import { Maximize, Minimize2, X } from 'lucide-react'
 
+import { WindowModes } from '@shared/types'
+
+import { useApp } from '~/libs/context/app'
+
 import { Button } from './ui/button'
 import { DotSquad } from './dot-squad'
-import { useApp } from '~/libs/context/app'
 import { WindowUIModeSelector } from './window-ui-mode-selector'
 
 const webKit = {
@@ -13,9 +16,19 @@ const webKit = {
 
 export function WindowFrame() {
   const { pathname } = useLocation()
-  const { windowControl } = useApp()
+  const { appSettings, windowControl, resetWindow, updateAppSettings } = useApp()
 
   const isLogin = pathname === '/login'
+
+  function handleUIModeChange({ action }: { action: WindowModes }) {
+    if (action === 'default') {
+      updateAppSettings([{ setting: 'appWindowMode', value: '' }])
+      return resetWindow()
+    }
+    windowControl({ action })
+  }
+
+  const currentUIMode = appSettings?.appWindowMode as WindowModes | undefined
 
   return (
     <div
@@ -34,8 +47,8 @@ export function WindowFrame() {
 
       <div className="flex" style={webKit.noDrag}>
         <WindowUIModeSelector
-          handleUIModeChange={() => console.log('todo')}
-          currentUIMode={undefined}
+          currentUIMode={currentUIMode}
+          handleUIModeChange={handleUIModeChange}
         />
         {!isLogin && (
           <>
