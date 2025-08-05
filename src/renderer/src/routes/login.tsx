@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
 import { WindowModes } from '@shared/types'
@@ -7,10 +7,11 @@ import { WindowModes } from '@shared/types'
 import { Button } from '~/components/ui/button'
 import { useApp } from '~/libs/context/app'
 import { windowModes } from '~/libs/hooks/use-app-window'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 export default function Login() {
   const { appSettings, resizeApp, windowControl } = useApp()
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
 
   const [searchParams] = useSearchParams()
 
@@ -27,7 +28,7 @@ export default function Login() {
   }, [maybeForceLogout])
 
   function handleManualLogin() {
-    navigation('/')
+    navigateTo('/')
 
     // TODO; Fetch app width & height from storage or app context, before resizing.
     const width = appSettings?.appWidth as number

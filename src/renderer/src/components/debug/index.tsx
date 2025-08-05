@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
@@ -10,6 +9,7 @@ import { useApp } from '~/libs/context/app'
 
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -19,7 +19,7 @@ const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
 
   const { appSettings, handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } =
     useApp()
@@ -80,7 +80,7 @@ export function Debug() {
         <Button
           variant={'outline'}
           onClick={() => {
-            navigation('/')
+            navigateTo('/')
             updateAppSettings([{ setting: 'debug', value: false }])
           }}
         >
@@ -99,7 +99,7 @@ export function Debug() {
         <Button
           variant={'outline'}
           onClick={() => {
-            navigation('/')
+            navigateTo('/')
             updateAppSettings([{ setting: 'debug', value: false }])
           }}
         >
@@ -162,7 +162,7 @@ export function Debug() {
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Route Nav:</label>
-            <Button onClick={() => navigation('/no-connection')}>no-connection</Button>
+            <Button onClick={() => navigateTo('/no-connection')}>no-connection</Button>
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>

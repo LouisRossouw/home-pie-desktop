@@ -1,4 +1,12 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react'
+import {
+  useRef,
+  useState,
+  createRef,
+  useContext,
+  createContext,
+  PropsWithChildren,
+  MutableRefObject
+} from 'react'
 
 import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
@@ -20,6 +28,10 @@ const appSettingsInit: UseAppSettings = {
   getAllAppSettings: async () => ({}) as AppSetting
 }
 
+// ***
+// TODO; Remove dot squad from app context. causes 4 re-renderings.
+// ***
+
 const dotSquadInit = {
   dotA: defaultDotSquadColour,
   dotB: defaultDotSquadColour,
@@ -32,11 +44,13 @@ type AppExtensions = UseAppWindow & UseAppSettings & UseDotSquadType
 type AppContextType = {
   isAuth: boolean
   setIsAuth: (v: boolean) => void
+  startRenderTime: MutableRefObject<number | null>
 } & AppExtensions
 
 export const AppContext = createContext<AppContextType>({
   isAuth: false,
   setIsAuth: () => {},
+  startRenderTime: createRef(),
   ...dotSquadInit,
   ...appWindowInit,
   ...appSettingsInit
@@ -47,6 +61,8 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
   const appWindow = useAppWindow(appSettings)
   const dotSquad = useDotSquad()
 
+  const startRenderTime = useRef(null)
+
   const [isAuth, setIsAuth] = useState(false)
 
   return (
@@ -54,6 +70,7 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
       value={{
         isAuth,
         setIsAuth,
+        startRenderTime,
         ...dotSquad,
         ...appWindow,
         ...appSettings

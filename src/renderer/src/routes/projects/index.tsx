@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 
 import { type Project } from '@shared/types'
 import { useQuery } from '@tanstack/react-query'
@@ -14,9 +14,10 @@ import { ProjectsList } from '~/components/projects-list'
 import { ProjectsPanel } from './projects-panel'
 import { OutletPanel } from './outlet-panel'
 import { projectsAppRoutes } from './projects-routes-list'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 export default function ProjectsRoute() {
-  const navigate = useNavigate()
+  const { navigateTo } = useNav()
   const { pathname } = useLocation()
 
   const panelGroupRef = useRef<ImperativePanelGroupHandle>(null)
@@ -51,7 +52,7 @@ export default function ProjectsRoute() {
               projects={projects}
               isExpanded={isProjectsExpanded}
               selectedProject={selectedProject}
-              handleSelectedProject={(v: string) => navigate(v)}
+              handleSelectedProject={(v: string) => navigateTo(v)}
             />
           }
         />

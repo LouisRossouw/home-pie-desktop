@@ -1,9 +1,11 @@
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import { AppVersion } from './app-version'
 import { useRef } from 'react'
 import { Bug, House } from 'lucide-react'
 import { useApp } from '~/libs/context/app'
 import { Button } from './ui/button'
+import { useNav } from '~/libs/hooks/use-navigation'
+import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -11,16 +13,16 @@ const mode = import.meta.env.MODE
 export function WindowFrameDebug() {
   const countToDebug = useRef(0)
   const { pathname } = useLocation()
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
 
-  const { appSettings, updateAppSettings } = useApp()
+  const { appSettings, updateAppSettings, startRenderTime } = useApp()
 
   function handleDebugRedirect() {
     countToDebug.current += 1
 
     if (countToDebug.current >= 5) {
       countToDebug.current = 0
-      navigation('debug')
+      navigateTo('debug')
       updateAppSettings([{ setting: 'debug', value: true }])
     }
   }
@@ -33,13 +35,18 @@ export function WindowFrameDebug() {
     )
   }
 
+  const duration = calculateRenderTime(startRenderTime.current)
+
   return (
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
       <div className="grid grid-cols-3 w-full">
         <div className="flex gap-4 justify-start items-center">
-          <Link to={'/'}>
+          {/* <Link to={'/'}>
             <House size={18} />
-          </Link>
+          </Link> */}
+          <Button variant={'outline'} className="w-6 h-6" onClick={() => navigateTo('/')}>
+            <House size={18} />
+          </Button>
           <p className="text-xs">{pathname}</p>
         </div>
         <div className="flex justify-center items-center">
@@ -47,9 +54,12 @@ export function WindowFrameDebug() {
         </div>
         <div className="flex justify-end items-center gap-4">
           {appSettings?.debug && (
-            <Button variant={'outline'} className="w-6 h-6" onClick={() => navigation('debug')}>
-              <Bug />
-            </Button>
+            <>
+              <p className="text-xs">{`${duration.toFixed(2)}ms`}</p>
+              <Button variant={'outline'} className="w-6 h-6" onClick={() => navigateTo('debug')}>
+                <Bug />
+              </Button>
+            </>
           )}
           <div onClick={handleDebugRedirect}>
             <AppVersion />

@@ -1,4 +1,8 @@
+import { Link } from 'react-router'
 import { Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
+
+import { useNav } from '~/libs/hooks/use-navigation'
+import { useApp } from '~/libs/context/app'
 
 import {
   Sidebar,
@@ -13,8 +17,6 @@ import {
   SidebarMenuItem
 } from '~/components/ui/sidebar'
 import { Button } from './ui/button'
-import { Link, useNavigate } from 'react-router'
-import { useApp } from '~/libs/context/app'
 
 const items = [
   {
@@ -41,7 +43,7 @@ const items = [
 ]
 
 export function AppSidebar({ close }: { close: () => void }) {
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
   const { appSettings } = useApp()
 
   return (
@@ -61,11 +63,18 @@ export function AppSidebar({ close }: { close: () => void }) {
               <SidebarMenu>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild onClick={close}>
-                      <Link to={item.url}>
+                    <SidebarMenuButton
+                      asChild
+                      onClick={() => {
+                        close()
+                        navigateTo(item.url)
+                      }}
+                      variant={'outline'}
+                    >
+                      <div>
                         <item.icon />
                         <span>{item.title}</span>
-                      </Link>
+                      </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -78,8 +87,8 @@ export function AppSidebar({ close }: { close: () => void }) {
                   className="w-full"
                   variant={'outline'}
                   onClick={() => {
-                    navigation('debug')
                     close()
+                    navigateTo('debug')
                   }}
                 >
                   <Bug />

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
 
 import { useApp } from '~/libs/context/app'
 import { AppSetting } from '~/libs/hooks/use-app-settings'
+import { useNav } from '~/libs/hooks/use-navigation'
 import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
 export function LoaderRoute({
@@ -12,7 +12,7 @@ export function LoaderRoute({
   fastLoad: boolean
   setLoaded: (v: boolean) => void
 }) {
-  const navigate = useNavigate()
+  const { navigateTo } = useNav()
   const { resizeApp, getAllAppSettings: updateContextWithAppSettings } = useApp()
 
   const [logs, setLogs] = useState<string>('')
@@ -32,7 +32,7 @@ export function LoaderRoute({
     }
     if (appLoaded) {
       setLoaded(true)
-      navigate('login')
+      navigateTo('login')
     }
   }, [appLoaded])
 

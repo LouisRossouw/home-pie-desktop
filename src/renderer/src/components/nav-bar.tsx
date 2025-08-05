@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import { Menu } from 'lucide-react'
 import { menus } from '~/libs/menus'
 
 import { Button } from './ui/button'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 export function NavBar({
   sideBarOpen,
@@ -13,7 +14,7 @@ export function NavBar({
   setSideBarOpen: (v: boolean) => void
 }) {
   const { pathname } = useLocation()
-  const navigate = useNavigate()
+  const { navigateTo } = useNav()
 
   const routeMenu = useMemo(() => {
     const firstSegment = pathname === '/' ? pathname : pathname.split('/')[1]
@@ -50,7 +51,7 @@ export function NavBar({
                 variant={selectedSubRoute === subMenu.slug ? 'default' : 'outline'}
                 onClick={() => {
                   if (!subMenu.url) return alert('No route set')
-                  navigate(subMenu.url)
+                  navigateTo(subMenu.url)
                 }}
               >
                 <subMenu.icon />

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { Middlewear } from './libs/middlewear'
 import { AppContextProvider } from './libs/context/app'
+// import { useRenderTimer } from './libs/hooks/use-render-timer'
 
 import { AppRoutes } from './app-routes'
 import { SplashRoute } from './routes/splash'
@@ -63,7 +64,13 @@ export default function App(): JSX.Element {
             <WindowFrameDebug />
           </>
         )}
+        {/* <PerfomanceCheck /> */}
       </AppContextProvider>
     </QueryClientProvider>
   )
 }
+
+// function PerfomanceCheck() {
+//   useRenderTimer()
+//   return null
+// }
