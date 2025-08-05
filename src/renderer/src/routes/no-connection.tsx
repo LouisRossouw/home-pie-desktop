@@ -3,8 +3,10 @@
 
 import { useEffect } from 'react'
 import { Button } from '~/components/ui/button'
+import { useApp } from '~/libs/context/app'
 
 export default function NoConnectionRoute() {
+  const { resizeApp } = useApp()
   // TODO; Add a poll / counter that attempts to reconnect
 
   // TODO; Add a cool countdown
@@ -14,7 +16,7 @@ export default function NoConnectionRoute() {
   // SUPER TODOTODO; Make a micro game for this screen, maybe port over my zombiezombie Threejs experience.
 
   useEffect(() => {
-    window.api.resizeApp({ width: 500, height: 500 })
+    resizeApp({ width: 500, height: 500 })
   }, [])
 
   return (

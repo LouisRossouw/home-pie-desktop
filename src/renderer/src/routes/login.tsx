@@ -2,14 +2,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
-import { Button } from '~/components/ui/button'
-import { buildThemeClasses } from '~/libs/utils/update-theme-ui'
-import { cn } from '~/libs/utils/cn'
-import { useApp } from '~/libs/context/app'
+import { WindowModes } from '@shared/types'
+
 import { Themes } from '~/libs/themes'
+import { useApp } from '~/libs/context/app'
+import { windowModes } from '~/libs/hooks/use-app-window'
+import { buildThemeClasses } from '~/libs/utils/update-theme-ui'
+import { Button } from '~/components/ui/button'
+import { cn } from '~/libs/utils/cn'
 
 export default function Login() {
-  const { appSettings } = useApp()
+  const { appSettings, resizeApp, windowControl } = useApp()
   const navigation = useNavigate()
 
   const [searchParams] = useSearchParams()
@@ -19,7 +22,7 @@ export default function Login() {
   const maybeForceLogout = searchParams.get('forceLogout')
 
   useEffect(() => {
-    window.api.resizeApp({ width: 500, height: 800 })
+    windowControl({ action: 'login' })
 
     if (maybeForceLogout) {
       // TODO?
@@ -30,7 +33,18 @@ export default function Login() {
     navigation('/')
 
     // TODO; Fetch app width & height from storage or app context, before resizing.
-    window.api.resizeApp({ width: 900, height: 670 })
+    const width = appSettings?.appWidth as number
+    const height = appSettings?.appHeight as number
+    const appWindowMode = appSettings?.appWindowMode as WindowModes
+
+    if (appWindowMode && windowModes.includes(appWindowMode)) {
+      return windowControl({ action: appWindowMode, width, height })
+    }
+    if (width && height) {
+      return resizeApp({ width, height, save: false })
+    }
+
+    resizeApp({ width: 900, height: 670, save: true })
   }
 
   const classes = useMemo(() => {

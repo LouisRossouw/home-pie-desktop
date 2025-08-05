@@ -1,15 +1,24 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen } from 'electron'
+import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
 import { getBaseURl } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
-const { differenceInHours } = require('date-fns')
+import { ResizeApp, WindowControl } from '@shared/types'
+import { defaultAppSettings } from '@shared/default-app-settings'
 
-import { defaultAppSettings } from './default-app-settings'
 import { initDatabase, setSetting, dbExists } from './database'
 import { readAppDataJson, saveTimestamps } from './utils'
 
 const envMode = import.meta.env.MODE
+
+export let currentRoute = ''
+export let suppressResizeEvent = false
+
+export async function syncRoute(route: string) {
+  console.log('Route -', route)
+  currentRoute = route
+}
 
 // Not sure about this, but maybe we can check if the app can skip the loadApp func.
 export async function maybeFastLoad() {
@@ -23,7 +32,7 @@ export async function maybeFastLoad() {
   const lastOpened = maybeAppEndTime ? differenceInHours(now, new Date(maybeAppEndTime)) : undefined
   console.log('lastOpened:', lastOpened ? `${lastOpened} hour(s) ago` : '..First time!')
 
-  const skipSplash = parseInt(lastOpened) < 8 // TODO; Make it 12, or based on if it is a new day?
+  const skipSplash = lastOpened ? lastOpened < 8 : lastOpened === 0 // TODO; Make it 12, or based on if it is a new day?
 
   return { skipSplash, skipLoader: dbExists }
 }
@@ -60,11 +69,14 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
   return { hasLoaded: true, isFirstLoad }
 }
 
-export type WindowControl = { action: 'minimize' | 'maximize' | 'close' }
-
-export function windowControl({ action }: WindowControl) {
+export function windowControl({ action, width, height }: WindowControl) {
   const win = BrowserWindow.getFocusedWindow()
   if (!win) return
+
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize
+
+  suppressResizeEvent = true
 
   switch (action) {
     case 'minimize':
@@ -77,17 +89,34 @@ export function windowControl({ action }: WindowControl) {
       updateAppCloseTime()
       win.close()
       break
-  }
-}
+    case 'sidebar-left':
+      const w = width ?? 1000
+      const h = height ?? screenHeight
 
-export type ResizeApp = { width: number; height: number }
+      win.setBounds({ x: 0, y: 0, width: w, height: h })
+
+      setSetting('appWidth', w)
+      setSetting('appHeight', h)
+
+      break
+    case 'login':
+      resizeApp({ width: 500, height: 800 })
+      break
+  }
+
+  // SuppressResizeEvent flag is used when the app switches between
+  // certain routes, splash, login, etc and suppresses the 'resize' event from firing.
+  setTimeout(() => {
+    suppressResizeEvent = false
+  }, 1000)
+}
 
 export function resizeApp({ width, height }: ResizeApp) {
   const win = BrowserWindow.getFocusedWindow()
 
   if (win) {
-    win.center()
     win.setSize(width, height)
+    win.center() // Leave this last so that we center on the new values
   }
 }
 

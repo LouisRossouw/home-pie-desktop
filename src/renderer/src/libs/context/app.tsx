@@ -2,8 +2,15 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react'
 
 import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
+import { UseAppWindow, useAppWindow } from '~/libs/hooks/use-app-window'
 import { useDotSquad, UseDotSquadType } from '~/libs/hooks/use-dot-squad'
 import { type UseAppSettings, type AppSetting, useAppSettings } from '~/libs/hooks/use-app-settings'
+
+const appWindowInit: UseAppWindow = {
+  windowControl: () => undefined,
+  resizeApp: () => undefined,
+  resetWindow: () => undefined
+}
 
 const appSettingsInit: UseAppSettings = {
   appSettings: undefined,
@@ -20,7 +27,7 @@ const dotSquadInit = {
   handleUpdateDotSquad: () => ({})
 }
 
-type AppExtensions = UseAppSettings & UseDotSquadType
+type AppExtensions = UseAppWindow & UseAppSettings & UseDotSquadType
 
 type AppContextType = {
   isAuth: boolean
@@ -31,11 +38,13 @@ export const AppContext = createContext<AppContextType>({
   isAuth: false,
   setIsAuth: () => {},
   ...dotSquadInit,
+  ...appWindowInit,
   ...appSettingsInit
 })
 
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
   const appSettings = useAppSettings()
+  const appWindow = useAppWindow(appSettings)
   const dotSquad = useDotSquad()
 
   const [isAuth, setIsAuth] = useState(false)
@@ -46,6 +55,7 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
         isAuth,
         setIsAuth,
         ...dotSquad,
+        ...appWindow,
         ...appSettings
       }}
     >

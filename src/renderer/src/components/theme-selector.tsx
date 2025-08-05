@@ -30,7 +30,7 @@ export function ThemeSelector({
       onValueChange={(value) => handleThemeChange(value)}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select a layout" />
+        <SelectValue placeholder="Select a theme" />
       </SelectTrigger>
       <SelectContent className="w-full">
         <SelectGroup>

@@ -2,19 +2,10 @@
 
 const timestamp = Math.floor(Date.now() / 1000)
 
+// prettier-ignore
 export const defaultAppSettings = [
-  {
-    label: 'App start time',
-    slug: 'app-start-time',
-    key: 'appStartTime',
-    value: timestamp
-  },
-  {
-    label: 'App end time',
-    slug: 'app-end-time',
-    key: 'appEndTime',
-    value: ''
-  },
+  {label: 'App start time',slug: 'app-start-time',key: 'appStartTime',value: timestamp},
+  {label: 'App end time',slug: 'app-end-time',key: 'appEndTime',value: ''},
   { label: 'Theme', slug: 'theme', key: 'theme', value: 'light' },
   { label: 'Decimals', slug: 'decimals', key: 'decimals', value: 3 },
   { label: 'Debug', slug: 'debug', key: 'debug', value: false },
@@ -23,5 +14,6 @@ export const defaultAppSettings = [
   { label: 'Notifications', slug: 'notifications', key: 'notifications', value: true },
   { label: 'Date format', slug: 'date-format', key: 'dateFormat', value: 'yyyy-MM-dd' },
   { label: 'App Width', slug: 'app-width', key: 'appWidth', value: 900 }, // ( Update the app width & height anytime the user changes width & height)
-  { label: 'App Height', slug: 'app-height', key: 'appHeight', value: 670 } // ^^^
+  { label: 'App Height', slug: 'app-height', key: 'appHeight', value: 670 }, // ^^^
+  { label: 'App Window Mode', slug: 'app-window-mode', key: 'appWindowMode', value: undefined }
 ] as const
