@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 
 import { registerIpcHandlers } from './src/ipc-handlers'
 import { currentRoute, suppressResizeEvent } from './src/app'
+import { startPoll } from './src/poll'
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
@@ -77,7 +78,6 @@ function createWindow(): void {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
-
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -86,6 +86,7 @@ app.whenReady().then(() => {
   })
 
   createWindow()
+  startPoll()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
