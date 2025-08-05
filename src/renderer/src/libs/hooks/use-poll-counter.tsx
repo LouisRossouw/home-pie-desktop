@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
+// ********
+
+// Render poll; wip
+
+// ********
+
 type State = {
   pollCount: number
   addSomeStateHere: number // TODO; Add some check here
