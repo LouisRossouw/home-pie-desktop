@@ -7,6 +7,12 @@ import { useApp } from '~/libs/context/app'
 
 import { Button } from './ui/button'
 import { DotSquad } from './dot-squad'
+import { useMemo } from 'react'
+import { buildThemeClasses } from '~/libs/utils/update-theme-ui'
+import { cn } from '~/libs/utils/cn'
+
+import { Themes } from '~/libs/themes'
+
 import { WindowUIModeSelector } from './window-ui-mode-selector'
 
 const webKit = {
@@ -17,6 +23,18 @@ const webKit = {
 export function WindowFrame() {
   const { pathname } = useLocation()
   const { appSettings, windowControl, resetWindow, updateAppSettings } = useApp()
+
+  const classes = useMemo(() => {
+    const currentTheme = appSettings?.theme as Themes
+    return buildThemeClasses({
+      currentTheme,
+      overrides: {
+        themeType: 'solid',
+        border: 'border-b border-x',
+        dontIgnoreText: true
+      }
+    })
+  }, [appSettings])
 
   const isLogin = pathname === '/login'
 
@@ -32,7 +50,10 @@ export function WindowFrame() {
 
   return (
     <div
-      className="h-8 rounded-t-lg w-full flex items-center justify-between px-2 bg-background border-b"
+      className={cn(
+        'h-8 rounded-t-lg w-full flex items-center justify-between px-2 bg-background',
+        ...classes
+      )}
       style={webKit.drag}
     >
       {/* TODO; Turn into grid columns , or something else to center things! */}

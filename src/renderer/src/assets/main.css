@@ -158,3 +158,23 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+.bg-theme-gradient-top {
+  background: linear-gradient(
+    to top,
+    var(--gradient-start),
+    /* var(--gradient-middle), */
+    var(--gradient-end)
+  );
+}
+
+.bg-theme-gradient-bottom {
+  background: linear-gradient(
+    to bottom,
+    var(--gradient-start),
+    /* var(--gradient-middle), */
+    var(--gradient-end)
+  );
+}
+

@@ -1,9 +1,12 @@
 import { Link, useLocation, useNavigate } from 'react-router'
 import { AppVersion } from './app-version'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Bug, House } from 'lucide-react'
 import { useApp } from '~/libs/context/app'
 import { Button } from './ui/button'
+import { buildThemeClasses } from '~/libs/utils/update-theme-ui'
+import { cn } from '~/libs/utils/cn'
+import { Themes } from '~/libs/themes'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -25,16 +28,38 @@ export function WindowFrameDebug() {
     }
   }
 
+  const classes = useMemo(() => {
+    const currentTheme = appSettings?.theme as Themes
+    return buildThemeClasses({
+      currentTheme,
+      overrides: {
+        themeType: 'solid',
+        border: 'border-b border-x',
+        dontIgnoreText: true
+      }
+    })
+  }, [appSettings])
+
   const isLogin = pathname === '/login'
 
   if (isLogin) {
     return (
-      <div className="flex items-center justify-between h-8 px-4 rounded-b-lg  bg-background"></div>
+      <div
+        className={cn(
+          'flex items-center justify-between h-8 px-4 rounded-b-lg bg-background',
+          ...classes
+        )}
+      ></div>
     )
   }
 
   return (
-    <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
+    <div
+      className={cn(
+        'flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background',
+        ...classes
+      )}
+    >
       <div className="grid grid-cols-3 w-full">
         <div className="flex gap-4 justify-start items-center">
           <Link to={'/'}>
