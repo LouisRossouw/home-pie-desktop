@@ -161,6 +161,10 @@ export function Debug() {
             <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
           </div>
           <div className="grid gap-2 border-t py-4">
+            <label>Route Nav:</label>
+            <Button onClick={() => navigation('/no-connection')}>no-connection</Button>
+          </div>
+          <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>
             <Button onClick={() => handleGetSettings('lockScreen')}>
               GetSetting - lock-screen
