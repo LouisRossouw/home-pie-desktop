@@ -1,4 +1,5 @@
 import { requireSession } from '@main/src/session'
+import { updateDotSquadActivity } from '@main/src/app'
 
 export async function apiTest() {
   const apiClient = await requireSession()
@@ -8,6 +9,7 @@ export async function apiTest() {
   })
 
   if (response.status === 200) {
+    updateDotSquadActivity({ activity: 'singleBlink' })
     return { ok: true, data: response.data }
   }
 

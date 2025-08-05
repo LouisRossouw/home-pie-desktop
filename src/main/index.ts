@@ -1,12 +1,14 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 import { registerIpcHandlers } from './src/ipc-handlers'
+import { currentRoute, suppressResizeEvent } from './src/app'
 
 export let mainWindow: BrowserWindow | undefined = undefined
-let ipcRegistered = false
+
+const ignoreRoutes = ['splash', 'login', 'no-connection']
 
 function createWindow(): void {
   // Create the browser window.
@@ -24,12 +26,36 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
+      // contextIsolation: true,
+      // nodeIntegration: false
     }
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show()
   })
+
+  // Update the renderer with the apps new size.
+  mainWindow.on('resized', () => {
+    if (suppressResizeEvent) return
+    if (!ignoreRoutes.includes(currentRoute)) {
+      const size = mainWindow?.getBounds()
+      mainWindow?.webContents.send('window-resized', size)
+    }
+  })
+
+  // Update the renderer that the app has moved, which will reset the appWindowMode.
+  mainWindow.on('moved', () => {
+    if (!ignoreRoutes.includes(currentRoute)) {
+      mainWindow?.webContents.send('window-resized', { hasMoved: true })
+    }
+  })
+
+  // mainWindow.on('move', () => {
+  //   if (!ignoreRoutes.includes(currentRoute)) {
+  //     mainWindow?.webContents.send('window-resized', { isMoving: true })
+  //   }
+  // })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)

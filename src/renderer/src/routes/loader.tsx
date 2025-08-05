@@ -1,17 +1,30 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) {
+import { useApp } from '~/libs/context/app'
+import { AppSetting } from '~/libs/hooks/use-app-settings'
+import { updateThemeUi } from '~/libs/utils/update-theme-ui'
+
+export function LoaderRoute({
+  fastLoad,
+  setLoaded
+}: {
+  fastLoad: boolean
+  setLoaded: (v: boolean) => void
+}) {
   const navigate = useNavigate()
+  const { resizeApp, getAllAppSettings: updateContextWithAppSettings } = useApp()
 
   const [logs, setLogs] = useState<string>('')
   const [appLoaded, setAppLoaded] = useState(false)
 
   useEffect(() => {
-    setupOnLoaderProgress()
+    if (!fastLoad) {
+      setupOnLoaderProgress()
+    }
     handleLoadAppSettings()
-    window.api.resizeApp({ width: 400, height: 600 })
-  }, [])
+    resizeApp({ width: 400, height: 600 })
+  }, [fastLoad])
 
   useEffect(() => {
     if (appLoaded) {
@@ -32,9 +45,36 @@ export function LoaderRoute({ setLoaded }: { setLoaded: (v: boolean) => void }) 
     window.api.onLoaderProgress(handler)
   }
 
+  // Maybe a good place to update any app settings?
+  function applyAppSettingsToApp(appSettings: AppSetting) {
+    const currentTheme = appSettings?.theme as string | undefined
+
+    updateThemeUi(currentTheme)
+  }
+
+  // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
-    await window.api.loadApp()
-    setAppLoaded(true)
+    const { hasLoaded, isFirstLoad } = await window.api.loadApp({ fastLoad })
+
+    // TODO; If it is the apps first load, redirect to an onboarding or welcome screen?
+    if (isFirstLoad) {
+      // intentionally left blank until i know what i want to do with this.
+    }
+
+    if (hasLoaded) {
+      const appSettings = await updateContextWithAppSettings()
+
+      applyAppSettingsToApp(appSettings)
+
+      return setAppLoaded(true)
+    }
+
+    console.error('App init broke!')
+  }
+
+  // FastLoad hides the loading screen.
+  if (fastLoad) {
+    return null
   }
 
   return (
