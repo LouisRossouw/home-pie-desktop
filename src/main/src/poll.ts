@@ -1,6 +1,8 @@
-// import { mainWindow } from '..'
+import { currentRoute, updateDotSquadActivity } from './app'
 
 // TODO; System poll, Turn into a class in the future.
+
+const ignoreRoutes = ['splash', 'login']
 
 let intervalId: NodeJS.Timeout | null = null
 
@@ -27,10 +29,18 @@ export function stopPolling() {
 }
 
 function polling() {
+  if (currentRoute === 'no-connection') {
+    // TODO; remain in a loop, break when connection resolves
+    // TODO; not 100% sure if this should be done in main process or renderer?
+    console.log('Is there connection? check connection!')
+  }
+
+  if (ignoreRoutes.includes(currentRoute)) return
+
   const isAnEvent = anEvent === 0
 
   if (isAnEvent) {
-    emitEvent('is-an-event')
+    emitEventToRender('is-an-event')
   }
 
   // Update other checks
@@ -48,7 +58,14 @@ function updateChecksCounter() {
   anEvent = anEvent < resetAnEventAt ? anEvent + 1 : 0
 }
 
+// Emit events in the main process
 function emitEvent(event: string) {
   console.log('Emiting:', event)
+}
+
+// Emit events to the render process
+function emitEventToRender(event: string) {
+  console.log('Emiting to render:', event)
+  updateDotSquadActivity({ activity: 'singleBlink' })
   // mainWindow?.webContents.send('system:event', event)
 }
