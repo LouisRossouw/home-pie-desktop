@@ -1,11 +1,14 @@
-import { useLocation } from 'react-router'
-import { AppVersion } from './app-version'
 import { useRef } from 'react'
+import { useLocation } from 'react-router'
+
 import { Bug, House } from 'lucide-react'
+
 import { useApp } from '~/libs/context/app'
-import { Button } from './ui/button'
 import { useNav } from '~/libs/hooks/use-navigation'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
+
+import { Button } from './ui/button'
+import { AppVersion } from './app-version'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE

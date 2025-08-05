@@ -46,12 +46,12 @@ export function WindowFrame() {
       )}
 
       <div className="flex" style={webKit.noDrag}>
-        <WindowUIModeSelector
-          currentUIMode={currentUIMode}
-          handleUIModeChange={handleUIModeChange}
-        />
         {!isLogin && (
           <>
+            <WindowUIModeSelector
+              currentUIMode={currentUIMode}
+              handleUIModeChange={handleUIModeChange}
+            />
             <Button
               size={'sm'}
               variant={'ghost'}
