@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { loadApp, resizeApp, windowControl } from './app'
+import { loadApp, maybeFastLoad, resizeApp, syncRoute, windowControl } from './app'
 
 import { Setting } from '@shared/types'
 
@@ -9,17 +9,27 @@ import { apiProjectList } from '@main/src/api/projects/api-projects-list'
 
 import { getAllSettings, getSetting, setSetting } from './database'
 
+function navIpcHandlers() {
+  ipcMain.handle('sync-route', (_event, route) => {
+    syncRoute(route)
+  })
+}
+
 function appIpcHandlers() {
   ipcMain.handle('resize-app', (_event, { width, height }) => {
     resizeApp({ width, height })
   })
 
-  ipcMain.handle('load-app', (_event) => {
-    return loadApp()
+  ipcMain.handle('maybe-fast-load', (_event) => {
+    return maybeFastLoad()
   })
 
-  ipcMain.on('window-control', (_event, { action }) => {
-    windowControl({ action })
+  ipcMain.handle('load-app', (_event, { fastLoad }) => {
+    return loadApp({ fastLoad })
+  })
+
+  ipcMain.on('window-control', (_event, { action, width, height }) => {
+    windowControl({ action, width, height })
   })
 }
 
@@ -63,5 +73,9 @@ function testIpcHandlers() {
 }
 
 export function registerIpcHandlers() {
-  ;(appIpcHandlers(), projectsIpcHandlers(), testIpcHandlers(), databaseIpcHandlers())
+  ;(navIpcHandlers(),
+    appIpcHandlers(),
+    projectsIpcHandlers(),
+    testIpcHandlers(),
+    databaseIpcHandlers())
 }

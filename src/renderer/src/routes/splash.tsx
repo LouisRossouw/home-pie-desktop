@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import logo from '../assets/LR16.png'
 
 import { AppVersion } from '~/components/app-version'
+import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
 const ee = import.meta.env.VITE_APP_TEST
 
@@ -10,6 +11,7 @@ export function SplashRoute() {
 
   useEffect(() => {
     window.api.resizeApp({ width: 250, height: 250 })
+    updateThemeUi('dark')
   }, [])
 
   return (

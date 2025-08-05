@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { themesList } from '~/libs/themes'
+import { Themes, themesList } from '~/libs/themes'
+import { Setting } from '@shared/types'
 import {
   Select,
   SelectItem,
@@ -8,35 +8,29 @@ import {
   SelectContent,
   SelectTrigger
 } from '~/components/ui/select'
+import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
-export function ThemeSelector() {
-  const [value, setValue] = useState('')
+type SettingValue = boolean | number | string
 
-  function saveTheme() {
-    // TODO; Write to database
-  }
-
-  function updateThemeUi(themeName?: string) {
-    document.body.classList.remove('default', 'light')
-
-    themesList.forEach((theme: { label: string; slug: string }) => {
-      document.body.classList.remove(theme.slug)
-    })
-
-    if (themeName) document.body.classList.add(themeName)
-  }
-
+export function ThemeSelector({
+  currentTheme,
+  handleAddNewChanges
+}: {
+  currentTheme?: Themes
+  handleAddNewChanges: (v: { setting: Setting; value: SettingValue }) => void
+}) {
   function handleThemeChange(value: string) {
-    setValue(value)
+    handleAddNewChanges({ setting: 'theme', value })
     updateThemeUi(value)
   }
 
-  const defaultTheme = 'light' // TODO; Needs to come from app settings.
-
   return (
-    <Select defaultValue={defaultTheme} onValueChange={(value) => handleThemeChange(value)}>
+    <Select
+      defaultValue={currentTheme ?? 'light'}
+      onValueChange={(value) => handleThemeChange(value)}
+    >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select a layout" />
+        <SelectValue placeholder="Select a theme" />
       </SelectTrigger>
       <SelectContent className="w-full">
         <SelectGroup>

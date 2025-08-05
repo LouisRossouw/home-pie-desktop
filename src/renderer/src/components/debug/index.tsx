@@ -1,9 +1,10 @@
+import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
-import { ApiTest, Setting } from '@shared/types'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
+import { ApiTest, Setting } from '@shared/types'
 
 import { useApp } from '~/libs/context/app'
 
@@ -18,8 +19,10 @@ const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
+  const navigation = useNavigate()
 
-  const { handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } = useApp()
+  const { appSettings, handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } =
+    useApp()
 
   const [output, setOutput] = useState<any>('')
   const [listenersCount, setListenersCount] = useState<Record<string, string>>({})
@@ -43,28 +46,24 @@ export function Debug() {
   async function getListenersCount() {
     const dotSquadLS = await window.api.listenerCount('dot-squad')
     const routerListenerLS = await window.api.listenerCount('navigate-to')
+    const ResizeListenerLS = await window.api.listenerCount('window-resized')
 
-    setListenersCount({ dotSquadLS, routerListenerLS })
+    setListenersCount({ dotSquadLS, routerListenerLS, ResizeListenerLS })
   }
 
+  // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
     const result = await window.api.getAppSetting({ setting })
 
     setOutput(JSON.parse(result))
   }
 
-  // async function handleSetSettings(setting: Setting, value: string) {
-  //   const success = await window.api.setAppSetting({ setting, value })
-
-  //   setOutput(JSON.stringify(success))
-  // }
-
   function clear() {
     setOutput(undefined)
   }
 
-  const isAuth = false // TODO
-  const isStaff = false // TODO
+  const isAuth = true // TODO
+  const isStaff = true // TODO
 
   const TokenExpires = 0 // TODO
   const connected = undefined // TODO
@@ -72,11 +71,39 @@ export function Debug() {
   const PGCID = authClients?.GOOGLE_CLIENT_ID.length
   const PMCID = authClients?.MANUAL_CLIENT_ID.length
 
+  const isDebug = appSettings?.debug
+
+  if (!isDebug || !isAuth || !isStaff) {
+    return (
+      <div className=" w-full h-[calc(100vh-152px)] items-center justify-center px-4 pb-4 bg-background">
+        <p>Debug mode has not been active</p>
+        <Button
+          variant={'outline'}
+          onClick={() => {
+            navigation('/')
+            updateAppSettings([{ setting: 'debug', value: false }])
+          }}
+        >
+          Disable debug
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div className=" w-full h-[calc(100vh-152px)] items-center justify-center px-4 pb-4 bg-background">
-      <div className="flex  p-2">
+      <div className="flex p-2 justify-between">
         <Button variant={'outline'} onClick={clear}>
           Clear
+        </Button>
+        <Button
+          variant={'outline'}
+          onClick={() => {
+            navigation('/')
+            updateAppSettings([{ setting: 'debug', value: false }])
+          }}
+        >
+          Disable debug
         </Button>
       </div>
 
@@ -168,7 +195,7 @@ export function Debug() {
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Theme:</label>
-            <ThemeSelector />
+            <ThemeSelector handleAddNewChanges={() => console.log('TODO')} />
           </div>
         </div>
 
