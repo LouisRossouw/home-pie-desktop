@@ -9,6 +9,7 @@ import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
 
 import { Button } from './ui/button'
 import { AppVersion } from './app-version'
+import { cn } from '~/libs/utils/cn'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -54,7 +55,7 @@ export function WindowFrameDebug() {
               updateAppSettings([{ setting: 'startRoute', value: pathname }])
             }}
           >
-            <Star size={18} color={isStartRoute ? 'orange' : undefined} />
+            <Star size={18} className={cn(isStartRoute && 'text-accent')} />
           </Button>
           <Button variant={'outline'} className="w-6 h-6" onClick={() => navigateTo('/')}>
             <House size={18} />
