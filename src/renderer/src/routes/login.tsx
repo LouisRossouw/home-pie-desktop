@@ -15,7 +15,7 @@ export default function Login() {
   const { appSettings, resizeApp, windowControl } = useApp()
   const { navigateTo } = useNav()
 
-  const { pollCount, startPolling, stopPolling } = usePoll()
+  const { startPolling, stopPolling } = usePoll()
 
   const [searchParams] = useSearchParams()
 

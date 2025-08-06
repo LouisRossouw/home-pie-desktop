@@ -1,4 +1,3 @@
-import { Link } from 'react-router'
 import { Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
 
 import { useNav } from '~/libs/hooks/use-navigation'

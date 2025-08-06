@@ -1,24 +1,24 @@
-import { useMemo } from 'react'
-import { Outlet, useNavigate } from 'react-router'
+// import { useMemo } from 'react'
+import { Outlet } from 'react-router'
 
-import { Lightbulb } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+// import { Lightbulb } from 'lucide-react'
+// import { useQuery } from '@tanstack/react-query'
 
-import { Button } from '~/components/ui/button'
-import { useNav } from '~/libs/hooks/use-navigation'
+// import { Button } from '~/components/ui/button'
+// import { useNav } from '~/libs/hooks/use-navigation'
 
 // import tempLogo from '../assets/projects/logo/timeinprogress-logo-play.gif'
 
-const myFinancesAppRoutes = [
-  {
-    slug: 'something-something',
-    img: undefined,
-    url: '/my-fincances/something'
-  }
-]
+// const myFinancesAppRoutes = [
+//   {
+//     slug: 'something-something',
+//     img: undefined,
+//     url: '/my-fincances/something'
+//   }
+// ]
 
 export default function MyFinances() {
-  const { navigateTo } = useNav()
+  // const { navigateTo } = useNav()
   // const { data: projectsRaw, isPending } = useQuery({
   //   queryKey: ['projects-list'],
   //   queryFn: getProjects

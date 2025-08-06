@@ -52,21 +52,23 @@ export default function App(): JSX.Element {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppContextProvider>
-        {booted && loaded && <Middlewear />}
-        {booted && !loaded ? (
-          <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
-        ) : (
-          <>
-            <WindowFrame />
-            <AppRoutes />
-            <WindowFrameDebug />
-          </>
-        )}
-        {/* <PerfomanceCheck /> */}
-      </AppContextProvider>
-    </QueryClientProvider>
+    <div className="border rounded-lg">
+      <QueryClientProvider client={queryClient}>
+        <AppContextProvider>
+          {booted && loaded && <Middlewear />}
+          {booted && !loaded ? (
+            <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
+          ) : (
+            <>
+              <WindowFrame />
+              <AppRoutes />
+              <WindowFrameDebug />
+            </>
+          )}
+          {/* <PerfomanceCheck /> */}
+        </AppContextProvider>
+      </QueryClientProvider>
+    </div>
   )
 }
 

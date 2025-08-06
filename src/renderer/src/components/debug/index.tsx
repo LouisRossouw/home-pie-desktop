@@ -220,7 +220,7 @@ export function Debug() {
   )
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex w-full justify-normal gap-2">
       <div className="w-full">
