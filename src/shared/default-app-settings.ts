@@ -1,5 +1,7 @@
 // TODO; Move this file somewhere else ?
 
+import { Setting } from './types'
+
 const timestamp = Math.floor(Date.now() / 1000)
 
 // prettier-ignore
@@ -18,3 +20,7 @@ export const defaultAppSettings = [
   { label: 'App Height', slug: 'app-height', key: 'appHeight', value: 670 }, // ^^^
   { label: 'App Window Mode', slug: 'app-window-mode', key: 'appWindowMode', value: undefined }
 ] as const
+
+export const settingKeys = Object.fromEntries(defaultAppSettings.map((s) => [s.key, s.key])) as {
+  [K in Setting]: K
+}

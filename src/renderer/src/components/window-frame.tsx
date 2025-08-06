@@ -2,6 +2,7 @@ import { useLocation } from 'react-router'
 import { Maximize, Minimize2, X } from 'lucide-react'
 
 import { WindowModes } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 
@@ -22,7 +23,7 @@ export function WindowFrame() {
 
   function handleUIModeChange({ action }: { action: WindowModes }) {
     if (action === 'default') {
-      updateAppSettings([{ setting: 'appWindowMode', value: '' }])
+      updateAppSettings([{ setting: settingKeys.appWindowMode, value: '' }])
       return resetWindow()
     }
     windowControl({ action })

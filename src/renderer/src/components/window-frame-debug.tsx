@@ -3,6 +3,8 @@ import { useLocation } from 'react-router'
 
 import { Bug, House, Star } from 'lucide-react'
 
+import { settingKeys } from '@shared/default-app-settings'
+
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
@@ -27,7 +29,7 @@ export function WindowFrameDebug() {
     if (countToDebug.current >= 5) {
       countToDebug.current = 0
       navigateTo('debug')
-      updateAppSettings([{ setting: 'debug', value: true }])
+      updateAppSettings([{ setting: settingKeys.debug, value: true }])
     }
   }
 
@@ -52,7 +54,7 @@ export function WindowFrameDebug() {
             // disabled={isStartRoute}
             onClick={() => {
               if (isStartRoute) return
-              updateAppSettings([{ setting: 'startRoute', value: pathname }])
+              updateAppSettings([{ setting: settingKeys.startRoute, value: pathname }])
             }}
           >
             <Star size={18} className={cn(isStartRoute && 'text-accent')} />

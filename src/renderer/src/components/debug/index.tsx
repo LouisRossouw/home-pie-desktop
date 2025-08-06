@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 import { ApiTest, Setting } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 
@@ -81,7 +82,7 @@ export function Debug() {
           variant={'outline'}
           onClick={() => {
             navigateTo('/')
-            updateAppSettings([{ setting: 'debug', value: false }])
+            updateAppSettings([{ setting: settingKeys.debug, value: false }])
           }}
         >
           Disable debug
@@ -100,7 +101,7 @@ export function Debug() {
           variant={'outline'}
           onClick={() => {
             navigateTo('/')
-            updateAppSettings([{ setting: 'debug', value: false }])
+            updateAppSettings([{ setting: settingKeys.debug, value: false }])
           }}
         >
           Disable debug
@@ -166,14 +167,14 @@ export function Debug() {
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>
-            <Button onClick={() => handleGetSettings('lockScreen')}>
+            <Button onClick={() => handleGetSettings(settingKeys.lockScreen)}>
               GetSetting - lock-screen
             </Button>
             <Button
               onClick={async () => {
                 const result = await updateAppSettings([
-                  { setting: 'dateFormat', value: 'noooo' },
-                  { setting: 'appHeight', value: 99999 }
+                  { setting: settingKeys.dateFormat, value: 'noooo' },
+                  { setting: settingKeys.appHeight, value: 99999 }
                 ])
                 setOutput(result)
               }}
