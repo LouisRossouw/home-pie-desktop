@@ -33,8 +33,10 @@ export default function Login() {
   }, [maybeForceLogout])
 
   function handleManualLogin() {
+    const startRoute = appSettings?.startRoute as string | undefined
+
     stopPolling()
-    navigateTo('/')
+    navigateTo(startRoute ?? '/')
 
     // TODO; Fetch app width & height from storage or app context, before resizing.
     const width = appSettings?.appWidth as number

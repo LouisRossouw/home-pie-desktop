@@ -6,6 +6,7 @@ const timestamp = Math.floor(Date.now() / 1000)
 export const defaultAppSettings = [
   {label: 'App start time',slug: 'app-start-time',key: 'appStartTime',value: timestamp},
   {label: 'App end time',slug: 'app-end-time',key: 'appEndTime',value: ''},
+  {label: "Default start screen", slug: "start-route", key: "startRoute", value: undefined},
   { label: 'Theme', slug: 'theme', key: 'theme', value: 'light' },
   { label: 'Decimals', slug: 'decimals', key: 'decimals', value: 3 },
   { label: 'Debug', slug: 'debug', key: 'debug', value: false },

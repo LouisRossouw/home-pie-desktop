@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useLocation } from 'react-router'
 
-import { Bug, House } from 'lucide-react'
+import { Bug, House, Star } from 'lucide-react'
 
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
@@ -31,6 +31,7 @@ export function WindowFrameDebug() {
   }
 
   const isLogin = pathname === '/login'
+  const isStartRoute = appSettings?.startRoute === pathname
 
   if (isLogin) {
     return (
@@ -44,12 +45,21 @@ export function WindowFrameDebug() {
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
       <div className="grid grid-cols-3 w-full">
         <div className="flex gap-4 justify-start items-center">
-          {/* <Link to={'/'}>
-            <House size={18} />
-          </Link> */}
+          <Button
+            variant={'outline'}
+            className="w-6 h-6"
+            // disabled={isStartRoute}
+            onClick={() => {
+              if (isStartRoute) return
+              updateAppSettings([{ setting: 'startRoute', value: pathname }])
+            }}
+          >
+            <Star size={18} color={isStartRoute ? 'orange' : undefined} />
+          </Button>
           <Button variant={'outline'} className="w-6 h-6" onClick={() => navigateTo('/')}>
             <House size={18} />
           </Button>
+
           <p className="text-xs">{pathname}</p>
         </div>
         <div className="flex justify-center items-center">
