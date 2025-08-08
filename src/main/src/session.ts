@@ -127,3 +127,19 @@ function updateTokens(response: any) {
 
   // TODO
 }
+
+// TODO
+export function handleError(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
+      console.error('Server is offline or unreachable')
+      return undefined
+    } else {
+      console.error('Axios request failed:', error.message)
+      return { ok: false }
+    }
+  } else {
+    console.error('Unknown error:', error)
+    return undefined
+  }
+}
