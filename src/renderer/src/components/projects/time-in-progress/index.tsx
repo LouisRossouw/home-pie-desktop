@@ -54,7 +54,7 @@ export function TimeInProgress() {
   }
 
   return (
-    <div className="flex w-full h-[calc(100vh-155px)] items-center justify-center animate-in fade-in duration-800 ease-in-out">
+    <div className="flex w-full h-[calc(100vh-160px)] items-center justify-center animate-in fade-in duration-800 ease-in-out">
       <div className="h-full w-full p-4 space-y-4">
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-2">

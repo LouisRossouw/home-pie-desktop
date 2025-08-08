@@ -41,7 +41,7 @@ export default function ProjectsRoute() {
   const selectedProject = currentSubRoutes[currentSubRoutes.length - 1]
 
   return (
-    <div className="flex h-[calc(100vh-96px)] items-center justify-center">
+    <div className="flex h-[calc(100vh-111px)] items-center justify-center">
       <PanelGroup direction="horizontal" ref={panelGroupRef}>
         <ProjectsPanel
           ref={projectsPanelRef}
