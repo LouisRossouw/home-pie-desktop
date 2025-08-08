@@ -71,6 +71,7 @@ export type Social = {
 export type ApiTimeInProgressOverview = { account: string; range: Range; interval: number }
 
 export type ApiTimeInProgressOverviewResponse = {
+  db_elapsed_time: number
   ok: boolean
   datetime: string
   instagram: Social

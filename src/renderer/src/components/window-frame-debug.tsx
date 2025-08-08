@@ -5,13 +5,13 @@ import { Bug, House, Star } from 'lucide-react'
 
 import { settingKeys } from '@shared/default-app-settings'
 
+import { cn } from '~/libs/utils/cn'
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
 
 import { Button } from './ui/button'
 import { AppVersion } from './app-version'
-import { cn } from '~/libs/utils/cn'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -49,7 +49,7 @@ export function WindowFrameDebug() {
       <div className="grid grid-cols-3 w-full">
         <div className="flex gap-4 justify-start items-center">
           <Button
-            variant={'outline'}
+            variant={'ghost'}
             className="w-6 h-6"
             // disabled={isStartRoute}
             onClick={() => {
@@ -59,7 +59,7 @@ export function WindowFrameDebug() {
           >
             <Star size={18} className={cn(isStartRoute && 'text-accent')} />
           </Button>
-          <Button variant={'outline'} className="w-6 h-6" onClick={() => navigateTo('/')}>
+          <Button variant={'ghost'} className="w-6 h-6" onClick={() => navigateTo('/')}>
             <House size={18} />
           </Button>
 

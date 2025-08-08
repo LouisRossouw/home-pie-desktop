@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { ApiTimeInProgressOverview } from '@shared/types'
 
-import { Castle, Edit2, RefreshCcw } from 'lucide-react'
+import { Castle, Edit2, RefreshCcw, Server } from 'lucide-react'
 
 import { getAllSearchParams } from '~/libs/utils/search-params'
 
@@ -53,6 +53,8 @@ export function TimeInProgress() {
     )
   }
 
+  const dbTime = data?.db_elapsed_time
+
   return (
     <div className="flex w-full h-[calc(100vh-160px)] items-center justify-center animate-in fade-in duration-800 ease-in-out">
       <div className="h-full w-full p-4 space-y-4">
@@ -61,9 +63,15 @@ export function TimeInProgress() {
             <Label className="text-lg text-bold text-foreground">Time In Progress</Label>
             <ProjectTools handleOpenEditMenu={handleOpenEditMenu} />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <RangeSelector selected={range} />
             <IntervalSelector currentValue={interval} className="w-32" />
+            {dbTime && (
+              <div className="flex gap-2 text-xs">
+                <Server size={14} />
+                <p>{dbTime.toFixed(2)}</p>
+              </div>
+            )}
             <Button variant={'outline'} size={'icon'} onClick={() => refetch()}>
               {isFetching ? <LoadingIndicator /> : <RefreshCcw />}
             </Button>
