@@ -1,7 +1,13 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-import type { OnResize, ResizeApp, Setting, WindowControl } from '@shared/types'
+import type {
+  Setting,
+  OnResize,
+  ResizeApp,
+  WindowControl,
+  ApiTimeInProgressOverview
+} from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 
 const IPCR = electronAPI.ipcRenderer
@@ -26,8 +32,10 @@ const appAPI = {
   removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb)
 }
 
+// prettier-ignore
 const externalAPI = {
-  apiProjectList: async () => IPCR.invoke('api-projects-list')
+  apiProjectList: async () => IPCR.invoke('api-projects-list'),
+  apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data)
 }
 
 // prettier-ignore
