@@ -2,16 +2,12 @@
 
 import { defaultAppSettings } from './default-app-settings'
 
-export type ApiTest = { ok: boolean; data?: any }
-
 export type Project = {
   title: string
   slug: string
   img?: string
   url: string
 }
-
-export type ApiProjectsList = { ok: boolean; data?: Project[] }
 
 export type Setting = (typeof defaultAppSettings)[number]['key']
 
@@ -37,4 +33,49 @@ export type OnResize = {
   height: number
   hasMoved?: boolean
   isMoving?: boolean
+}
+
+// **
+// **
+// **
+// ** API Related Types;
+
+export type Range = 'hour' | 'day' | 'week' | 'month' | 'year'
+
+export type ApiTest = { ok: boolean; data?: any }
+
+export type ApiProjectsList = { ok: boolean; data?: Project[] }
+
+type SocialData = {
+  account: string
+  to_date: string
+  latest_post_value: number
+  latest_followers: number
+  from_date: string
+  past_post_value: number
+  past_followers_value: number
+  post_difference: number
+  followers_difference: number
+  average_per_10_min: number
+  average_per_1_hour: number
+  average_per_1_day: number
+  average_per_1_week: number
+  average_per_1_month: number
+}
+
+export type Social = {
+  data: SocialData
+  history: SocialData[]
+}
+
+export type ApiTimeInProgressOverview = { account: string; range: Range; interval: number }
+
+export type ApiTimeInProgressOverviewResponse = {
+  ok: boolean
+  datetime: string
+  instagram: Social
+  youtube: Social
+  tiktok: Social
+  bluesky: Social
+  twitter: Social
 }
