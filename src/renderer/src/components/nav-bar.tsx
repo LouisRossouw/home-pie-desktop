@@ -26,7 +26,7 @@ export function NavBar({
 
   if (!routeMenu)
     return (
-      <nav className="flex h-8 w-full items-center justify-end p-2 ">
+      <nav className="flex h-8 w-full items-center justify-end p-2">
         <Button variant={'ghost'} size={'sm'} onClick={() => setSideBarOpen(!sideBarOpen)}>
           <Menu />
         </Button>
@@ -34,7 +34,7 @@ export function NavBar({
     )
 
   return (
-    <nav className="flex h-8 w-full items-center justify-between p-2 border-b">
+    <nav className="flex h-12 w-full items-center justify-between p-2 border-b">
       <div className="flex gap-4">
         {routeMenu && (
           <div className="border-r flex items-center gap-4 pr-4">
