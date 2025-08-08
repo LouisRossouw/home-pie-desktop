@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { IpcRendererEvent } from 'electron'
 
 import { useApp } from '~/libs/context/app'
-import { dotSquadAnims } from '@shared/dot-squad'
+import { type DotSquadAnims } from '@shared/dot-squad'
 
 export function DotSquadListener() {
   const { handleUpdateDotSquad } = useApp()
@@ -13,9 +13,9 @@ export function DotSquadListener() {
   }, [])
 
   function setupOnDotSquadActivity() {
-    const handler = (_event: IpcRendererEvent, { activity }: { activity: string }) => {
+    const handler = (_event: IpcRendererEvent, { activity }: { activity: DotSquadAnims }) => {
       if (activity) {
-        handleUpdateDotSquad(dotSquadAnims[activity])
+        handleUpdateDotSquad(activity)
       }
     }
     window.api.updateDotSquad(handler)

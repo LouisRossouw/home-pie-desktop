@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
 import { WindowModes } from '@shared/types'
 
-import { Button } from '~/components/ui/button'
 import { useApp } from '~/libs/context/app'
+import { useNav } from '~/libs/hooks/use-navigation'
+import { usePoll } from '~/libs/hooks/use-poll-counter'
 import { windowModes } from '~/libs/hooks/use-app-window'
+
+import { Button } from '~/components/ui/button'
 
 export default function Login() {
   const { appSettings, resizeApp, windowControl } = useApp()
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
+
+  const { startPolling, stopPolling } = usePoll()
 
   const [searchParams] = useSearchParams()
 
@@ -20,6 +25,7 @@ export default function Login() {
 
   useEffect(() => {
     windowControl({ action: 'login' })
+    startPolling()
 
     if (maybeForceLogout) {
       // TODO?
@@ -27,7 +33,10 @@ export default function Login() {
   }, [maybeForceLogout])
 
   function handleManualLogin() {
-    navigation('/')
+    const startRoute = appSettings?.startRoute as string | undefined
+
+    stopPolling()
+    navigateTo(startRoute ?? '/')
 
     // TODO; Fetch app width & height from storage or app context, before resizing.
     const width = appSettings?.appWidth as number
@@ -54,7 +63,7 @@ export default function Login() {
       {!readyToSignIn ? (
         <div className="grid h-full w-full items-center justify-center p-4 gap-4">
           <div className="text-center">
-            <h1 className="font-bold text-6xl">{format(now, 'HH:mm')}</h1>
+            <h1 className="font-bold text-6xl">{format(now, 'HH:mm:ss')}</h1>
             <h2 className="font-medium text-3xl">{format(now, 'yyyy-MM-dd')}</h2>
           </div>
           <div className="text-center w-full space-y-4">

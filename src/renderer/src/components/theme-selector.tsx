@@ -1,5 +1,9 @@
-import { Themes, themesList } from '~/libs/themes'
 import { Setting } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
+
+import { Themes, themesList } from '~/libs/themes'
+import { updateThemeUi } from '~/libs/utils/update-theme-ui'
+
 import {
   Select,
   SelectItem,
@@ -8,7 +12,6 @@ import {
   SelectContent,
   SelectTrigger
 } from '~/components/ui/select'
-import { updateThemeUi } from '~/libs/utils/update-theme-ui'
 
 type SettingValue = boolean | number | string
 
@@ -20,7 +23,7 @@ export function ThemeSelector({
   handleAddNewChanges: (v: { setting: Setting; value: SettingValue }) => void
 }) {
   function handleThemeChange(value: string) {
-    handleAddNewChanges({ setting: 'theme', value })
+    handleAddNewChanges({ setting: settingKeys.theme, value })
     updateThemeUi(value)
   }
 

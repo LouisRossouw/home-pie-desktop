@@ -1,15 +1,16 @@
-import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 import { ApiTest, Setting } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -19,7 +20,7 @@ const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
-  const navigation = useNavigate()
+  const { navigateTo } = useNav()
 
   const { appSettings, handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } =
     useApp()
@@ -80,8 +81,8 @@ export function Debug() {
         <Button
           variant={'outline'}
           onClick={() => {
-            navigation('/')
-            updateAppSettings([{ setting: 'debug', value: false }])
+            navigateTo('/')
+            updateAppSettings([{ setting: settingKeys.debug, value: false }])
           }}
         >
           Disable debug
@@ -99,8 +100,8 @@ export function Debug() {
         <Button
           variant={'outline'}
           onClick={() => {
-            navigation('/')
-            updateAppSettings([{ setting: 'debug', value: false }])
+            navigateTo('/')
+            updateAppSettings([{ setting: settingKeys.debug, value: false }])
           }}
         >
           Disable debug
@@ -161,15 +162,19 @@ export function Debug() {
             <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
           </div>
           <div className="grid gap-2 border-t py-4">
+            <label>Route Nav:</label>
+            <Button onClick={() => navigateTo('/no-connection')}>no-connection</Button>
+          </div>
+          <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>
-            <Button onClick={() => handleGetSettings('lockScreen')}>
+            <Button onClick={() => handleGetSettings(settingKeys.lockScreen)}>
               GetSetting - lock-screen
             </Button>
             <Button
               onClick={async () => {
                 const result = await updateAppSettings([
-                  { setting: 'dateFormat', value: 'noooo' },
-                  { setting: 'appHeight', value: 99999 }
+                  { setting: settingKeys.dateFormat, value: 'noooo' },
+                  { setting: settingKeys.appHeight, value: 99999 }
                 ])
                 setOutput(result)
               }}
@@ -216,7 +221,7 @@ export function Debug() {
   )
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex w-full justify-normal gap-2">
       <div className="w-full">

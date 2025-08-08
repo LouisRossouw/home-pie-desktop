@@ -17,6 +17,7 @@ export function useDotSquad() {
   useEffect(() => {
     if (frames) {
       playDotSquad(frames, setDotA, setDotB, setDotC)
+      setFrames(undefined)
     }
   }, [frames, reload])
 

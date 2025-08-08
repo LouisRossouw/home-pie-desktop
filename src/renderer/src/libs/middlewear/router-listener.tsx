@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { IpcRendererEvent } from 'electron'
-import { useNavigate } from 'react-router'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 export function RouterListener() {
-  const navigate = useNavigate()
+  const { navigateTo } = useNav()
 
   useEffect(() => {
     const cleanup = setupRouterListener()
@@ -13,7 +13,7 @@ export function RouterListener() {
   function setupRouterListener() {
     const handler = (_event: IpcRendererEvent, { url }: { url: string }) => {
       if (url) {
-        navigate(url)
+        navigateTo(url)
       }
     }
 

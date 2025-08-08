@@ -1,13 +1,15 @@
 import { ipcMain } from 'electron'
 import { loadApp, maybeFastLoad, resizeApp, syncRoute, windowControl } from './app'
 
-import { Setting } from '@shared/types'
+import { ApiTimeInProgressOverview, Setting } from '@shared/types'
 
 import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
 import { apiProjectList } from '@main/src/api/projects/api-projects-list'
 
 import { getAllSettings, getSetting, setSetting } from './database'
+
+import { apiTimeInProgressOverview } from './api/projects/time-in-progress/api-overview'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -36,6 +38,10 @@ function appIpcHandlers() {
 function projectsIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
     return await apiProjectList()
+  })
+
+  ipcMain.handle('api-timeinprogress-overview', async (_event, data: ApiTimeInProgressOverview) => {
+    return await apiTimeInProgressOverview(data)
   })
 }
 

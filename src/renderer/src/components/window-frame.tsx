@@ -2,6 +2,7 @@ import { useLocation } from 'react-router'
 import { Maximize, Minimize2, X } from 'lucide-react'
 
 import { WindowModes } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 
@@ -22,7 +23,7 @@ export function WindowFrame() {
 
   function handleUIModeChange({ action }: { action: WindowModes }) {
     if (action === 'default') {
-      updateAppSettings([{ setting: 'appWindowMode', value: '' }])
+      updateAppSettings([{ setting: settingKeys.appWindowMode, value: '' }])
       return resetWindow()
     }
     windowControl({ action })
@@ -32,53 +33,61 @@ export function WindowFrame() {
 
   return (
     <div
-      className="h-8 rounded-t-lg w-full flex items-center justify-between px-2 bg-background border-b"
+      className="h-8 rounded-t-lg px-2 bg-background border-b items-center justify-center"
       style={webKit.drag}
     >
-      {/* TODO; Turn into grid columns , or something else to center things! */}
-      {isLogin ? <div></div> : <div>HomePie</div>}
-      {!isLogin ? (
-        <div className="flex" style={webKit.noDrag}>
-          <DotSquad />
+      <div className="grid grid-cols-3 w-full">
+        <div className="flex w-full items-center">{isLogin ? <div></div> : <div>HomePie</div>}</div>
+
+        <div className="flex w-full items-center justify-center">
+          {!isLogin ? (
+            <div className="flex">
+              <DotSquad />
+            </div>
+          ) : (
+            <div>HomePie</div>
+          )}
         </div>
-      ) : (
-        <div>HomePie</div>
-      )}
 
-      <div className="flex" style={webKit.noDrag}>
-        <WindowUIModeSelector
-          currentUIMode={currentUIMode}
-          handleUIModeChange={handleUIModeChange}
-        />
-        {!isLogin && (
-          <>
+        <div className="flex w-full items-center justify-end">
+          {!isLogin && (
+            <div className="flex" style={webKit.noDrag}>
+              <div>
+                <WindowUIModeSelector
+                  currentUIMode={currentUIMode}
+                  handleUIModeChange={handleUIModeChange}
+                />
+              </div>
+              <Button
+                size={'sm'}
+                variant={'ghost'}
+                className="h-8 w-8"
+                onClick={() => windowControl({ action: 'minimize' })}
+              >
+                <Minimize2 size={18} />
+              </Button>
+              <Button
+                size={'sm'}
+                variant={'ghost'}
+                className="h-8 w-8"
+                onClick={() => windowControl({ action: 'maximize' })}
+              >
+                <Maximize size={18} />
+              </Button>
+            </div>
+          )}
+
+          <div style={webKit.noDrag}>
             <Button
               size={'sm'}
               variant={'ghost'}
               className="h-8 w-8"
-              onClick={() => windowControl({ action: 'minimize' })}
+              onClick={() => windowControl({ action: 'close' })}
             >
-              <Minimize2 size={18} />
+              <X size={18} />
             </Button>
-            <Button
-              size={'sm'}
-              variant={'ghost'}
-              className="h-8 w-8"
-              onClick={() => windowControl({ action: 'maximize' })}
-            >
-              <Maximize size={18} />
-            </Button>
-          </>
-        )}
-
-        <Button
-          size={'sm'}
-          variant={'ghost'}
-          className="h-8 w-8"
-          onClick={() => windowControl({ action: 'close' })}
-        >
-          <X size={18} />
-        </Button>
+          </div>
+        </div>
       </div>
     </div>
   )
