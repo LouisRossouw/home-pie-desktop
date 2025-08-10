@@ -17,21 +17,21 @@ export default function LineChartComponent({ dataKey, data, strokeColor, fill })
   return (
     // <div className="flex w-full h-full justify-center items-center">
     <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart data={data ?? []}>
+      <ComposedChart data={data ?? []} className="text-xs">
         <CartesianGrid stroke="#ccc" opacity={0.2} />
-        {data && <XAxis dataKey={'date'} />}
-        <YAxis domain={[minY, maxY]} />
-        {/* {data && (
-            <Tooltip content={<CustomTooltip data={data} />} cursor={{ fill: 'transparent' }} />
-          )} */}
+        {data && <XAxis dataKey={'date'} tickFormatter={(date) => format(date, 'yyyy-MM-dd')} />}
+        <YAxis domain={[minY, maxY]} width={5} />
+        {data && (
+          <Tooltip content={<CustomTooltip data={data} />} cursor={{ fill: 'transparent' }} />
+        )}
 
         <Legend />
         <Area
-          type="monotone"
-          dataKey={dataKey}
           fill={fill}
+          type="bump"
+          dataKey={dataKey}
           stroke={strokeColor}
-          activeDot={{ r: 5, stroke: 'red', fill: 'red' }}
+          activeDot={{ r: 5, stroke: 'white', fill: 'red' }}
           dot={dotsVisible ? { r: 2 } : false}
         />
         <Scatter dataKey="postedAt" fill="aqua" />
@@ -41,16 +41,16 @@ export default function LineChartComponent({ dataKey, data, strokeColor, fill })
   )
 }
 
-// const CustomTooltip = ({ active, payload, label, data }: TooltipProps<ValueType, NameType>) => {
-//   if (active) {
-//     return (
-//       <div className="custom-tooltip">
-//         <p className="desc">{`Posts: ${data[label]?.post ?? 'N/A'}`}</p>
-//         <p className="label">{`Followers ${payload?.[0]?.value ?? 'N/A'}`}</p>
-//         <p className="desc">{format(data[label]?.date ?? '2025-01-01', 'dd-MM-yyyy HH:mm')}</p>
-//       </div>
-//     )
-//   }
+const CustomTooltip = ({ active, payload, label, data }: TooltipProps<ValueType, NameType>) => {
+  if (active) {
+    return (
+      <div className="custom-tooltip">
+        {/* <p className="desc">{`Posts: ${data[label]?.post ?? 'N/A'}`}</p> */}
+        <p className="label">{`Followers ${payload?.[0]?.value ?? 'N/A'}`}</p>
+        {/* <p className="desc">{format(data[label]?.date ?? '2025-01-01', 'dd-MM-yyyy HH:mm')}</p> */}
+      </div>
+    )
+  }
 
-//   return null
-// }
+  return null
+}
