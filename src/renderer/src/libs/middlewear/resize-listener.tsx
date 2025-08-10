@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { IpcRendererEvent } from 'electron'
 
 import { OnResize } from '@shared/types'
+import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 
@@ -24,13 +25,13 @@ export function WindowResizeListener() {
     if (appWindowMode.current !== '') {
       resetWindow()
     }
-    updateAppSettings([{ setting: 'appWindowMode', value: '' }])
+    updateAppSettings([{ setting: settingKeys.appWindowMode, value: '' }])
   }
 
   function handleResizeWindow(size: { width: number; height: number }) {
     updateAppSettings([
-      { setting: 'appWidth', value: size.width },
-      { setting: 'appHeight', value: size.height }
+      { setting: settingKeys.appWidth, value: size.width },
+      { setting: settingKeys.appHeight, value: size.height }
     ])
   }
 

@@ -1,11 +1,11 @@
-import { app, BrowserWindow, screen } from 'electron'
+import { app, BrowserWindow, screen, shell } from 'electron'
 import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
 import { getBaseURl } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
 import { ResizeApp, WindowControl } from '@shared/types'
-import { defaultAppSettings } from '@shared/default-app-settings'
+import { defaultAppSettings, settingKeys } from '@shared/default-app-settings'
 
 import { initDatabase, setSetting, dbExists } from './database'
 import { readAppDataJson, saveTimestamps } from './utils'
@@ -27,7 +27,7 @@ export async function maybeFastLoad() {
   const now = new Date()
 
   const appData = readAppDataJson()
-  const maybeAppEndTime = appData['appEndTime'] as number | undefined
+  const maybeAppEndTime = appData[settingKeys.appEndTime] as number | undefined
 
   const lastOpened = maybeAppEndTime ? differenceInHours(now, new Date(maybeAppEndTime)) : undefined
   console.log('lastOpened:', lastOpened ? `${lastOpened} hour(s) ago` : '..First time!')
@@ -95,8 +95,8 @@ export function windowControl({ action, width, height }: WindowControl) {
 
       win.setBounds({ x: 0, y: 0, width: w, height: h })
 
-      setSetting('appWidth', w)
-      setSetting('appHeight', h)
+      setSetting(settingKeys.appWidth, w)
+      setSetting(settingKeys.appHeight, h)
 
       break
     case 'login':
@@ -143,12 +143,26 @@ export async function updateDotSquadActivity({ activity }: { activity: DotSquadA
 
 async function updateAppStartTime() {
   const now = Date.now()
-  setSetting('appStartTime', now)
+  setSetting(settingKeys.appStartTime, now)
   saveTimestamps({ appStartTime: now })
 }
 
 async function updateAppCloseTime() {
   const now = Date.now()
-  setSetting('appEndTime', Date.now())
+  setSetting(settingKeys.appEndTime, Date.now())
   saveTimestamps({ appEndTime: now })
+}
+
+export async function openDirectory({ path }: { path: string }) {
+  try {
+    const result = await shell.openPath(path)
+
+    if (result) {
+      console.error(`Error opening directory: ${result}`)
+    } else {
+      console.log(`Directory opened successfully: ${path}`)
+    }
+  } catch (error) {
+    console.error(`Failed to open directory: ${error}`)
+  }
 }

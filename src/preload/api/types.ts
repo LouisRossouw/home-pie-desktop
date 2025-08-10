@@ -1,4 +1,12 @@
-import { ApiProjectsList, ApiTest, ResizeApp, Setting, WindowControl } from '@shared/types'
+import {
+  ApiTest,
+  Setting,
+  ResizeApp,
+  WindowControl,
+  ApiProjectsList,
+  ApiTimeInProgressOverview,
+  ApiTimeInProgressOverviewResponse
+} from '@shared/types'
 
 type Nav = {
   syncRoute: (v: string) => {}
@@ -16,10 +24,15 @@ type AppAPI = {
   listenerCount: (v: any) => Promise<any>
   removeAllListeners: (v: any) => Promise<any>
   removeListener: (v: any, listener: string) => Promise<any>
+  openDirectory: (v: { path: string }) => void // TODO; Return & handle error
 }
 
+// prettier-ignore
 type ExternalAPI = {
   apiProjectList: () => Promise<ApiProjectsList>
+  apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
+  apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
+  apiGenGenStart: (data: {project: string}) => Promise<any> // TODO; type
 }
 
 type TestAPI = {

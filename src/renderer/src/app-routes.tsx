@@ -1,46 +1,85 @@
-import { Routes, Route } from 'react-router'
+import { Route, Routes } from 'react-router'
+
+import { NoMatch } from './routes/no-match'
+import NoConnectionRoute from './routes/no-connection'
 
 import { MainLayout } from './routes/main-layout'
 
 import Login from './routes/login'
-import Home from './routes/home'
-
-import { NoMatch } from './routes/no-match'
-
-import ProjectsOverviewRoute from './routes/sub-projects/overview'
-import ProjectSettings from './routes/sub-projects/settings'
-import TimeInProgressRoute from './routes/sub-projects/time-in-progress'
-import InstaInsightsRoute from './routes/sub-projects/insta-insights'
-import NoConnectionRoute from './routes/no-connection'
 import DebugRoute from './routes/debug'
-import MyFinancesOverviewRoute from './routes/my-finances/overview'
-import MyFinances from './routes/my-finances'
-import ProjectsRoute from './routes/projects'
+
+import Home from './routes/home'
 import SettingsRoute from './routes/settings'
 
-export function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="login" element={<Login />} />
-      <Route path="no-connection" element={<NoConnectionRoute />} />
+import MyFinancesOverviewRoute from './routes/my-finances/overview'
 
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        <Route path="projects" element={<ProjectsRoute />}>
-          <Route index element={<ProjectsOverviewRoute />} />
-          <Route path="project-settings" element={<ProjectSettings />} />
-          <Route path="time-in-progress" element={<TimeInProgressRoute />} />
-          <Route path="insta-insights" element={<InstaInsightsRoute />} />
-        </Route>
-        <Route path="my-finances" element={<MyFinances />}>
-          <Route index element={<MyFinancesOverviewRoute />} />
-          <Route path="my-finances-settings" element={<ProjectSettings />} />
-          {/* <Route path="time-in-progress" element={<TimeInProgressRoute />} /> */}
-        </Route>
-        <Route path="debug" element={<DebugRoute />} />
-        <Route path="settings" element={<SettingsRoute />} />
-      </Route>
-      <Route path="*" element={<NoMatch />} />
-    </Routes>
-  )
+import ProjectsRoute from './routes/projects'
+import ProjectsOverviewRoute from './routes/sub-projects/overview'
+import ProjectSettingsRoute from './routes/sub-projects/settings'
+import InstaInsightsRoute from './routes/sub-projects/insta-insights'
+import InstaInsightsOverviewRoute from './routes/sub-projects/insta-insights/overview'
+import TimeInProgressRoute from './routes/sub-projects/time-in-progress'
+
+import GenGenRoute from './routes/gengen'
+import GenGenSettingsRoute from './routes/gengen/settings'
+import GenGenOverviewRoute from './routes/gengen/overview'
+import GenGenTimeInProgressRoute from './routes/gengen/time-in-progress'
+import MyFinancesRoute from './routes/my-finances'
+
+export function AppRoutes() {
+  return <Routes>{renderRoutes(routesConfig)}</Routes>
 }
+
+function renderRoutes(routes) {
+  return routes.map(({ children, ...route }, index: number) => (
+    <Route key={index} {...route}>
+      {children && renderRoutes(children)}
+    </Route>
+  ))
+}
+
+const routesConfig = [
+  { path: 'login', element: <Login /> },
+  { path: 'no-connection', element: <NoConnectionRoute /> },
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      {
+        path: 'projects',
+        element: <ProjectsRoute />,
+        children: [
+          { index: true, element: <ProjectsOverviewRoute /> },
+          { path: 'project-settings', element: <ProjectSettingsRoute /> },
+          { path: 'time-in-progress', element: <TimeInProgressRoute /> },
+          {
+            path: 'insta-insights',
+            element: <InstaInsightsRoute />,
+            children: [{ index: true, element: <InstaInsightsOverviewRoute /> }]
+          }
+        ]
+      },
+      {
+        path: 'my-finances',
+        element: <MyFinancesRoute />,
+        children: [
+          { index: true, element: <MyFinancesOverviewRoute /> },
+          { path: 'my-finances-settings', element: <div>TODO</div> }
+        ]
+      },
+      {
+        path: 'gengen',
+        element: <GenGenRoute />,
+        children: [
+          { index: true, element: <GenGenOverviewRoute /> },
+          { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
+          { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
+        ]
+      },
+      { path: 'debug', element: <DebugRoute /> },
+      { path: 'settings', element: <SettingsRoute /> }
+    ]
+  },
+  { path: '*', element: <NoMatch /> }
+]

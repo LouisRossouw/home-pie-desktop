@@ -3,9 +3,9 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+import { startPolling } from './src/poll'
 import { registerIpcHandlers } from './src/ipc-handlers'
 import { currentRoute, suppressResizeEvent } from './src/app'
-import { startPoll } from './src/poll'
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
@@ -86,7 +86,7 @@ app.whenReady().then(() => {
   })
 
   createWindow()
-  startPoll()
+  startPolling()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -1,7 +1,13 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-import type { OnResize, ResizeApp, Setting, WindowControl } from '@shared/types'
+import type {
+  Setting,
+  OnResize,
+  ResizeApp,
+  WindowControl,
+  ApiTimeInProgressOverview
+} from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 
 const IPCR = electronAPI.ipcRenderer
@@ -23,11 +29,16 @@ const appAPI = {
   updateDotSquad: (callback: (event: IpcRendererEvent, data: { activity: DotSquadAnims }) => void) => {ipcRenderer.on('dot-squad', callback)},
   listenerCount: (channel: any) => ipcRenderer.listenerCount(channel),
   removeAllListeners: (channel: any) => ipcRenderer.removeAllListeners(channel),
-  removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb)
+  removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb),
+  openDirectory: async (data: {path: string}) =>IPCR.invoke('open-directory', data)
 }
 
+// prettier-ignore
 const externalAPI = {
-  apiProjectList: async () => IPCR.invoke('api-projects-list')
+  apiProjectList: async () => IPCR.invoke('api-projects-list'),
+  apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
+  apiGenGenCheckProgress: async (data: {project: string}) => IPCR.invoke('api-gengen-check-progress', data),
+  apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data)
 }
 
 // prettier-ignore
