@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron'
+import { app, BrowserWindow, screen, shell } from 'electron'
 import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
@@ -151,4 +151,18 @@ async function updateAppCloseTime() {
   const now = Date.now()
   setSetting(settingKeys.appEndTime, Date.now())
   saveTimestamps({ appEndTime: now })
+}
+
+export async function openDirectory({ path }: { path: string }) {
+  try {
+    const result = await shell.openPath(path)
+
+    if (result) {
+      console.error(`Error opening directory: ${result}`)
+    } else {
+      console.log(`Directory opened successfully: ${path}`)
+    }
+  } catch (error) {
+    console.error(`Failed to open directory: ${error}`)
+  }
 }
