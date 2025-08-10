@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { loadApp, maybeFastLoad, resizeApp, syncRoute, windowControl } from './app'
+import { loadApp, maybeFastLoad, openDirectory, resizeApp, syncRoute, windowControl } from './app'
 
 import { ApiTimeInProgressOverview, Setting } from '@shared/types'
 
@@ -7,9 +7,10 @@ import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
 import { apiProjectList } from '@main/src/api/projects/api-projects-list'
 
-import { getAllSettings, getSetting, setSetting } from './database'
-
+import { apiGenGenCheckProgress } from './api/gengen/api-gengen-check-progress'
 import { apiTimeInProgressOverview } from './api/projects/time-in-progress/api-overview'
+import { getAllSettings, getSetting, setSetting } from './database'
+import { apiGenGenStart } from './api/gengen/api-gengen-start'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -33,6 +34,10 @@ function appIpcHandlers() {
   ipcMain.on('window-control', (_event, { action, width, height }) => {
     windowControl({ action, width, height })
   })
+
+  ipcMain.on('open-directory', (_event, data) => {
+    openDirectory(data)
+  })
 }
 
 function projectsIpcHandlers() {
@@ -42,6 +47,16 @@ function projectsIpcHandlers() {
 
   ipcMain.handle('api-timeinprogress-overview', async (_event, data: ApiTimeInProgressOverview) => {
     return await apiTimeInProgressOverview(data)
+  })
+}
+
+function gengenIpcHandlers() {
+  ipcMain.handle('api-gengen-start', async (_event, data) => {
+    return await apiGenGenStart(data)
+  })
+
+  ipcMain.handle('api-gengen-check-progress', async (_event, data) => {
+    return await apiGenGenCheckProgress(data)
   })
 }
 
@@ -83,5 +98,6 @@ export function registerIpcHandlers() {
     appIpcHandlers(),
     projectsIpcHandlers(),
     testIpcHandlers(),
-    databaseIpcHandlers())
+    databaseIpcHandlers(),
+    gengenIpcHandlers())
 }
