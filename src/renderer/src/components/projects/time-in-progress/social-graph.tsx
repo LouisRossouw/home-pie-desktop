@@ -30,8 +30,8 @@ export function SocialGraph({ title, data }: { title: string; data?: Social }) {
   const dataStaleTime = differenceInMinutes(currentDate, toDate)
 
   const isActive = timeDifference >= 60 ? true : false
+  const strokeColor = followersDiff > 0 ? 'lime' : followersDiff === 0 ? 'gray' : 'red'
   const serverIconColor = dataStaleTime >= 10 ? 'lime' : dataStaleTime > 12 ? 'red' : 'grey'
-  const strokeColor = followersDiff > 0 ? 'lime' : followersDiff === 0 ? 'yellow' : 'red'
 
   if (!data) {
     return (

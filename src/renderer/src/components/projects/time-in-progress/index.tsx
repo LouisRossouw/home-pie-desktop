@@ -14,6 +14,8 @@ import { IntervalSelector } from '~/components/interval-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
 
 import { SocialGraph } from './social-graph'
+import { TooltipInfo } from '~/components/tooltip-info'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 const fiveMin = 1000 * 60 * 5
 
@@ -90,14 +92,21 @@ export function TimeInProgress() {
 }
 
 function ProjectTools({ handleOpenEditMenu }: { handleOpenEditMenu: () => void }) {
+  const { navigateTo } = useNav()
+
   return (
     <>
       <Button variant={'ghost'} size={'icon'} onClick={handleOpenEditMenu}>
         <Edit2 size={18} />
       </Button>
-      <Button variant={'ghost'} onClick={handleOpenEditMenu}>
-        <Castle size={18} />
-      </Button>
+      <TooltipInfo
+        content="GenGen"
+        children={
+          <Button variant={'outline'} onClick={() => navigateTo('/gengen/time-in-progress')}>
+            <Castle size={18} />
+          </Button>
+        }
+      />
     </>
   )
 }
