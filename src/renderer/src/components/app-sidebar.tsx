@@ -1,4 +1,4 @@
-import { Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
+import { Bot, Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
 
 import { useNav } from '~/libs/hooks/use-navigation'
 import { useApp } from '~/libs/context/app'
@@ -34,6 +34,11 @@ const items = [
     url: '/my-finances',
     icon: CircleDollarSign
   },
+  {
+    title: 'GenGen',
+    url: '/gengen',
+    icon: Bot
+  },
 
   {
     title: 'Settings',
@@ -47,7 +52,7 @@ export function AppSidebar({ close }: { close: () => void }) {
   const { appSettings } = useApp()
 
   return (
-    <Sidebar side="right">
+    <Sidebar side="right" className="z-50">
       <SidebarHeader className="p-4">
         <div className="flex w-full justify-end">
           <Button variant={'ghost'} size={'sm'} onClick={close}>
