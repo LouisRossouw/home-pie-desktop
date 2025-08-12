@@ -10,8 +10,8 @@ import LineChartComponent from '~/components/composed-chart'
 import { SocialIndicator, SocialStatsCard } from './social-stats-card'
 
 export function SocialGraph({ title, data }: { title: string; data?: Social }) {
-  const followersDiff = data?.data.followers_difference ?? 0
-  const followersCount = data?.data.latest_followers
+  const followersDiff = data?.data?.followers_difference ?? 0
+  const followersCount = data?.data?.latest_followers
   const historyData = data?.history
 
   const fill =
@@ -23,8 +23,8 @@ export function SocialGraph({ title, data }: { title: string; data?: Social }) {
 
   const currentDate = new Date()
 
-  const fromDate = new Date(String(data?.data.from_date))
-  const toDate = new Date(String(data?.data.to_date))
+  const fromDate = new Date(String(data?.data?.from_date ?? new Date()))
+  const toDate = new Date(String(data?.data?.to_date ?? new Date()))
 
   const timeDifference = differenceInMinutes(currentDate, fromDate)
   const dataStaleTime = differenceInMinutes(currentDate, toDate)
@@ -35,14 +35,14 @@ export function SocialGraph({ title, data }: { title: string; data?: Social }) {
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center border rounded-lg min-h-60 min-w-80">
+      <div className="flex items-center justify-center border rounded-lg min-h-60 w-full">
         <p>No data..</p>
       </div>
     )
   }
 
   return (
-    <div className="items-center justify-center border rounded-lg min-h-60 min-w-80">
+    <div className="items-center justify-center border rounded-lg min-h-60 w-full">
       <div className="flex flex-nowrap  px-4 border-b justify-between">
         <SocialStatsHeader
           title={title}
