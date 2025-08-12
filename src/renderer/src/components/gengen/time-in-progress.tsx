@@ -7,6 +7,8 @@ import { ProgressBar } from '../progressbar'
 import { Copy } from '../copy'
 import { LoadingIndicator } from '../loading-indicator'
 import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { Separator } from '../ui/separator'
 
 const projectsPath = import.meta.env.VITE_LOCAL_SERVER_PROJECTS_PATH
 
@@ -124,7 +126,7 @@ export function GenGenTimeInProgress() {
                       }
                     />
                   </div>
-                  <Textarea value={progressData?.manifest?.gengen_description_str} />
+                  <Textarea defaultValue={progressData?.manifest?.gengen_description_str} />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex justify-between">
@@ -134,15 +136,32 @@ export function GenGenTimeInProgress() {
                       handleCopy={() => handleCopyText(progressData?.manifest)}
                     />
                   </div>
-                  <Textarea className="max-h-20" value={JSON.stringify(progressData?.manifest)} />
+                  <Textarea
+                    className="max-h-20"
+                    defaultValue={JSON.stringify(progressData?.manifest)}
+                  />
                 </div>
               </div>
 
               <div className="flex items-center justify-center">
-                <Label>Open:</Label>
-                <Button onClick={() => OpenDirectory(progressData?.files)}>
-                  <File />
-                </Button>
+                <div className="grid p-4 gap-4 border rounded-lg">
+                  <div className="grid gap-1">
+                    <Label>{progressData?.manifest?.title}</Label>
+                    <p className="text-xs font-light">
+                      {format(progressData?.manifest?.date, 'yyyy-MM-dd HH:MM')}
+                    </p>
+                  </div>
+                  <Separator />
+                  <div className="flex w-full justify-between gap-4">
+                    <Label>Open directory</Label>
+                    <Button
+                      variant={'ghost'}
+                      onClick={() => OpenDirectory(progressData?.files?.file_output_dir_short)}
+                    >
+                      <File />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
