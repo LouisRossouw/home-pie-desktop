@@ -46,7 +46,7 @@ export type ApiTest = { ok: boolean; data?: any }
 
 export type ApiProjectsList = { ok: boolean; data?: Project[] }
 
-type SocialData = {
+export type SocialData = {
   account: string
   to_date: string
   latest_post_value: number
