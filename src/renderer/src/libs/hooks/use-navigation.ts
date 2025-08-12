@@ -3,10 +3,9 @@ import { useApp } from '../context/app'
 
 export function useNav() {
   const navigation = useNavigate()
-
   const { pathname } = useLocation()
 
-  const { appSettings, startRenderTime } = useApp() // TODO; Remove this, it is causing re-rendering
+  const { appSettings, startRenderTime } = useApp()
 
   function navigateTo(path: string) {
     if (appSettings?.debug) {

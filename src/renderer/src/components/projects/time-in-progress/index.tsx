@@ -3,19 +3,19 @@ import { useQuery } from '@tanstack/react-query'
 
 import { ApiTimeInProgressOverview } from '@shared/types'
 
-import { Castle, Edit2, InspectIcon, RefreshCcw, Server } from 'lucide-react'
+import { Castle, Edit2, RefreshCcw, Server } from 'lucide-react'
 
-import { useNav } from '~/libs/hooks/use-navigation'
 import { getAllSearchParams } from '~/libs/utils/search-params'
 
 import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
-import { TooltipInfo } from '~/components/tooltip-info'
 import { RangeSelector } from '~/components/range-selector'
 import { IntervalSelector } from '~/components/interval-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
 
 import { SocialGraph } from './social-graph'
+import { TooltipInfo } from '~/components/tooltip-info'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 const fiveMin = 1000 * 60 * 5
 
@@ -104,17 +104,6 @@ function ProjectTools({ handleOpenEditMenu }: { handleOpenEditMenu: () => void }
         children={
           <Button variant={'outline'} onClick={() => navigateTo('/gengen/time-in-progress')}>
             <Castle size={18} />
-          </Button>
-        }
-      />
-      <TooltipInfo
-        content="Insta Insights"
-        children={
-          <Button
-            variant={'outline'}
-            onClick={() => navigateTo('/projects/insta-insights/time.in.progress/insights')}
-          >
-            <InspectIcon size={18} />
           </Button>
         }
       />

@@ -30,7 +30,7 @@ const appAPI = {
   listenerCount: (channel: any) => ipcRenderer.listenerCount(channel),
   removeAllListeners: (channel: any) => ipcRenderer.removeAllListeners(channel),
   removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb),
-  openDirectory: async (data: {path: string}) => IPCR.invoke('open-directory', data)
+  openDirectory: async (data: {path: string}) =>IPCR.invoke('open-directory', data)
 }
 
 // prettier-ignore
@@ -38,9 +38,7 @@ const externalAPI = {
   apiProjectList: async () => IPCR.invoke('api-projects-list'),
   apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
   apiGenGenCheckProgress: async (data: {project: string}) => IPCR.invoke('api-gengen-check-progress', data),
-  apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data),
-  apiInstaInsightsGetAllAccounts: async () => IPCR.invoke('api-insta-insights-get-all-accounts'),
-  apiInstaInsightsGetAccountsOverview: async (data: {accounts: string[], range: 'hour', interval: number, platform: string}) => IPCR.invoke('api-insta-insights-get-accounts-overview', data)
+  apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data)
 }
 
 // prettier-ignore
