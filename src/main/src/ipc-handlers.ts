@@ -11,8 +11,6 @@ import { apiGenGenCheckProgress } from './api/gengen/api-gengen-check-progress'
 import { apiTimeInProgressOverview } from './api/projects/time-in-progress/api-overview'
 import { getAllSettings, getSetting, setSetting } from './database'
 import { apiGenGenStart } from './api/gengen/api-gengen-start'
-import { apiInstaInsightsGetAllAccounts } from './api/projects/insta-insights/api-get-all-accounts'
-import { apiInstaInsightsGetAccountsOverview } from './api/projects/insta-insights/api-overview'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -37,7 +35,7 @@ function appIpcHandlers() {
     windowControl({ action, width, height })
   })
 
-  ipcMain.handle('open-directory', (_event, data) => {
+  ipcMain.on('open-directory', (_event, data) => {
     openDirectory(data)
   })
 }
@@ -47,17 +45,8 @@ function projectsIpcHandlers() {
     return await apiProjectList()
   })
 
-  // * TIme In Progress related API
   ipcMain.handle('api-timeinprogress-overview', async (_event, data: ApiTimeInProgressOverview) => {
     return await apiTimeInProgressOverview(data)
-  })
-
-  // * Insta insights related API
-  ipcMain.handle('api-insta-insights-get-all-accounts', async (_event) => {
-    return await apiInstaInsightsGetAllAccounts()
-  })
-  ipcMain.handle('api-insta-insights-get-accounts-overview', async (_event, data) => {
-    return await apiInstaInsightsGetAccountsOverview(data)
   })
 }
 
@@ -65,6 +54,7 @@ function gengenIpcHandlers() {
   ipcMain.handle('api-gengen-start', async (_event, data) => {
     return await apiGenGenStart(data)
   })
+
   ipcMain.handle('api-gengen-check-progress', async (_event, data) => {
     return await apiGenGenCheckProgress(data)
   })

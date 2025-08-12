@@ -1,5 +1,5 @@
-import { InstaInsights } from '~/components/projects/insta-insights'
+import { Outlet } from 'react-router'
 
 export default function InstaInsightsRoute() {
-  return <InstaInsights />
+  return <Outlet />
 }

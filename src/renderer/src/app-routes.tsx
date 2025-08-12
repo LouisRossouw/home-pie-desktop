@@ -18,14 +18,13 @@ import ProjectsOverviewRoute from './routes/sub-projects/overview'
 import ProjectSettingsRoute from './routes/sub-projects/settings'
 import InstaInsightsRoute from './routes/sub-projects/insta-insights'
 import InstaInsightsOverviewRoute from './routes/sub-projects/insta-insights/overview'
+import TimeInProgressRoute from './routes/sub-projects/time-in-progress'
 
 import GenGenRoute from './routes/gengen'
-import MyFinancesRoute from './routes/my-finances'
 import GenGenSettingsRoute from './routes/gengen/settings'
 import GenGenOverviewRoute from './routes/gengen/overview'
 import GenGenTimeInProgressRoute from './routes/gengen/time-in-progress'
-import TimeInProgressRoute from './routes/sub-projects/time-in-progress'
-import InsightsRoute from './routes/sub-projects/insta-insights/insights'
+import MyFinancesRoute from './routes/my-finances'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -57,13 +56,7 @@ const routesConfig = [
           {
             path: 'insta-insights',
             element: <InstaInsightsRoute />,
-            children: [
-              { index: true, element: <InstaInsightsOverviewRoute /> },
-              {
-                path: ':account',
-                children: [{ path: 'insights', element: <InsightsRoute /> }]
-              }
-            ]
+            children: [{ index: true, element: <InstaInsightsOverviewRoute /> }]
           }
         ]
       },
