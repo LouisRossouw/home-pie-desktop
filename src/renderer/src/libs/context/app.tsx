@@ -29,7 +29,7 @@ const appSettingsInit: UseAppSettings = {
 }
 
 // ***
-// TODO; Remove dot squad from app context. causes 4 re-renderings.
+// TODO; Remove dot squad from app context. causes re-renderings.
 // ***
 
 const dotSquadInit = {

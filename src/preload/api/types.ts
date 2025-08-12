@@ -5,7 +5,8 @@ import {
   WindowControl,
   ApiProjectsList,
   ApiTimeInProgressOverview,
-  ApiTimeInProgressOverviewResponse
+  ApiTimeInProgressOverviewResponse,
+  Range
 } from '@shared/types'
 
 type Nav = {
@@ -33,6 +34,8 @@ type ExternalAPI = {
   apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
   apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
   apiGenGenStart: (data: {project: string}) => Promise<any> // TODO; type
+  apiInstaInsightsGetAllAccounts: () => Promise<any> // TODO; type
+  apiInstaInsightsGetAccountsOverview: (data: {accounts: string[], range: Range, interval: number, platform: string}) => Promise<any> // TODO; type
 }
 
 type TestAPI = {
