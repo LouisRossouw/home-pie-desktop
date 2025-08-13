@@ -42,7 +42,7 @@ export function LoaderRoute({
         setLogs(msg)
       }
     }
-    window.api.onLoaderProgress(handler)
+    window.api.app.onLoaderProgress(handler)
   }
 
   // Maybe a good place to update any app settings?
@@ -54,7 +54,7 @@ export function LoaderRoute({
 
   // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
-    const { hasLoaded, isFirstLoad } = await window.api.loadApp({ fastLoad })
+    const { hasLoaded, isFirstLoad } = await window.api.app.loadApp({ fastLoad })
 
     // TODO; If it is the apps first load, redirect to an onboarding or welcome screen?
     if (isFirstLoad) {

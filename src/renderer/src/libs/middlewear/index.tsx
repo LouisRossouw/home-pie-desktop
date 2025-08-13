@@ -8,7 +8,7 @@ export function Middlewear() {
   const { pathname } = useLocation()
 
   // Updates the main process on what route the app is currently on.
-  window.api.syncRoute(pathname === '/' ? pathname : pathname.replace('/', ''))
+  window.api.nav.syncRoute(pathname === '/' ? pathname : pathname.replace('/', ''))
 
   return (
     <>

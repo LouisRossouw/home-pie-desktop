@@ -11,8 +11,7 @@ export async function apiTimeInProgressOverview({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.get('/api/timeinprogress/overview-data', {
-      headers: { 'Content-Type': 'application/json' },
+    const response = await apiClient.get('/api/time-in-progress/overview', {
       params: { account, range, interval }
     })
 

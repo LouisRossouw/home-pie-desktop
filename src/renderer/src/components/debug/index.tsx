@@ -45,16 +45,16 @@ export function Debug() {
   }, [])
 
   async function getListenersCount() {
-    const dotSquadLS = await window.api.listenerCount('dot-squad')
-    const routerListenerLS = await window.api.listenerCount('navigate-to')
-    const ResizeListenerLS = await window.api.listenerCount('window-resized')
+    const dotSquadLS = await window.api.app.listenerCount('dot-squad')
+    const routerListenerLS = await window.api.app.listenerCount('navigate-to')
+    const ResizeListenerLS = await window.api.app.listenerCount('window-resized')
 
     setListenersCount({ dotSquadLS, routerListenerLS, ResizeListenerLS })
   }
 
   // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
-    const result = await window.api.getAppSetting({ setting })
+    const result = await window.api.db.getAppSetting({ setting })
 
     setOutput(JSON.parse(result))
   }
@@ -235,5 +235,5 @@ function InfoRow({ label, value }: { label: string; value: string | number }) {
 }
 
 async function testPing() {
-  return await window.api.apiTest()
+  return await window.api.test.apiTest()
 }

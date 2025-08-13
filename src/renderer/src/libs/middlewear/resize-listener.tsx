@@ -46,11 +46,11 @@ export function WindowResizeListener() {
       }
     }
 
-    window.api.onWindowResize(handler)
+    window.api.app.onWindowResize(handler)
     console.log('ResizeListener mounted.')
 
     return () => {
-      window.api.removeListener(handler, 'window-resized')
+      window.api.app.removeListener(handler, 'window-resized')
     }
   }
 

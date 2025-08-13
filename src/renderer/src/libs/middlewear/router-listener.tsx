@@ -17,11 +17,11 @@ export function RouterListener() {
       }
     }
 
-    window.api.navigateTo(handler)
+    window.api.nav.navigateTo(handler)
     console.log('RouterListener mounted.')
 
     return () => {
-      window.api.removeListener(handler, 'navigate-to')
+      window.api.app.removeListener(handler, 'navigate-to')
     }
   }
 
