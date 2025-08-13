@@ -16,8 +16,7 @@ export async function apiInstaInsightsGetAccountsOverview({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.get('/api/insta-insights/get-accounts-overview', {
-      headers: { 'Content-Type': 'application/json' },
+    const response = await apiClient.get('/api/insta-insights/overview', {
       params: {
         accounts: JSON.stringify(accounts),
         platform,
