@@ -9,12 +9,14 @@ import {
   ImperativePanelGroupHandle
 } from 'react-resizable-panels'
 
-import { ResizableHandle } from '~/components/ui/resizable'
-import { ProjectsList } from '~/components/projects-list'
-import { ProjectsPanel } from './projects-panel'
-import { OutletPanel } from './outlet-panel'
-import { projectsAppRoutes } from './projects-routes-list'
 import { useNav } from '~/libs/hooks/use-navigation'
+
+import { ProjectsList } from '~/components/projects-list'
+import { ResizableHandle } from '~/components/ui/resizable'
+
+import { OutletPanel } from './outlet-panel'
+import { ProjectsPanel } from './projects-panel'
+import { projectsAppRoutes } from './projects-routes-list'
 
 export default function ProjectsRoute() {
   const { navigateTo } = useNav()
@@ -74,7 +76,7 @@ function buildProjectsList(projectsRaw?: Project[]) {
 }
 
 async function getProjects() {
-  const { data } = await window.api.apiProjectList()
+  const { data } = await window.api.external.apiProjectList()
 
   return data ?? []
 }

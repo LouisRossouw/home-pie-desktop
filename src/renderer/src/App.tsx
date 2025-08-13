@@ -24,7 +24,7 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     const init = async () => {
-      const fastLoad = await window.api.maybeFastLoad()
+      const fastLoad = await window.api.app.maybeFastLoad()
 
       if (fastLoad.skipSplash) {
         setBooted(true)

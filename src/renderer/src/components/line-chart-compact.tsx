@@ -12,25 +12,27 @@ export default function LineChartCompact({ data, followers_difference }) {
 
   const dotsVisible = true
 
+  const strokeColor =
+    followers_difference > 0 ? 'lime' : followers_difference === 0 ? 'gray' : 'red'
+
+  const fill =
+    followers_difference > 0
+      ? 'rgba(0, 255, 200, 0.2)'
+      : followers_difference === 0
+        ? 'rgba(255, 255, 0, 0.1)'
+        : 'rgba(255, 0, 0, 0.1)'
+
   return (
     <>
-      <div className="flex w-full h-full justify-center items-center">
-        <ResponsiveContainer width="100%" height={100}>
+      <div className="flex w-full h-20 justify-center items-center">
+        <ResponsiveContainer width="100%" height={70}>
           <ComposedChart data={data ?? []}>
             <YAxis domain={[minY, maxY]} tick={false} axisLine={false} />
             <Area
               type="monotone"
               dataKey="followers"
-              stroke={
-                followers_difference > 0 ? 'lime' : followers_difference === 0 ? 'yellow' : 'red'
-              }
-              fill={
-                followers_difference > 0
-                  ? 'rgba(0, 255, 200, 0.2)'
-                  : followers_difference === 0
-                    ? 'rgba(255, 255, 0, 0.1)'
-                    : 'rgba(255, 0, 0, 0.1)'
-              }
+              stroke={strokeColor}
+              fill={fill}
               activeDot={{ r: 5, stroke: 'red', fill: 'red' }}
               dot={dotsVisible ? { r: 2 } : false}
             />

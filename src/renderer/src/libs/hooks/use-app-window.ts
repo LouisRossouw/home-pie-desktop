@@ -15,7 +15,7 @@ export type UseAppWindow = {
 export function useAppWindow(appSettings: UseAppSettings) {
   //
   function resizeApp({ height, width, save }: ResizeApp) {
-    window.api.resizeApp({ height, width })
+    window.api.app.resizeApp({ height, width })
     if (save) {
       appSettings.updateAppSettings([
         { setting: settingKeys.appWidth, value: width },
@@ -25,7 +25,7 @@ export function useAppWindow(appSettings: UseAppSettings) {
   }
 
   function windowControl({ action, width, height }: WindowControl) {
-    window.api.windowControl({ action, width, height })
+    window.api.app.windowControl({ action, width, height })
     if (!windowBaseActions.includes(action)) {
       appSettings.updateAppSettings([{ setting: settingKeys.appWindowMode, value: action }])
 

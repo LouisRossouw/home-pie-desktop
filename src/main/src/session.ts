@@ -23,7 +23,8 @@ export async function requireSession(requireAuth: boolean = true) {
   const apiClient = axios.create({
     baseURL,
     headers: {
-      ...(validToken ? { Authorization: `Bearer ${validToken}` } : {})
+      ...(validToken ? { Authorization: `Bearer ${validToken}` } : {}),
+      'Content-Type': 'application/json'
     }
   })
 

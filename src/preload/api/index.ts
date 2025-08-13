@@ -6,7 +6,9 @@ import type {
   OnResize,
   ResizeApp,
   WindowControl,
-  ApiTimeInProgressOverview
+  ApiTimeInProgressOverview,
+  ApiInstaInsightsAccountsOverview,
+  ApiInstaInsightsAccount
 } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 
@@ -36,11 +38,20 @@ const appAPI = {
 // prettier-ignore
 const externalAPI = {
   apiProjectList: async () => IPCR.invoke('api-projects-list'),
-  apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
-  apiGenGenCheckProgress: async (data: {project: string}) => IPCR.invoke('api-gengen-check-progress', data),
+
+  // GenGen
   apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data),
+  apiGenGenCheckProgress: async (data: {project: string}) => IPCR.invoke('api-gengen-check-progress', data),
+
+  // Time In Progress
+  apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
+
+  // Insta Insights
   apiInstaInsightsGetAllAccounts: async () => IPCR.invoke('api-insta-insights-get-all-accounts'),
-  apiInstaInsightsGetAccountsOverview: async (data: {accounts: string[], range: 'hour', interval: number, platform: string}) => IPCR.invoke('api-insta-insights-get-accounts-overview', data)
+  apiInstaInsightsGetAccountsOverview: async (data: ApiInstaInsightsAccountsOverview) => IPCR.invoke('api-insta-insights-get-accounts-overview', data),
+  apiInstaInsightsAddAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-add-account', data),
+  apiInstaInsightsUpdateAccountStatus: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-update-account-status', data),
+  apiInstaInsightsRemoveAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-remove-account', data)
 }
 
 // prettier-ignore
@@ -57,9 +68,9 @@ const testAPI = {
 }
 
 export const api = {
-  ...databaseAppSettingsAPI,
-  ...externalAPI,
-  ...testAPI,
-  ...appAPI,
-  ...navAPI
+  nav: navAPI,
+  app: appAPI,
+  test: testAPI,
+  external: externalAPI,
+  db: databaseAppSettingsAPI
 }

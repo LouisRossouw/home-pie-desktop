@@ -1,13 +1,19 @@
 import { updateDotSquadActivity } from '@main/src/app'
 import { handleError, requireSession } from '@main/src/session'
 
-export async function apiInstaInsightsGetAllAccounts() {
+export async function apiInstaInsightsAddAccount({
+  account,
+  active
+}: {
+  account: string
+  active: boolean
+}) {
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.get('/api/insta-insights/accounts')
+    const response = await apiClient.post('/api/insta-insights/accounts', { account, active })
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       updateDotSquadActivity({ activity: 'selectProject' })
       return response.data
     }

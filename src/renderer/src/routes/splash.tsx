@@ -10,7 +10,7 @@ export function SplashRoute() {
   // TODO; Use this route to show logo + version number
 
   useEffect(() => {
-    window.api.resizeApp({ width: 250, height: 250 })
+    window.api.app.resizeApp({ width: 250, height: 250 })
     updateThemeUi('dark')
   }, [])
 

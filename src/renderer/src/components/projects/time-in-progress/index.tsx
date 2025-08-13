@@ -123,5 +123,5 @@ function ProjectTools({ handleOpenEditMenu }: { handleOpenEditMenu: () => void }
 }
 
 async function getTimeInProgressOverview({ account, range, interval }: ApiTimeInProgressOverview) {
-  return await window.api.apiTimeInProgressOverview({ account, range, interval })
+  return await window.api.external.apiTimeInProgressOverview({ account, range, interval })
 }

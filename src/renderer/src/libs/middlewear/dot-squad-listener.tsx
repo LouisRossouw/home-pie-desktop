@@ -18,11 +18,11 @@ export function DotSquadListener() {
         handleUpdateDotSquad(activity)
       }
     }
-    window.api.updateDotSquad(handler)
+    window.api.app.updateDotSquad(handler)
     console.log('DotSquad mounted.')
 
     return () => {
-      window.api.removeListener(handler, 'dot-squad')
+      window.api.app.removeListener(handler, 'dot-squad')
     }
   }
 

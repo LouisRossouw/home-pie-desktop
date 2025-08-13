@@ -80,3 +80,26 @@ export type ApiTimeInProgressOverviewResponse = {
   bluesky: Social
   twitter: Social
 }
+
+export type ApiInstaInsightsAccountsOverview = {
+  accounts: string[]
+  range: Range
+  interval: number
+  platform: string
+}
+
+export type ApiInstaInsightsAccount = { account: string; active: boolean }
+
+export type ApiInstaInsightsAccountsOverviewResponse = {
+  ok: true
+  datetime: string
+  db_elapsed_time: string
+  current_data: SocialData
+  historic_data: SocialData[]
+}
+
+export type AccountsDataWithPic = SocialData & {
+  profile_picture_url: string
+  history: any[]
+  active: boolean
+}

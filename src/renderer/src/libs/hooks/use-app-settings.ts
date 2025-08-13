@@ -20,7 +20,7 @@ export function useAppSettings() {
   async function getAppSetting(setting: Setting) {
     if (appSettings) return appSettings[setting]
 
-    return JSON.parse(await window.api.getAppSetting({ setting }))
+    return JSON.parse(await window.api.db.getAppSetting({ setting }))
   }
 
   async function updateAppSettings(settings: { setting: Setting; value: Value }[]) {
@@ -35,7 +35,7 @@ export function useAppSettings() {
     })
 
     for (const s of settings) {
-      await window.api.setAppSetting({ setting: s.setting, value: s.value })
+      await window.api.db.setAppSetting({ setting: s.setting, value: s.value })
     }
 
     return true
@@ -44,7 +44,7 @@ export function useAppSettings() {
   async function getAllAppSettings() {
     if (appSettings) return appSettings
 
-    const settingsArray = await window.api.getAllAppSettings()
+    const settingsArray = await window.api.db.getAllAppSettings()
     const settingsObj = arrayToObject(settingsArray) as AppSetting
 
     setAppSettings(settingsObj)

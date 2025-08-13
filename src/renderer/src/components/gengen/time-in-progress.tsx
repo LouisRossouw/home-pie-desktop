@@ -50,7 +50,9 @@ export function GenGenTimeInProgress() {
   }
 
   async function startGenGen() {
-    const { ok, hasStarted } = await window.api.apiGenGenStart({ project: 'time.in.progress' })
+    const { ok, hasStarted } = await window.api.external.apiGenGenStart({
+      project: 'time.in.progress'
+    })
 
     if (ok && hasStarted) {
       return setCheckProgress(true)
@@ -59,7 +61,7 @@ export function GenGenTimeInProgress() {
   }
 
   async function OpenDirectory(file: string) {
-    window.api.openDirectory({ path: projectsPath + (file ?? '/') })
+    window.api.app.openDirectory({ path: projectsPath + (file ?? '/') })
   }
 
   if (isPending) {
@@ -189,6 +191,8 @@ export function GenGenTimeInProgress() {
 }
 
 async function apiGenGenCheckProgress() {
-  const response = await window.api.apiGenGenCheckProgress({ project: 'time.in.progress' })
+  const response = await window.api.external.apiGenGenCheckProgress({
+    project: 'time.in.progress'
+  })
   return response ?? {}
 }
