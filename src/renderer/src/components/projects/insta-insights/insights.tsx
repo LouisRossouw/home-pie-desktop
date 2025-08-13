@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
+import { useOutletContext } from 'react-router'
 
-import { Social } from '@shared/types'
+import type { AccountsDataWithPic, Social } from '@shared/types'
 
 import { SocialGraph } from '../time-in-progress/social-graph'
-import { AccountsDataWithPic } from '.'
-import { useOutletContext } from 'react-router'
 
 type InsightsContext = {
   account?: string
