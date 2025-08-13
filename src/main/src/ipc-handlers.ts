@@ -6,13 +6,18 @@ import { ApiTimeInProgressOverview, Setting } from '@shared/types'
 import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
 import { apiProjectList } from '@main/src/api/projects/api-projects-list'
-
-import { apiGenGenCheckProgress } from './api/gengen/api-gengen-check-progress'
 import { apiTimeInProgressOverview } from './api/projects/time-in-progress/api-overview'
-import { getAllSettings, getSetting, setSetting } from './database'
+
 import { apiGenGenStart } from './api/gengen/api-gengen-start'
-import { apiInstaInsightsGetAllAccounts } from './api/projects/insta-insights/api-get-all-accounts'
+import { apiGenGenCheckProgress } from './api/gengen/api-gengen-check-progress'
+
+import { apiInstaInsightsAddAccount } from './api/projects/insta-insights/api-add-account'
 import { apiInstaInsightsGetAccountsOverview } from './api/projects/insta-insights/api-overview'
+import { apiInstaInsightsRemoveAccount } from './api/projects/insta-insights/api-remove-account'
+import { apiInstaInsightsGetAllAccounts } from './api/projects/insta-insights/api-get-all-accounts'
+import { apiInstaInsightsUpdateAccountStatus } from './api/projects/insta-insights/api-update-account-status'
+
+import { getAllSettings, getSetting, setSetting } from './database'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -58,6 +63,15 @@ function projectsIpcHandlers() {
   })
   ipcMain.handle('api-insta-insights-get-accounts-overview', async (_event, data) => {
     return await apiInstaInsightsGetAccountsOverview(data)
+  })
+  ipcMain.handle('api-insta-insights-add-account', async (_event, data) => {
+    return await apiInstaInsightsAddAccount(data)
+  })
+  ipcMain.handle('api-insta-insights-update-account-status', async (_event, data) => {
+    return await apiInstaInsightsUpdateAccountStatus(data)
+  })
+  ipcMain.handle('api-insta-insights-remove-account', async (_event, data) => {
+    return await apiInstaInsightsRemoveAccount(data)
   })
 }
 
