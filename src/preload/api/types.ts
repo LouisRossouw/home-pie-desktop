@@ -6,10 +6,13 @@ import {
   ApiProjectsList,
   ApiTimeInProgressOverview,
   ApiTimeInProgressOverviewResponse,
-  Range
+  Range,
+  ApiInstaInsightsAccountsOverview,
+  ApiInstaInsightsAccount,
+  ApiInstaInsightsAccountsOverviewResponse
 } from '@shared/types'
 
-type Nav = {
+type NavAPI = {
   syncRoute: (v: string) => {}
   navigateTo: (v: any) => {}
 }
@@ -31,11 +34,20 @@ type AppAPI = {
 // prettier-ignore
 type ExternalAPI = {
   apiProjectList: () => Promise<ApiProjectsList>
-  apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
+
+  // GenGen
   apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
   apiGenGenStart: (data: {project: string}) => Promise<any> // TODO; type
-  apiInstaInsightsGetAllAccounts: () => Promise<any> // TODO; type
-  apiInstaInsightsGetAccountsOverview: (data: {accounts: string[], range: Range, interval: number, platform: string}) => Promise<any> // TODO; type
+
+  // Time In Progress
+  apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
+
+  // Insta Insights
+  apiInstaInsightsGetAllAccounts: () => Promise<{ok: boolean, data: ApiInstaInsightsAccount[]}>
+  apiInstaInsightsGetAccountsOverview: (data: ApiInstaInsightsAccountsOverview) => Promise<ApiInstaInsightsAccountsOverviewResponse>
+  apiInstaInsightsAddAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
+  apiInstaInsightsUpdateAccountStatus: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
+  apiInstaInsightsRemoveAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
 }
 
 type TestAPI = {
@@ -50,4 +62,11 @@ type DatabaseAppSettingsAPI = {
   getAllAppSettings: () => Promise<Record<string, string>[]> // TODO; Type
 }
 
-export type Api = AppAPI & ExternalAPI & DatabaseAppSettingsAPI & TestAPI & Nav
+// export type Api = AppAPI & ExternalAPI & DatabaseAppSettingsAPI & TestAPI & Nav
+export type Api = {
+  nav: NavAPI
+  app: AppAPI
+  test: TestAPI
+  external: ExternalAPI
+  db: DatabaseAppSettingsAPI
+}
