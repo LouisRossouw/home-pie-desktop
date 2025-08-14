@@ -120,7 +120,7 @@ function AccountRow({
   const accountName = account.account
 
   function handleNavigate() {
-    navigate(`/projects/insta-insights/${account}/insights`)
+    navigate(`/projects/insta-insights/${accountName}/insights`)
   }
 
   return (
