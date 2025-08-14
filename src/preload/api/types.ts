@@ -9,7 +9,8 @@ import {
   Range,
   ApiInstaInsightsAccountsOverview,
   ApiInstaInsightsAccount,
-  ApiInstaInsightsAccountsOverviewResponse
+  ApiInstaInsightsAccountsOverviewResponse,
+  ApiTimeInProgressInsertHistoricalData
 } from '@shared/types'
 
 type NavAPI = {
@@ -41,6 +42,7 @@ type ExternalAPI = {
 
   // Time In Progress
   apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
+  apiTimeInProgressInsertHistoricalData: (data: ApiTimeInProgressInsertHistoricalData) => Promise<{ok: boolean}>
 
   // Insta Insights
   apiInstaInsightsGetAllAccounts: () => Promise<{ok: boolean, data: ApiInstaInsightsAccount[]}>

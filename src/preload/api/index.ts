@@ -8,7 +8,8 @@ import type {
   WindowControl,
   ApiTimeInProgressOverview,
   ApiInstaInsightsAccountsOverview,
-  ApiInstaInsightsAccount
+  ApiInstaInsightsAccount,
+  ApiTimeInProgressInsertHistoricalData
 } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 
@@ -45,6 +46,7 @@ const externalAPI = {
 
   // Time In Progress
   apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
+  apiTimeInProgressInsertHistoricalData: async (data: ApiTimeInProgressInsertHistoricalData) => IPCR.invoke('api-timeinprogress-insert-historical-data', data),
 
   // Insta Insights
   apiInstaInsightsGetAllAccounts: async () => IPCR.invoke('api-insta-insights-get-all-accounts'),

@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { loadApp, maybeFastLoad, openDirectory, resizeApp, syncRoute, windowControl } from './app'
 
-import { ApiTimeInProgressOverview, Setting } from '@shared/types'
+import type { Setting } from '@shared/types'
 
 import { mainWindow } from '@main/.'
 import { apiTest } from '@main/src/api/api-test'
@@ -18,6 +18,7 @@ import { apiInstaInsightsGetAllAccounts } from './api/projects/insta-insights/ap
 import { apiInstaInsightsUpdateAccountStatus } from './api/projects/insta-insights/api-update-account-status'
 
 import { getAllSettings, getSetting, setSetting } from './database'
+import { apiTimeInProgressInsertHistoricalData } from './api/projects/time-in-progress/api-platform'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -53,8 +54,11 @@ function projectsIpcHandlers() {
   })
 
   // * TIme In Progress related API
-  ipcMain.handle('api-timeinprogress-overview', async (_event, data: ApiTimeInProgressOverview) => {
+  ipcMain.handle('api-timeinprogress-overview', async (_event, data) => {
     return await apiTimeInProgressOverview(data)
+  })
+  ipcMain.handle('api-timeinprogress-insert-historical-data', async (_event, data) => {
+    return await apiTimeInProgressInsertHistoricalData(data)
   })
 
   // * Insta insights related API

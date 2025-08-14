@@ -6,7 +6,6 @@ export async function apiGenGenStart({ project }: { project: string }) {
 
   try {
     const response = await apiClient.post('/api/gengen/start', {
-      headers: { 'Content-Type': 'application/json' },
       params: { project }
     })
 
