@@ -14,20 +14,24 @@ import {
 } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import { Switch } from '~/components/ui/switch'
-import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { Input } from '~/components/ui/input'
 
 export function AddAccountDialog() {
   const queryClient = useQueryClient()
 
+  const [open, setOpen] = useState(false)
+  // const [error, setError] = useState(false) // TODO; Handle errors
+
   const [active, setActive] = useState(false)
 
-  const { mutateAsync: addAccounts } = useMutation({
+  const { mutateAsync: addAccounts, isPending } = useMutation({
     mutationKey: ['add-account'],
     mutationFn: AddAccount,
     onSuccess: async ({ ok }) => {
       if (ok) {
         await queryClient.invalidateQueries({ queryKey: ['insta-insights-all-accounts'] })
+        setOpen(false)
       }
     }
   })
@@ -42,7 +46,7 @@ export function AddAccountDialog() {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus size={18} />
@@ -60,7 +64,7 @@ export function AddAccountDialog() {
             <div className="grid gap-4">
               <div className="grid gap-3">
                 <Label htmlFor="name-1">Account Name</Label>
-                <Input id="name-1" name="name" placeholder="kpow_636" />
+                <Input required id="name-1" name="name" placeholder="kpow_636" />
               </div>
 
               <div className="grid gap-3">
@@ -79,7 +83,9 @@ export function AddAccountDialog() {
               </Button>
             </DialogClose>
 
-            <Button type="submit">Save changes</Button>
+            <Button disabled={isPending} type="submit">
+              Save changes
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
