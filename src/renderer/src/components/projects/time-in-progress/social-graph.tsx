@@ -1,18 +1,32 @@
-import { differenceInMinutes, format } from 'date-fns'
+import { useState } from 'react'
 import { CircleCheck, ServerIcon } from 'lucide-react'
 
-import { type Social } from '@shared/types'
+import { differenceInMinutes, format } from 'date-fns'
+
+import type { Social } from '@shared/types'
 
 import { Label } from '~/components/ui/label'
 import { PingSVG } from '~/components/svg-icons'
 import LineChartComponent from '~/components/composed-chart'
 
 import { SocialIndicator, SocialStatsCard } from './social-stats-card'
+import { AddHistoricalDataDialog } from './add-historical-data-dialog'
 
-export function SocialGraph({ title, data }: { title: string; data?: Social }) {
+export function SocialGraph({
+  title,
+  data,
+  editable
+}: {
+  title: string
+  data?: Social
+  editable?: boolean
+}) {
+  const [edit, setEdit] = useState(false)
+
+  const platform = data?.data?.platform
   const followersDiff = data?.data?.followers_difference ?? 0
   const followersCount = data?.data?.latest_followers
-  const historyData = data?.history
+  const historyData = data?.historical
 
   const fill =
     followersDiff > 0
@@ -33,6 +47,11 @@ export function SocialGraph({ title, data }: { title: string; data?: Social }) {
   const strokeColor = followersDiff > 0 ? 'lime' : followersDiff === 0 ? 'gray' : 'red'
   const serverIconColor = dataStaleTime >= 10 ? 'lime' : dataStaleTime > 12 ? 'red' : 'grey'
 
+  function handleEditVisibility(visible: boolean) {
+    if (!editable || !platform) return
+    setEdit(visible)
+  }
+
   if (!data) {
     return (
       <div className="flex items-center justify-center border rounded-lg min-h-60 w-full">
@@ -42,30 +61,41 @@ export function SocialGraph({ title, data }: { title: string; data?: Social }) {
   }
 
   return (
-    <div className="items-center justify-center border rounded-lg min-h-60 w-full">
-      <div className="flex flex-nowrap  px-4 border-b justify-between">
-        <SocialStatsHeader
-          title={title}
-          followersDiff={followersDiff}
-          followersCount={followersCount}
-        />
-        <ServerStats
-          isActive={isActive}
-          fromDate={fromDate}
-          dataStaleTime={dataStaleTime}
-          serverIconColor={serverIconColor}
-        />
-      </div>
+    <>
+      <div
+        className="items-center justify-center border rounded-lg min-h-60 w-full"
+        onMouseLeave={() => handleEditVisibility(false)}
+        onMouseEnter={() => handleEditVisibility(true)}
+      >
+        <div className="flex flex-nowrap  px-4 border-b justify-between">
+          <SocialStatsHeader
+            title={title}
+            followersDiff={followersDiff}
+            followersCount={followersCount}
+          />
+          {edit && (
+            <div className="flex items-center">
+              <AddHistoricalDataDialog platform={platform} followersCount={followersCount ?? 0} />
+            </div>
+          )}
+          <ServerStats
+            isActive={isActive}
+            fromDate={fromDate}
+            dataStaleTime={dataStaleTime}
+            serverIconColor={serverIconColor}
+          />
+        </div>
 
-      <div className="flex h-[calc(100%-45px)] w-full items-center justify-center p-4 text-xs sm:text-sm">
-        <LineChartComponent
-          dataKey="followers"
-          data={historyData}
-          fill={fill}
-          strokeColor={strokeColor}
-        />
+        <div className="flex h-[calc(100%-45px)] w-full items-center justify-center p-4 text-xs sm:text-sm">
+          <LineChartComponent
+            dataKey="followers"
+            data={historyData}
+            fill={fill}
+            strokeColor={strokeColor}
+          />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -76,6 +106,7 @@ function SocialStatsHeader({ title, followersDiff, followersCount }) {
         <Label className="text-lg">{title}</Label>
         <SocialIndicator value={followersDiff} />
       </div>
+
       <div className="flex border-l min-w-50">
         <SocialStatsCard
           disableIndicator
