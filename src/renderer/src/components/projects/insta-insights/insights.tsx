@@ -22,7 +22,7 @@ export function Insights() {
     if (filtered) {
       return {
         data: { ...filtered },
-        history: filtered.history
+        historical: filtered.historical
       }
     }
 

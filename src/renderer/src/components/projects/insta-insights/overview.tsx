@@ -178,7 +178,7 @@ function AccountRow({
       <div className="grid grid-cols-7 gap-2 w-full">
         <div className="w-full col-span-2">
           <LineChartCompact
-            data={account.history}
+            data={account.historical}
             followers_difference={account?.followers_difference}
           />
         </div>

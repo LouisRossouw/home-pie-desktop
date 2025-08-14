@@ -83,8 +83,8 @@ async function apiGetAccountsOverview({
   })
 
   return {
-    currentData: res.current_data ?? [],
-    historicData: res.historic_data ?? [],
+    currentData: res.data ?? [],
+    historicData: res.historical ?? [],
     dbTime: res.db_elapsed_time
   }
 }

@@ -51,21 +51,23 @@ export function InstaInsightsLayout({
     let updatedAccounts = currentData.map((account) => {
       let matchedHistory = null
 
-      for (const history of historicData) {
-        if (history.length > 0) {
-          const lastItem = history[history.length - 1]
+      for (const data of historicData) {
+        if (data.length > 0) {
+          const lastItem = data[data.length - 1]
+
           if (lastItem.name === account.account) {
-            matchedHistory = history
+            matchedHistory = data
+
             return {
               ...account,
               profile_picture_url: lastItem.profile_picture_url,
-              history: matchedHistory
+              historical: matchedHistory
             }
           }
         }
       }
 
-      return { ...account, history: [] }
+      return { ...account, historical: [] }
     })
 
     // Merge in "active" from accountsRaw
@@ -85,7 +87,7 @@ export function InstaInsightsLayout({
         updatedAccounts.push({
           account: raw.account,
           active: false,
-          history: [],
+          historical: [],
           profile_picture_url: null
         })
       }

@@ -25,9 +25,9 @@ export function AddAccountDialog() {
 
   const [active, setActive] = useState(false)
 
-  const { mutateAsync: addAccounts, isPending } = useMutation({
+  const { mutateAsync: addAccountMutation, isPending } = useMutation({
     mutationKey: ['add-account'],
-    mutationFn: AddAccount,
+    mutationFn: addAccount,
     onSuccess: async ({ ok }) => {
       if (ok) {
         await queryClient.invalidateQueries({ queryKey: ['insta-insights-all-accounts'] })
@@ -42,7 +42,7 @@ export function AddAccountDialog() {
     const formData = new FormData(e.currentTarget)
     const account = (formData.get('name') ?? '').toString()
 
-    addAccounts({ account, active })
+    addAccountMutation({ account, active })
   }
 
   return (
@@ -93,6 +93,6 @@ export function AddAccountDialog() {
   )
 }
 
-async function AddAccount({ account, active }: { account: string; active: boolean }) {
+async function addAccount({ account, active }: { account: string; active: boolean }) {
   return await window.api.external.apiInstaInsightsAddAccount({ account, active })
 }
