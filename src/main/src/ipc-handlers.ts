@@ -19,6 +19,11 @@ import { apiInstaInsightsUpdateAccountStatus } from './api/projects/insta-insigh
 
 import { getAllSettings, getSetting, setSetting } from './database'
 import { apiTimeInProgressInsertHistoricalData } from './api/projects/time-in-progress/api-platform'
+import { apiMrPingPingStatus } from './api/mr-ping-ping/api-status'
+import { apiMrPingPingAppConfig } from './api/mr-ping-ping/api-app-config'
+import { apiMrPingPingAppsConfig } from './api/mr-ping-ping/api-apps-config'
+import { apiMrPingPingAppsStatus } from './api/mr-ping-ping/api-apps-status'
+import { apiMrPingPingAppStatus } from './api/mr-ping-ping/api-app-status'
 
 function navIpcHandlers() {
   ipcMain.handle('sync-route', (_event, route) => {
@@ -51,6 +56,23 @@ function appIpcHandlers() {
 function projectsIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
     return await apiProjectList()
+  })
+
+  // * Mr PingPing
+  ipcMain.handle('api-mr-ping-ping-status', async (_event) => {
+    return await apiMrPingPingStatus()
+  })
+  ipcMain.handle('api-mr-ping-ping-app-config', async (_event, data) => {
+    return await apiMrPingPingAppConfig(data)
+  })
+  ipcMain.handle('api-mr-ping-ping-apps-config', async (_event) => {
+    return await apiMrPingPingAppsConfig()
+  })
+  ipcMain.handle('api-mr-ping-ping-apps-status', async (_event) => {
+    return await apiMrPingPingAppsStatus()
+  })
+  ipcMain.handle('api-mr-ping-ping-app-status', async (_event, data) => {
+    return await apiMrPingPingAppStatus(data)
   })
 
   // * TIme In Progress related API
