@@ -11,15 +11,19 @@ import LineChartComponent from '~/components/composed-chart'
 
 import { SocialIndicator, SocialStatsCard } from './social-stats-card'
 import { AddHistoricalDataDialog } from './add-historical-data-dialog'
+import { LoadingIndicator } from '~/components/loading-indicator'
+import { cn } from '~/libs/utils/cn'
 
 export function SocialGraph({
   title,
   data,
-  editable
+  editable,
+  ignoreActive
 }: {
   title: string
   data?: Social
   editable?: boolean
+  ignoreActive?: boolean
 }) {
   const [edit, setEdit] = useState(false)
 
@@ -43,9 +47,16 @@ export function SocialGraph({
   const timeDifference = differenceInMinutes(currentDate, fromDate)
   const dataStaleTime = differenceInMinutes(currentDate, toDate)
 
-  const isActive = timeDifference >= 60 ? true : false
+  // ** Re write this better
+
+  const isActive = ignoreActive ? true : timeDifference <= 60 ? true : false
   const strokeColor = followersDiff > 0 ? 'lime' : followersDiff === 0 ? 'gray' : 'red'
-  const serverIconColor = dataStaleTime >= 10 ? 'lime' : dataStaleTime > 12 ? 'red' : 'grey'
+  const serverIconColor =
+    dataStaleTime >= 10 && dataStaleTime <= 12 ? 'lime' : dataStaleTime > 12 ? 'red' : 'grey'
+
+  const critical = ignoreActive ? false : dataStaleTime > 30
+
+  // **
 
   function handleEditVisibility(visible: boolean) {
     if (!editable || !platform) return
@@ -63,10 +74,21 @@ export function SocialGraph({
   return (
     <>
       <div
-        className="items-center justify-center border rounded-lg min-h-60 w-full"
+        className={cn(
+          'relative items-center justify-center border  rounded-lg min-h-60 w-full'
+          // critical && 'border-accent-foreground/40'
+        )}
         onMouseLeave={() => handleEditVisibility(false)}
         onMouseEnter={() => handleEditVisibility(true)}
       >
+        {critical && (
+          <div className="absolute flex items-center justify-center rounded-lg w-full h-full p-4 z-10 bg-background/80">
+            <div className="flex flex-col justify-center items-center">
+              <LoadingIndicator />
+              <p className="text-xs">{title} is Offline</p>
+            </div>
+          </div>
+        )}
         <div className="flex flex-nowrap  px-4 border-b justify-between">
           <SocialStatsHeader
             title={title}
@@ -82,7 +104,7 @@ export function SocialGraph({
             isActive={isActive}
             fromDate={fromDate}
             dataStaleTime={dataStaleTime}
-            serverIconColor={serverIconColor}
+            serverIconColor={ignoreActive ? 'gray' : serverIconColor}
           />
         </div>
 
@@ -134,18 +156,18 @@ function ServerStats({ isActive, fromDate, dataStaleTime, serverIconColor }) {
             <span className="hidden sm:block">Active</span>
             <PingSVG
               bgColor="bg-red-400"
-              toPing={isActive}
-              children={<CircleCheck size={14} color={isActive ? 'red' : 'lime'} />}
+              toPing={!isActive}
+              children={<CircleCheck size={14} color={isActive ? 'lime' : 'red'} />}
             />
           </div>
           <div className="flex items-center justify-end gap-2 font-light text-xs">
             <span className="hidden sm:block">
-              {fromDate && format(new Date(fromDate), 'dd-MM-yyyy HH:mm')} -
+              {fromDate && format(new Date(fromDate), 'HH:mm')} -
             </span>
             <span>{dataStaleTime} Min</span>
             <PingSVG
               bgColor={serverIconColor === 'lime' ? 'bg-green-400' : 'bg-red-500'}
-              toPing={serverIconColor === 'lime' || serverIconColor === 'red'}
+              toPing={serverIconColor === 'red'}
               children={<ServerIcon size={14} color={serverIconColor} />}
             />
           </div>

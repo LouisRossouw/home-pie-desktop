@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { ApiTimeInProgressOverview } from '@shared/types'
 
-import { Castle, Edit2, InspectIcon, RefreshCcw, Server } from 'lucide-react'
+import { Castle, CircleCheck, Edit2, InspectIcon, RefreshCcw, Server } from 'lucide-react'
 
 import { useNav } from '~/libs/hooks/use-navigation'
 import { getAllSearchParams } from '~/libs/utils/search-params'
@@ -16,11 +16,16 @@ import { IntervalSelector } from '~/components/interval-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
 
 import { SocialGraph } from './social-graph'
+import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+import { addHours, differenceInMinutes } from 'date-fns'
+import { PingSVG } from '~/components/svg-icons'
 
 const fiveMin = 1000 * 60 * 5
+const tenMin = 1000 * 60 * 10
 
 export function TimeInProgress() {
   const [searchParams] = useSearchParams()
+  const { getAppStatus } = useMrPingPingService()
 
   const SP = getAllSearchParams(searchParams)
 
@@ -30,8 +35,18 @@ export function TimeInProgress() {
   const { data, isPending, isFetching, refetch } = useQuery({
     queryKey: ['time-in-progress-overview'],
     queryFn: () => getTimeInProgressOverview({ account: 'time.in.progress', range, interval }),
-    staleTime: fiveMin,
-    refetchInterval: fiveMin
+    refetchInterval: fiveMin,
+    staleTime: fiveMin
+  })
+
+  // Return the status of the client, and API for time in progress.
+  const { data: systemData } = useQuery({
+    queryKey: ['system-status', 'time-in-progress'],
+    queryFn: async () => {
+      return await getAppStatus({ appNames: ['timeinprogress_client', 'timeinprogress_api'] })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
   })
 
   function handleOpenEditMenu() {
@@ -42,7 +57,7 @@ export function TimeInProgress() {
   if (isPending) {
     return (
       <div className="flex w-full h-full items-center justify-center">
-        <p>Loading..</p>
+        <LoadingIndicator />
       </div>
     )
   }
@@ -63,8 +78,13 @@ export function TimeInProgress() {
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-2">
             <Label className="text-lg text-bold text-foreground">Time In Progress</Label>
+            <SystemStatus systemData={systemData ?? []} />
+            <Button variant={'ghost'} size={'icon'} onClick={handleOpenEditMenu}>
+              <Edit2 size={18} />
+            </Button>
             <ProjectTools handleOpenEditMenu={handleOpenEditMenu} />
           </div>
+
           <div className="flex gap-4 items-center">
             <RangeSelector selected={range} />
             <IntervalSelector currentValue={interval} className="w-32" />
@@ -82,11 +102,42 @@ export function TimeInProgress() {
         <div className="grid h-full w-full gap-4 overflow-y-scroll grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
           <SocialGraph title={'Instagram'} data={data?.instagram} />
           <SocialGraph title={'YouTube'} data={data?.youtube} />
-          <SocialGraph title={'TikTok'} data={data?.tiktok} editable />
+          <SocialGraph title={'TikTok'} data={data?.tiktok} editable ignoreActive />
           <SocialGraph title={'Bluesky'} data={data?.bluesky} />
           {/* <SocialGraph title={'Twitter'} data={data?.twitter} /> */}
         </div>
       </div>
+    </div>
+  )
+}
+
+function SystemStatus({ systemData }: { systemData: any[] }) {
+  return (
+    <div className="flex px-2 gap-2">
+      {systemData?.map((data) => {
+        const critical = data?.success ? false : true
+
+        const lastPingedMin = differenceInMinutes(new Date(), addHours(data.date_time, 2))
+        const serverIconColor = critical
+          ? 'red'
+          : lastPingedMin <= 45
+            ? 'lime'
+            : lastPingedMin > 60
+              ? 'red'
+              : 'grey'
+
+        return (
+          <div>
+            <PingSVG
+              toPing={serverIconColor === 'red'}
+              bgColor={serverIconColor === 'lime' ? 'bg-green-400' : 'bg-red-500'}
+              children={<CircleCheck size={14} color={serverIconColor} />}
+            />
+            {data.appName === 'timeinprogress_client' && <p className="text-xs">CLI</p>}
+            {data.appName === 'timeinprogress_api' && <p className="text-xs">API</p>}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -96,9 +147,6 @@ function ProjectTools({ handleOpenEditMenu }: { handleOpenEditMenu: () => void }
 
   return (
     <>
-      <Button variant={'ghost'} size={'icon'} onClick={handleOpenEditMenu}>
-        <Edit2 size={18} />
-      </Button>
       <TooltipInfo
         content="GenGen"
         children={

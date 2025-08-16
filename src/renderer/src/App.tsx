@@ -11,6 +11,9 @@ import { LoaderRoute } from './routes/loader'
 
 import { WindowFrame } from './components/window-frame'
 import { WindowFrameDebug } from './components/window-frame-debug'
+import { MrPingPingContextProvider } from './libs/context/mr-ping-ping'
+import { DotSquadContextProvider } from './libs/context/dot-squad'
+import { DotSquadListener } from './libs/middlewear/dot-squad-listener'
 
 const queryClient = new QueryClient()
 
@@ -55,24 +58,23 @@ export default function App(): JSX.Element {
     <div className="border rounded-lg">
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
-          {booted && loaded && <Middlewear />}
           {booted && !loaded ? (
             <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
           ) : (
             <>
-              <WindowFrame />
+              <DotSquadContextProvider>
+                <WindowFrame />
+                {booted && loaded && <DotSquadListener />}
+              </DotSquadContextProvider>
               <AppRoutes />
-              <WindowFrameDebug />
+              <MrPingPingContextProvider>
+                <WindowFrameDebug />
+                {booted && loaded && <Middlewear />}
+              </MrPingPingContextProvider>
             </>
           )}
-          {/* <PerfomanceCheck /> */}
         </AppContextProvider>
       </QueryClientProvider>
     </div>
   )
 }
-
-// function PerfomanceCheck() {
-//   useRenderTimer()
-//   return null
-// }

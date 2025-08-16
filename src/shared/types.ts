@@ -121,4 +121,12 @@ export type ApiTimeInProgressInsertHistoricalData = {
   // views?: number
 }
 
+export type ApiMrPingPingStatus = {
+  ok: boolean
+  date: string
+  res_time: number
+  last_pinged: string
+  db_elapsed_time: number
+}
+
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'

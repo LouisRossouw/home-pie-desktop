@@ -7,10 +7,12 @@ import { ApiTest, Setting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
+import { useNav } from '~/libs/hooks/use-navigation'
+import { useDotSquadTest } from '~/libs/context/dot-squad'
 
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
-import { useNav } from '~/libs/hooks/use-navigation'
+import { LoadingIndicator } from '~/components/loading-indicator'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -21,9 +23,8 @@ const authClients = getOAuthClients()
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
   const { navigateTo } = useNav()
-
-  const { appSettings, handleUpdateDotSquad, getAppSetting, updateAppSettings, getAllAppSettings } =
-    useApp()
+  const { handleUpdateDotSquad } = useDotSquadTest()
+  const { appSettings, getAppSetting, updateAppSettings, getAllAppSettings } = useApp()
 
   const [output, setOutput] = useState<any>('')
   const [listenersCount, setListenersCount] = useState<Record<string, string>>({})
@@ -40,16 +41,25 @@ export function Debug() {
     }
   })
 
+  const { mutateAsync: mrPingPingMutation } = useMutation({
+    mutationKey: ['mr-ping-ping'],
+    mutationFn: (data: { intent: string }) => apiMrPingPingTest(data),
+    onSuccess: (res) => {
+      setOutput(res)
+    }
+  })
+
   useEffect(() => {
     getListenersCount()
   }, [])
 
   async function getListenersCount() {
     const dotSquadLS = await window.api.app.listenerCount('dot-squad')
-    const routerListenerLS = await window.api.app.listenerCount('navigate-to')
-    const ResizeListenerLS = await window.api.app.listenerCount('window-resized')
+    const routerLS = await window.api.app.listenerCount('navigate-to')
+    const ResizeLS = await window.api.app.listenerCount('window-resized')
+    const ProcessLS = await window.api.app.listenerCount('emit-process-activity')
 
-    setListenersCount({ dotSquadLS, routerListenerLS, ResizeListenerLS })
+    setListenersCount({ dotSquadLS, routerLS, ResizeLS, ProcessLS })
   }
 
   // Fetch setting directly from db.
@@ -156,6 +166,19 @@ export function Debug() {
           <div className="grid gap-2 border-t py-4">
             <label>External API:</label>
             <Button onClick={() => sendTestPing()}>{isPendingPingTest ? '..' : 'Test ping'}</Button>
+            <Button onClick={() => mrPingPingMutation({ intent: 'apps-config' })}>
+              {'Mr Ping Ping apps'}
+            </Button>
+            <Button onClick={() => mrPingPingMutation({ intent: 'app-config' })}>
+              {'Mr Ping Ping app config'}
+            </Button>
+            <Button onClick={() => mrPingPingMutation({ intent: 'apps-status' })}>
+              {'Mr Ping Ping apps status'}
+            </Button>
+
+            <Button onClick={() => mrPingPingMutation({ intent: 'app-status' })}>
+              {'Mr Ping Ping app status'}
+            </Button>
           </div>
           <div className="grid gap-2 border-t py-4">
             <label>DotSquad:</label>
@@ -165,6 +188,7 @@ export function Debug() {
             <label>Route Nav:</label>
             <Button onClick={() => navigateTo('/no-connection')}>no-connection</Button>
           </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Local Database:</label>
             <Button onClick={() => handleGetSettings(settingKeys.lockScreen)}>
@@ -210,7 +234,7 @@ export function Debug() {
           </div>
           <div className="h-full overflow-y-hidden">
             {isPendingPingTest ? (
-              'Loading..'
+              <LoadingIndicator />
             ) : (
               <p className="text-xs">{JSON.stringify(output, null, 2)}</p>
             )}
@@ -236,4 +260,21 @@ function InfoRow({ label, value }: { label: string; value: string | number }) {
 
 async function testPing() {
   return await window.api.test.apiTest()
+}
+
+async function apiMrPingPingTest({ intent }: { intent: string }) {
+  if (intent === 'app-config') {
+    return await window.api.external.apiMrPingPingAppConfig({ appName: 'timeinprogress_client' })
+  }
+  if (intent === 'apps-config') {
+    return await window.api.external.apiMrPingPingAppsConfig()
+  }
+  if (intent === 'apps-status') {
+    return await window.api.external.apiMrPingPingAppsStatus()
+  }
+  if (intent === 'app-status') {
+    return await window.api.external.apiMrPingPingAppStatus({ appName: 'timeinprogress_client' })
+  }
+
+  return
 }

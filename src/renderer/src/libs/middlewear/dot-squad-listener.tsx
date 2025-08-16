@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { IpcRendererEvent } from 'electron'
 
-import { useApp } from '~/libs/context/app'
+// import { useApp } from '~/libs/context/app'
 import { type DotSquadAnims } from '@shared/dot-squad'
+import { useDotSquadTest } from '../context/dot-squad'
 
 export function DotSquadListener() {
-  const { handleUpdateDotSquad } = useApp()
+  const { handleUpdateDotSquad } = useDotSquadTest()
 
   useEffect(() => {
     const cleanup = setupOnDotSquadActivity()

@@ -2,10 +2,10 @@
 // * Heavy on the state changes but its fun!
 
 import { DotFilledIcon } from '@radix-ui/react-icons'
-import { useApp } from '~/libs/context/app'
+import { useDotSquadTest } from '~/libs/context/dot-squad'
 
 export function DotSquad() {
-  const { dotA, dotB, dotC } = useApp()
+  const { dotA, dotB, dotC } = useDotSquadTest()
 
   return (
     <div className="flex h-full items-center justify-center">

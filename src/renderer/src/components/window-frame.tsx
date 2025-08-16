@@ -9,6 +9,10 @@ import { useApp } from '~/libs/context/app'
 import { Button } from './ui/button'
 import { DotSquad } from './dot-squad'
 import { WindowUIModeSelector } from './window-ui-mode-selector'
+import { capitalize } from '~/libs/utils/utils'
+
+const isDev = import.meta.env.DEV
+const mode = import.meta.env.MODE
 
 const webKit = {
   drag: { WebkitAppRegion: 'drag' },
@@ -37,7 +41,16 @@ export function WindowFrame() {
       style={webKit.drag}
     >
       <div className="grid grid-cols-3 w-full">
-        <div className="flex w-full items-center">{isLogin ? <div></div> : <div>HomePie</div>}</div>
+        <div className="flex w-full items-center">
+          {isLogin ? (
+            <div></div>
+          ) : (
+            <div className="flex gap-1 items-center text-sm">
+              HomePie
+              {isDev && <p className="opacity-50">/ {capitalize(mode)}</p>}
+            </div>
+          )}
+        </div>
 
         <div className="flex w-full items-center justify-center">
           {!isLogin ? (

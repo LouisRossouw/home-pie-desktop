@@ -1,5 +1,9 @@
-import { Loader2 } from 'lucide-react'
+import { SpinSVG } from './svg-icons'
 
 export function LoadingIndicator() {
-  return <Loader2 className="w-8 h-8 animate-spin" />
+  return (
+    <div className="w-4">
+      <SpinSVG />
+    </div>
+  )
 }

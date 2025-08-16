@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router'
 
 import { RouterListener } from './router-listener'
-import { DotSquadListener } from './dot-squad-listener'
 import { WindowResizeListener } from './resize-listener'
+import { ProcessListener } from './process-listener'
 
 export function Middlewear() {
   const { pathname } = useLocation()
@@ -13,8 +13,9 @@ export function Middlewear() {
   return (
     <>
       <RouterListener />
-      <DotSquadListener />
+      {/* <DotSquadListener /> */}
       <WindowResizeListener />
+      <ProcessListener />
     </>
   )
 }

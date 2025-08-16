@@ -12,14 +12,15 @@ import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
 
 import { Button } from './ui/button'
 import { AppVersion } from './app-version'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
 
-const isDev = import.meta.env.DEV
-const mode = import.meta.env.MODE
+import { MrPingPingIndicator } from './mr-ping-ping'
 
 export function WindowFrameDebug() {
   const countToDebug = useRef(0)
   const { pathname } = useLocation()
   const { navigateTo } = useNav()
+  const { status } = useMrPingPing()
 
   const { appSettings, updateAppSettings, startRenderTime } = useApp()
 
@@ -65,8 +66,12 @@ export function WindowFrameDebug() {
 
           <p className="text-xs">{pathname}</p>
         </div>
-        <div className="flex justify-center items-center">
-          {isDev && <p className="text-xs">{mode}</p>}
+        <div className="flex justify-center items-center gap-4">
+          <MrPingPingIndicator
+            resTime={status?.res_time}
+            lastPingedRaw={status?.last_pinged}
+            isLoading={status?.last_pinged ? false : true}
+          />
         </div>
         <div className="flex justify-end items-center gap-4">
           {appSettings?.debug && (

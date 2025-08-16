@@ -8,10 +8,10 @@ import {
   MutableRefObject
 } from 'react'
 
-import { defaultDotSquadColour } from '@shared/dot-squad/constants'
+// import { defaultDotSquadColour } from '@shared/dot-squad/constants'
 
 import { UseAppWindow, useAppWindow } from '~/libs/hooks/use-app-window'
-import { useDotSquad, UseDotSquadType } from '~/libs/hooks/use-dot-squad'
+// import { useDotSquad, UseDotSquadType } from '~/libs/hooks/use-dot-squad'
 import { type UseAppSettings, type AppSetting, useAppSettings } from '~/libs/hooks/use-app-settings'
 
 const appWindowInit: UseAppWindow = {
@@ -32,14 +32,14 @@ const appSettingsInit: UseAppSettings = {
 // TODO; Remove dot squad from app context. causes re-renderings.
 // ***
 
-const dotSquadInit = {
-  dotA: defaultDotSquadColour,
-  dotB: defaultDotSquadColour,
-  dotC: defaultDotSquadColour,
-  handleUpdateDotSquad: () => ({})
-}
+// const dotSquadInit = {
+//   dotA: defaultDotSquadColour,
+//   dotB: defaultDotSquadColour,
+//   dotC: defaultDotSquadColour,
+//   handleUpdateDotSquad: () => ({})
+// }
 
-type AppExtensions = UseAppWindow & UseAppSettings & UseDotSquadType
+type AppExtensions = UseAppWindow & UseAppSettings
 
 type AppContextType = {
   isAuth: boolean
@@ -51,7 +51,7 @@ export const AppContext = createContext<AppContextType>({
   isAuth: false,
   setIsAuth: () => {},
   startRenderTime: createRef(),
-  ...dotSquadInit,
+  // ...dotSquadInit,
   ...appWindowInit,
   ...appSettingsInit
 })
@@ -59,7 +59,7 @@ export const AppContext = createContext<AppContextType>({
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
   const appSettings = useAppSettings()
   const appWindow = useAppWindow(appSettings)
-  const dotSquad = useDotSquad()
+  // const dotSquad = useDotSquad()
 
   const startRenderTime = useRef(null)
 
@@ -71,7 +71,7 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
         isAuth,
         setIsAuth,
         startRenderTime,
-        ...dotSquad,
+        // ...dotSquad,
         ...appWindow,
         ...appSettings
       }}

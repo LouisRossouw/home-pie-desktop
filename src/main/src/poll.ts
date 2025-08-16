@@ -1,3 +1,4 @@
+import { mainWindow } from '..'
 import { currentRoute, updateDotSquadActivity } from './app'
 
 // TODO; System poll, Turn into a class in the future.
@@ -12,7 +13,10 @@ let isPolling = false
 const pollMS = 1000
 
 let anEvent = 0
+let checkMrPingPingStatus = 0
+
 const resetAnEventAt = 10
+const resetCheckMrPingPingStatusAt = 120 // 2 min
 
 export async function startPolling() {
   if (intervalId !== null) return
@@ -38,9 +42,13 @@ function polling() {
   if (ignoreRoutes.includes(currentRoute)) return
 
   const isAnEvent = anEvent === 0
+  const isCheckMrPingPingStatus = checkMrPingPingStatus === 5
 
   if (isAnEvent) {
     emitEventToRender('is-an-event')
+  }
+  if (isCheckMrPingPingStatus) {
+    emitEventToRender('is-check-mr-ping-ping-status')
   }
 
   // Update other checks
@@ -56,16 +64,26 @@ function incrementAndResetPoll() {
 
 function updateChecksCounter() {
   anEvent = anEvent < resetAnEventAt ? anEvent + 1 : 0
+  checkMrPingPingStatus =
+    checkMrPingPingStatus < resetCheckMrPingPingStatusAt ? checkMrPingPingStatus + 1 : 0
 }
 
 // Emit events in the main process
-function emitEvent(event: string) {
-  console.log('Emiting:', event)
-}
+// function emitEvent(event: string) {
+//   console.log('Emiting:', event)
+// }
 
 // Emit events to the render process
 function emitEventToRender(event: string) {
   console.log('Emiting to render:', event)
-  updateDotSquadActivity({ activity: 'singleBlink' })
+
+  if (event === 'is-an-event') {
+    return updateDotSquadActivity({ activity: 'singleBlink' })
+  }
+  if (event === 'is-check-mr-ping-ping-status') {
+    return mainWindow?.webContents.send('emit-process-activity', { activity: event })
+  }
+
+  return
   // mainWindow?.webContents.send('system:event', event)
 }
