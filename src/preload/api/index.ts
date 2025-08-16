@@ -33,12 +33,20 @@ const appAPI = {
   listenerCount: (channel: any) => ipcRenderer.listenerCount(channel),
   removeAllListeners: (channel: any) => ipcRenderer.removeAllListeners(channel),
   removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb),
-  openDirectory: async (data: {path: string}) => IPCR.invoke('open-directory', data)
+  openDirectory: async (data: {path: string}) => IPCR.invoke('open-directory', data),
+  emitProcessActivity: (callback: (event: IpcRendererEvent, data: {activity: string}) => void) => {ipcRenderer.on('emit-process-activity', callback)},
 }
 
 // prettier-ignore
 const externalAPI = {
   apiProjectList: async () => IPCR.invoke('api-projects-list'),
+
+  // Mr PingPing
+  apiMrPingPingStatus: async () => IPCR.invoke('api-mr-ping-ping-status'),
+  apiMrPingPingAppConfig: async (data: {appName: string}) => IPCR.invoke('api-mr-ping-ping-app-config', data),
+  apiMrPingPingAppsConfig: async () => IPCR.invoke('api-mr-ping-ping-apps-config'),
+  apiMrPingPingAppsStatus: async () => IPCR.invoke('api-mr-ping-ping-apps-status'),
+  apiMrPingPingAppStatus: async (data: {appName: string}) => IPCR.invoke('api-mr-ping-ping-app-status', data),
 
   // GenGen
   apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data),

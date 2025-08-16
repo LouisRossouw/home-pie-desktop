@@ -6,11 +6,11 @@ import {
   ApiProjectsList,
   ApiTimeInProgressOverview,
   ApiTimeInProgressOverviewResponse,
-  Range,
   ApiInstaInsightsAccountsOverview,
   ApiInstaInsightsAccount,
   ApiInstaInsightsAccountsOverviewResponse,
-  ApiTimeInProgressInsertHistoricalData
+  ApiTimeInProgressInsertHistoricalData,
+  ApiMrPingPingStatus
 } from '@shared/types'
 
 type NavAPI = {
@@ -30,11 +30,19 @@ type AppAPI = {
   removeAllListeners: (v: any) => Promise<any>
   removeListener: (v: any, listener: string) => Promise<any>
   openDirectory: (v: { path: string }) => void // TODO; Return & handle error
+  emitProcessActivity: (v: any) => Promise<any>
 }
 
 // prettier-ignore
 type ExternalAPI = {
   apiProjectList: () => Promise<ApiProjectsList>
+
+  // Mr PingPing
+  apiMrPingPingStatus: () => Promise<ApiMrPingPingStatus>
+  apiMrPingPingAppConfig: (data: {appName: string}) => Promise<any>
+  apiMrPingPingAppsConfig: () => Promise<any>
+  apiMrPingPingAppsStatus: () => Promise<any>
+  apiMrPingPingAppStatus: (data: {appName: string}) => Promise<{ok: boolean, data: unknown}>
 
   // GenGen
   apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
