@@ -66,14 +66,13 @@ export function WindowFrameDebug() {
 
           <p className="text-xs">{pathname}</p>
         </div>
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex justify-center items-center gap-4"></div>
+        <div className="flex justify-end items-center gap-4">
           <MrPingPingIndicator
             resTime={status?.res_time}
             lastPingedRaw={status?.last_pinged}
             isLoading={status?.last_pinged ? false : true}
           />
-        </div>
-        <div className="flex justify-end items-center gap-4">
           {appSettings?.debug && (
             <>
               <p className="text-xs">{`${duration.toFixed(2)}ms`}</p>

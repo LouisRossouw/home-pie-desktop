@@ -3,6 +3,7 @@ import { Ghost } from 'lucide-react'
 import { Button } from './ui/button'
 import { TooltipInfo } from './tooltip-info'
 import { PingSVG, SpinSVG } from './svg-icons'
+import { useNavigate } from 'react-router'
 
 export function MrPingPingIndicator({
   lastPingedRaw,
@@ -13,6 +14,7 @@ export function MrPingPingIndicator({
   resTime?: number
   isLoading: boolean
 }) {
+  const navigateTo = useNavigate()
   if (isLoading) return <SpinSVG />
 
   const lastPinged = addHours(new Date(lastPingedRaw!), 2)
@@ -31,7 +33,7 @@ export function MrPingPingIndicator({
           size={'sm'}
           className="h-6"
           variant={'ghost'}
-          onClick={() => alert('TODO; Nav to MrPingPing routes')}
+          onClick={() => navigateTo('/ping-ping')}
         >
           <PingSVG
             bgColor={bgColor}

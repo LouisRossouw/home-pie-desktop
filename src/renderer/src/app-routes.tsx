@@ -27,6 +27,9 @@ import GenGenTimeInProgressRoute from './routes/gengen/time-in-progress'
 import TimeInProgressRoute from './routes/sub-projects/time-in-progress'
 import InsightsRoute from './routes/sub-projects/insta-insights/insights'
 
+import PingPingOverviewRoute from './routes/ping-ping/overview'
+import PingPingRoute from './routes/ping-ping'
+
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
 }
@@ -83,6 +86,11 @@ const routesConfig = [
           { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
           { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
         ]
+      },
+      {
+        path: 'ping-ping',
+        element: <PingPingRoute />,
+        children: [{ index: true, element: <PingPingOverviewRoute /> }]
       },
       { path: 'debug', element: <DebugRoute /> },
       { path: 'settings', element: <SettingsRoute /> }
