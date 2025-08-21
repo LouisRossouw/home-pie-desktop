@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 import { startPolling } from './src/poll'
-import { registerIpcHandlers } from './src/ipc-handlers'
+import { registerIpcHandlers } from './src/ipc'
 import { currentRoute, suppressResizeEvent } from './src/app'
 
 export let mainWindow: BrowserWindow | undefined = undefined
