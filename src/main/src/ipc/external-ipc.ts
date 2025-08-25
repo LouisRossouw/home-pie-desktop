@@ -15,6 +15,8 @@ import { apiMrPingPingAppConfig } from '../api/mr-ping-ping/api-app-config'
 import { apiMrPingPingAppsConfig } from '../api/mr-ping-ping/api-apps-config'
 import { apiMrPingPingAppsStatus } from '../api/mr-ping-ping/api-apps-status'
 import { apiMrPingPingAppStatus } from '../api/mr-ping-ping/api-app-status'
+import { apiGenGenStart } from '../api/gengen/api-gengen-start'
+import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
 
 export function externalIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
@@ -36,6 +38,14 @@ export function externalIpcHandlers() {
   })
   ipcMain.handle('api-mr-ping-ping-app-status', async (_event, data) => {
     return await apiMrPingPingAppStatus(data)
+  })
+
+  // GenGen
+  ipcMain.handle('api-gengen-start', async (_event, data) => {
+    return await apiGenGenStart(data)
+  })
+  ipcMain.handle('api-gengen-check-progress', async (_event, data) => {
+    return await apiGenGenCheckProgress(data)
   })
 
   // * TIme In Progress related API
