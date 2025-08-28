@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { format } from 'date-fns'
 
 import { WindowModes } from '@shared/types'
 
-import { Button } from '~/components/ui/button'
+import { Themes } from '~/libs/themes'
 import { useApp } from '~/libs/context/app'
 import { windowModes } from '~/libs/hooks/use-app-window'
+import { buildThemeClasses } from '~/libs/utils/update-theme-ui'
+import { Button } from '~/components/ui/button'
+import { cn } from '~/libs/utils/cn'
 
 export default function Login() {
   const { appSettings, resizeApp, windowControl } = useApp()
@@ -44,13 +47,26 @@ export default function Login() {
     resizeApp({ width: 900, height: 670, save: true })
   }
 
+  const classes = useMemo(() => {
+    const currentTheme = appSettings?.theme as Themes
+    return buildThemeClasses({
+      currentTheme,
+      overrides: {}
+    })
+  }, [appSettings])
+
   const now = new Date()
 
   // TODO; Add some kind of option that shows a locked out version / screen saved? of the app, with a time etc?
   // currently there is a place holder "readyToSignIn" that does something like this, make this optional
 
   return (
-    <div className="flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background">
+    <div
+      className={cn(
+        'flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background',
+        ...classes
+      )}
+    >
       {!readyToSignIn ? (
         <div className="grid h-full w-full items-center justify-center p-4 gap-4">
           <div className="text-center">
