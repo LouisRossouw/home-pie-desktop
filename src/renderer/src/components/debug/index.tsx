@@ -64,7 +64,7 @@ export function Debug() {
 
   // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
-    const result = await window.api.db.getAppSetting({ setting })
+    const result = await window.api.db.getAppSetting({ key: setting })
 
     setOutput(JSON.parse(result))
   }
@@ -220,6 +220,25 @@ export function Debug() {
               }}
             >
               getAllAppSettings
+            </Button>
+            <Button
+              onClick={async () => {
+                const result = await window.api.db.getAuth({ key: 'access_token' })
+                setOutput(result)
+              }}
+            >
+              getAuth
+            </Button>
+            <Button
+              onClick={async () => {
+                const result = await window.api.db.setAuth({
+                  key: 'access_token',
+                  value: 'weeeee!'
+                })
+                setOutput(result)
+              }}
+            >
+              setAuth
             </Button>
           </div>
           <div className="grid gap-2 border-t py-4">

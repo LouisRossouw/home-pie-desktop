@@ -7,7 +7,8 @@ import { type DotSquadAnims } from '@shared/dot-squad'
 import { ResizeApp, WindowControl } from '@shared/types'
 import { defaultAppSettings, settingKeys } from '@shared/default-app-settings'
 
-import { initDatabase, setSetting, dbExists } from './database'
+import { setSetting } from './db/settings'
+import { initDatabase, dbExists } from './db'
 import { readAppDataJson, saveTimestamps } from './utils'
 
 const envMode = import.meta.env.MODE
@@ -48,7 +49,7 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
 
     initDatabase()
     defaultAppSettings.forEach(async (setting) => {
-      setSetting(setting.key, setting.value)
+      setSetting({ key: setting.key, value: setting.value })
       await updateOnLoaderProgress({
         msg: `Adding default setting:', ${setting.key} - ${setting.value}`,
         enableDelay: false
@@ -95,8 +96,8 @@ export function windowControl({ action, width, height }: WindowControl) {
 
       win.setBounds({ x: 0, y: 0, width: w, height: h })
 
-      setSetting(settingKeys.appWidth, w)
-      setSetting(settingKeys.appHeight, h)
+      setSetting({ key: settingKeys.appWidth, value: w })
+      setSetting({ key: settingKeys.appHeight, value: h })
 
       break
     case 'login':
@@ -143,13 +144,13 @@ export async function updateDotSquadActivity({ activity }: { activity: DotSquadA
 
 async function updateAppStartTime() {
   const now = Date.now()
-  setSetting(settingKeys.appStartTime, now)
+  setSetting({ key: settingKeys.appStartTime, value: now })
   saveTimestamps({ appStartTime: now })
 }
 
 async function updateAppCloseTime() {
   const now = Date.now()
-  setSetting(settingKeys.appEndTime, Date.now())
+  setSetting({ key: settingKeys.appEndTime, value: Date.now() })
   saveTimestamps({ appEndTime: now })
 }
 

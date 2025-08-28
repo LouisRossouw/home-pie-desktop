@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import playDotSquad from '@shared/dot-squad/dot-squad-play'
-import { defaultDotSquadColour } from '@shared/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/constants'
 import { dotSquadAnims, type DotSquadAnims, type Frame } from '@shared/dot-squad'
 
 // SideNote: saving this file would cause hot reload to add more listeners ..

@@ -1,4 +1,4 @@
-import { defaultDotSquadColour } from '@shared/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/constants'
 
 export const noServer = [
   {
