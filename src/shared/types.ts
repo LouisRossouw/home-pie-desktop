@@ -1,6 +1,6 @@
 // TODO; Maybe switch to open-api, to generate api response types from my server.
 
-import { defaultAppSettings } from './default-app-settings'
+import { defaultCoreSettings, defaultUserSettings } from './default-app-settings'
 
 export type Project = {
   title: string
@@ -9,7 +9,9 @@ export type Project = {
   url: string
 }
 
-export type Setting = (typeof defaultAppSettings)[number]['key']
+export type CoreSetting = (typeof defaultCoreSettings)[number]['key']
+export type UserSetting = (typeof defaultUserSettings)[number]['key']
+export type Setting = CoreSetting | UserSetting
 
 export type ResizeApp = {
   width: number

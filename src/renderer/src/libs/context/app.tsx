@@ -8,11 +8,13 @@ import {
   MutableRefObject
 } from 'react'
 
-// import { defaultDotSquadColour } from '@shared/dot-squad/constants'
-
+import {
+  useAppSettings,
+  type AppSettings,
+  type UseAppSettings
+} from '~/libs/hooks/use-app-settings'
 import { UseAppWindow, useAppWindow } from '~/libs/hooks/use-app-window'
-// import { useDotSquad, UseDotSquadType } from '~/libs/hooks/use-dot-squad'
-import { type UseAppSettings, type AppSetting, useAppSettings } from '~/libs/hooks/use-app-settings'
+import { UserSettings, UseUserSettings, useUserSettings } from '~/libs/hooks/use-user-settings'
 
 const appWindowInit: UseAppWindow = {
   windowControl: () => undefined,
@@ -25,21 +27,18 @@ const appSettingsInit: UseAppSettings = {
   setAppSettings: () => {},
   getAppSetting: async () => '',
   updateAppSettings: async () => false,
-  getAllAppSettings: async () => ({}) as AppSetting
+  getAllAppSettings: async () => ({}) as AppSettings
 }
 
-// ***
-// TODO; Remove dot squad from app context. causes re-renderings.
-// ***
+const userSettingsInit: UseUserSettings = {
+  userSettings: undefined,
+  setUserSettings: () => {},
+  getUserSetting: async () => '',
+  updateUserSettings: async () => false,
+  getAllUserSettings: async () => ({}) as UserSettings
+}
 
-// const dotSquadInit = {
-//   dotA: defaultDotSquadColour,
-//   dotB: defaultDotSquadColour,
-//   dotC: defaultDotSquadColour,
-//   handleUpdateDotSquad: () => ({})
-// }
-
-type AppExtensions = UseAppWindow & UseAppSettings
+type AppExtensions = UseAppWindow & UseAppSettings & UseUserSettings
 
 type AppContextType = {
   isAuth: boolean
@@ -51,15 +50,15 @@ export const AppContext = createContext<AppContextType>({
   isAuth: false,
   setIsAuth: () => {},
   startRenderTime: createRef(),
-  // ...dotSquadInit,
   ...appWindowInit,
-  ...appSettingsInit
+  ...appSettingsInit,
+  ...userSettingsInit
 })
 
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
-  const appSettings = useAppSettings()
-  const appWindow = useAppWindow(appSettings)
-  // const dotSquad = useDotSquad()
+  const coreSettings = useAppSettings()
+  const userSettings = useUserSettings({ userId: coreSettings.appSettings?.activeAccountId ?? '0' })
+  const appWindow = useAppWindow(coreSettings)
 
   const startRenderTime = useRef(null)
 
@@ -71,9 +70,9 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
         isAuth,
         setIsAuth,
         startRenderTime,
-        // ...dotSquad,
         ...appWindow,
-        ...appSettings
+        ...coreSettings,
+        ...userSettings
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { Setting } from '@shared/types'
+import { UserSetting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
 import { Themes, themesList } from '~/libs/themes'
@@ -20,7 +20,7 @@ export function ThemeSelector({
   handleAddNewChanges
 }: {
   currentTheme?: Themes
-  handleAddNewChanges: (v: { setting: Setting; value: SettingValue }) => void
+  handleAddNewChanges: (v: { setting: UserSetting; value: SettingValue }) => void
 }) {
   function handleThemeChange(value: string) {
     handleAddNewChanges({ setting: settingKeys.theme, value })

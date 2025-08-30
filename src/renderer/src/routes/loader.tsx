@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import { useApp } from '~/libs/context/app'
-import { AppSetting } from '~/libs/hooks/use-app-settings'
+import { AppSettings } from '~/libs/hooks/use-app-settings'
 import { useNav } from '~/libs/hooks/use-navigation'
 import { updateThemeUi } from '~/libs/utils/update-theme-ui'
+import { UserSettings } from '~/libs/hooks/use-user-settings'
+
+type Settings = AppSettings & UserSettings
 
 export function LoaderRoute({
   fastLoad,
@@ -13,7 +16,11 @@ export function LoaderRoute({
   setLoaded: (v: boolean) => void
 }) {
   const { navigateTo } = useNav()
-  const { resizeApp, getAllAppSettings: updateContextWithAppSettings } = useApp()
+  const {
+    resizeApp,
+    getAllAppSettings: updateContextWithAppSettings,
+    getAllUserSettings: updateContextWithUserSettings
+  } = useApp()
 
   const [logs, setLogs] = useState<string>('')
   const [appLoaded, setAppLoaded] = useState(false)
@@ -46,8 +53,8 @@ export function LoaderRoute({
   }
 
   // Maybe a good place to update any app settings?
-  function applyAppSettingsToApp(appSettings: AppSetting) {
-    const currentTheme = appSettings?.theme as string | undefined
+  function applyAppSettingsToApp(settings: Settings) {
+    const currentTheme = settings?.theme as string | undefined
 
     updateThemeUi(currentTheme)
   }
@@ -62,14 +69,22 @@ export function LoaderRoute({
     }
 
     if (hasLoaded) {
-      const appSettings = await updateContextWithAppSettings()
+      const coreSettings = await updateContextWithAppSettings()
+      const userSettings = await updateContextWithUserSettings()
 
-      applyAppSettingsToApp(appSettings)
+      const settings = { ...coreSettings, ...userSettings } as Settings
+
+      applyAppSettingsToApp(settings)
 
       return setAppLoaded(true)
     }
 
     console.error('App init broke!')
+  }
+
+  async function handleLoadUserSession() {
+    // TODO; Maybe we can check session here?
+    // const { session } = await window.api.app.session()
   }
 
   // FastLoad hides the loading screen.

@@ -62,6 +62,8 @@ export function Debug() {
     setListenersCount({ dotSquadLS, routerLS, ResizeLS, ProcessLS })
   }
 
+  // ** TODO; update logic/func to handle CORE & USER settings.
+
   // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
     const result = await window.api.db.getAppSetting({ key: setting })
