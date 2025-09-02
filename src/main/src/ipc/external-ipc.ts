@@ -17,6 +17,7 @@ import { apiMrPingPingAppsStatus } from '../api/mr-ping-ping/api-apps-status'
 import { apiMrPingPingAppStatus } from '../api/mr-ping-ping/api-app-status'
 import { apiGenGenStart } from '../api/gengen/api-gengen-start'
 import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
+import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
 
 export function externalIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
@@ -38,6 +39,9 @@ export function externalIpcHandlers() {
   })
   ipcMain.handle('api-mr-ping-ping-app-status', async (_event, data) => {
     return await apiMrPingPingAppStatus(data)
+  })
+  ipcMain.handle('api-mr-ping-ping-apps-data', async (_event, data) => {
+    return await apiMrPingPingAppsData(data)
   })
 
   // GenGen

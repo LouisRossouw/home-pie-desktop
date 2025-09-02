@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { getBaseURl } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
-import { ApiTest, Setting } from '@shared/types'
+import { ApiTest, CoreSetting, Setting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
@@ -65,8 +65,8 @@ export function Debug() {
   // ** TODO; update logic/func to handle CORE & USER settings.
 
   // Fetch setting directly from db.
-  async function handleGetSettings(setting: Setting) {
-    const result = await window.api.db.getAppSetting({ key: setting })
+  async function handleGetSettings(setting: CoreSetting) {
+    const result = await window.api.db.getCoreSetting({ key: setting })
 
     setOutput(JSON.parse(result))
   }

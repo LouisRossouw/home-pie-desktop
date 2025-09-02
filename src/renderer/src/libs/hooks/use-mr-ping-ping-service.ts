@@ -17,10 +17,29 @@ export function useMrPingPingService() {
     return res.flatMap((item) => item.data)
   }
 
+  async function getAppRecordedData({
+    appNames,
+    range,
+    interval
+  }: {
+    appNames: string[]
+    range: string
+    interval: number
+  }) {
+    const res = await Promise.all(
+      appNames.map((appName) =>
+        window.api.external.apiMrPingPingAppData({ appName, range, interval })
+      )
+    )
+
+    return res.flatMap((item) => item.data)
+  }
+
   return {
     status,
     setStatus,
     handleGetStatus,
-    getAppStatus
+    getAppStatus,
+    getAppRecordedData
   }
 }

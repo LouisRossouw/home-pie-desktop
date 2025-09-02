@@ -29,6 +29,8 @@ import InsightsRoute from './routes/sub-projects/insta-insights/insights'
 
 import PingPingOverviewRoute from './routes/ping-ping/overview'
 import PingPingRoute from './routes/ping-ping'
+import SmartHomeRoute from './routes/smart-home'
+import SmartHomeOverviewRoute from './routes/smart-home/overview'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -92,6 +94,12 @@ const routesConfig = [
         element: <PingPingRoute />,
         children: [{ index: true, element: <PingPingOverviewRoute /> }]
       },
+      {
+        path: 'smart-home',
+        element: <SmartHomeRoute />,
+        children: [{ index: true, element: <SmartHomeOverviewRoute /> }]
+      },
+
       { path: 'debug', element: <DebugRoute /> },
       { path: 'settings', element: <SettingsRoute /> }
     ]
