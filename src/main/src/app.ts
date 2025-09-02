@@ -2,7 +2,7 @@ import { app, BrowserWindow, screen, shell } from 'electron'
 import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
-import { getBaseURl } from '@shared/api'
+import { getBaseURL } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
 import { ResizeApp, WindowControl } from '@shared/types'
 import { defaultCoreSettings, defaultUserSettings, settingKeys } from '@shared/default-app-settings'
@@ -12,6 +12,7 @@ import { readAppDataJson, saveTimestamps } from './utils'
 import { initDatabase, dbExists } from './db'
 import { setCoreSetting } from './db/core-settings'
 import { setUserSetting } from './db/user-settings'
+import { getAppName, getAppWebsiteBaseURL } from '@shared/constants'
 
 const envMode = import.meta.env.MODE
 
@@ -74,7 +75,7 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
 
   await updateOnLoaderProgress({ msg: `ENV: ${envMode}`, ms })
   await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}`, ms })
-  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURl()}`, ms })
+  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURL()}`, ms })
   await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}`, ms })
 
   updateAppStartTime()
@@ -177,5 +178,34 @@ export async function openDirectory({ path }: { path: string }) {
     }
   } catch (error) {
     console.error(`Failed to open directory: ${error}`)
+  }
+}
+
+export async function handleAuthBrowser() {
+  const loginKey = generateLoginKey()
+  const authUrl = `${getAppWebsiteBaseURL}/auth/authorize?loginKey=${loginKey}}&origin=${getAppName}`
+  // Open system browser to start auth process.
+  await shell.openExternal(authUrl)
+}
+
+function generateLoginKey() {
+  // TODO; Generate a loginKey, this key is passed in the authUrl,
+  // it is saved in the backend API and returned back to this app.
+
+  // TODO; save to the database
+
+  return 'TODO'
+}
+
+// TODO;
+// open app with homepie-dev://open
+export function handleDeepLink(url: string) {
+  const urlObj = new URL(url)
+  // const code = urlObj.searchParams.get('code')
+  const code = 'temp code 1234'
+  console.log('Deepink works;', url)
+  if (code) {
+    console.log('Got auth code via deep link:', code)
+    mainWindow?.webContents.send('auth-code', { code })
   }
 }
