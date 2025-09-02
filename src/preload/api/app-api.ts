@@ -3,6 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 import type { OnResize, ResizeApp, WindowControl } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
+import { IpcKey } from '@shared/constants'
 
 const IPCR = electronAPI.ipcRenderer
 
@@ -19,6 +20,9 @@ export type AppAPI = {
   removeListener: (v: any, listener: string) => Promise<any>
   openDirectory: (v: { path: string }) => void // TODO; Return & handle error
   emitProcessActivity: (v: any) => Promise<any>
+
+  onAuthCode: (v: any) => Promise<any>
+  signIn: () => void
 }
 
 // prettier-ignore
@@ -35,4 +39,7 @@ export const appAPI = {
   removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb),
   openDirectory: async (data: {path: string}) => IPCR.invoke('open-directory', data),
   emitProcessActivity: (callback: (event: IpcRendererEvent, data: {activity: string}) => void) => {ipcRenderer.on('emit-process-activity', callback)},
+
+  onAuthCode: (callback: (event: IpcRendererEvent, data: {code: any}) => void) => {ipcRenderer.on('auth-code', callback)},
+  signIn: async () => IPCR.invoke(IpcKey.signIn),
 }
