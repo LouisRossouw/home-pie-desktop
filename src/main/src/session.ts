@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 import { mainWindow } from '@main/.'
-import { getBaseURl } from '@shared/api'
+import { getBaseURL } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 
-export const baseURL = getBaseURl()
+export const baseURL = getBaseURL()
 const OauthClient = getOAuthClients()
 
 export async function requireSession(requireAuth: boolean = true) {
