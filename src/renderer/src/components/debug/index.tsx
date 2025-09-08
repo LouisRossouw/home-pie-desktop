@@ -13,6 +13,7 @@ import { useDotSquadTest } from '~/libs/context/dot-squad'
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
+import { PieSensaiMessageDialog } from './pie-sensai-message-dialog'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -42,8 +43,16 @@ export function Debug() {
   })
 
   const { mutateAsync: mrPingPingMutation } = useMutation({
-    mutationKey: ['mr-ping-ping'],
+    mutationKey: ['mr-ping-ping', 'test'],
     mutationFn: (data: { intent: string }) => apiMrPingPingTest(data),
+    onSuccess: (res) => {
+      setOutput(res)
+    }
+  })
+
+  const { mutateAsync: pieSensaiMutation } = useMutation({
+    mutationKey: ['pie-sensai', 'test'],
+    mutationFn: (data: { intent: string }) => apiPieSensaiTest(data),
     onSuccess: (res) => {
       setOutput(res)
     }
@@ -241,6 +250,22 @@ export function Debug() {
               setAuth
             </Button>
           </div>
+
+          <div className="grid gap-2 border-t py-4">
+            <label>External Physical Devices:</label>
+            <PieSensaiMessageDialog />
+            <Button onClick={() => pieSensaiMutation({ intent: 'api-pie-sensai-temperature' })}>
+              Pie Sensai - Temperature
+            </Button>
+
+            <Button onClick={() => pieSensaiMutation({ intent: 'api-pie-sensai-humidity' })}>
+              Pie Sensai - Humidity
+            </Button>
+            <Button onClick={() => pieSensaiMutation({ intent: 'api-pie-sensai-error' })}>
+              Pie Sensai - Error
+            </Button>
+          </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Theme:</label>
             <ThemeSelector handleAddNewChanges={() => console.log('TODO')} />
@@ -295,5 +320,18 @@ async function apiMrPingPingTest({ intent }: { intent: string }) {
     return await window.api.external.apiMrPingPingAppStatus({ appName: 'timeinprogress_client' })
   }
 
+  return
+}
+
+async function apiPieSensaiTest({ intent }: { intent: string }) {
+  if (intent === 'api-pie-sensai-temperature') {
+    return await window.api.external.apiPieSensaiTemperature()
+  }
+  if (intent === 'api-pie-sensai-humidity') {
+    return await window.api.external.apiPieSensaiHumidity()
+  }
+  if (intent === 'api-pie-sensai-error') {
+    return await window.api.external.apiPieSensaiError()
+  }
   return
 }
