@@ -38,6 +38,12 @@ export type ExternalAPI = {
   apiInstaInsightsAddAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
   apiInstaInsightsUpdateAccountStatus: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
   apiInstaInsightsRemoveAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
+
+  // Pie Sensai - Direct
+  apiPieSensaiMessage: (data: {message: string, textSize?: number}) => Promise<any>
+  apiPieSensaiTemperature: () => Promise<any>
+  apiPieSensaiHumidity: () => Promise<any>
+  apiPieSensaiError: () => Promise<any>
 }
 // prettier-ignore
 export const externalAPI = {
@@ -63,5 +69,11 @@ export const externalAPI = {
   apiInstaInsightsGetAccountsOverview: async (data: ApiInstaInsightsAccountsOverview) => IPCR.invoke('api-insta-insights-get-accounts-overview', data),
   apiInstaInsightsAddAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-add-account', data),
   apiInstaInsightsUpdateAccountStatus: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-update-account-status', data),
-  apiInstaInsightsRemoveAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-remove-account', data)
+  apiInstaInsightsRemoveAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-remove-account', data),
+
+  // Pie Sensai - Direct
+  apiPieSensaiMessage: async (data: {message: string, textSize?: number}) => IPCR.invoke('api-pie-sensai-message', data),
+  apiPieSensaiTemperature: async () => IPCR.invoke('api-pie-sensai-temperature'),
+  apiPieSensaiHumidity: async () => IPCR.invoke('api-pie-sensai-humidity'),
+  apiPieSensaiError: async () => IPCR.invoke('api-pie-sensai-error'),
 }
