@@ -17,6 +17,10 @@ import { apiMrPingPingAppsStatus } from '../api/mr-ping-ping/api-apps-status'
 import { apiMrPingPingAppStatus } from '../api/mr-ping-ping/api-app-status'
 import { apiGenGenStart } from '../api/gengen/api-gengen-start'
 import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
+import { apiPieSensaiMessage } from '../api/pie-sensai/api-pie-sensai-message'
+import { apiPieSensaiTemperature } from '../api/pie-sensai/api-pie-sensai-temperature'
+import { apiPieSensaiHumidity } from '../api/pie-sensai/api-pie-sensai-humidity'
+import { apiPieSensaiError } from '../api/pie-sensai/api-pie-sensai-error'
 
 export function externalIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
@@ -71,5 +75,19 @@ export function externalIpcHandlers() {
   })
   ipcMain.handle('api-insta-insights-remove-account', async (_event, data) => {
     return await apiInstaInsightsRemoveAccount(data)
+  })
+
+  // Pie Sensai - Direct
+  ipcMain.handle('api-pie-sensai-message', async (_event, data) => {
+    return await apiPieSensaiMessage(data)
+  })
+  ipcMain.handle('api-pie-sensai-temperature', async (_event) => {
+    return await apiPieSensaiTemperature()
+  })
+  ipcMain.handle('api-pie-sensai-humidity', async (_event) => {
+    return await apiPieSensaiHumidity()
+  })
+  ipcMain.handle('api-pie-sensai-error', async (_event) => {
+    return await apiPieSensaiError()
   })
 }
