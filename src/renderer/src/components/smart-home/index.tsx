@@ -7,24 +7,18 @@ const tenMin = 1000 * 60 * 10
 export function SmartHome() {
   const { getAppRecordedData } = useMrPingPingService()
 
-  const {
-    data: tempData,
-    isPending,
-    refetch
-  } = useQuery({
+  const { data, isPending, refetch } = useQuery({
     queryKey: ['temperature-humidity-detail'],
     queryFn: async () => {
       return await getAppRecordedData({
         appNames: ['temperature_humidity'],
         range: 'hour',
-        interval: 1
+        interval: 100
       })
     },
     refetchInterval: tenMin,
     staleTime: tenMin
   })
 
-  console.log(tempData)
-
-  return <SmartHomeLayout data={tempData} refetch={refetch} />
+  return <SmartHomeLayout data={data} isLoading={isPending} refetch={refetch} />
 }
