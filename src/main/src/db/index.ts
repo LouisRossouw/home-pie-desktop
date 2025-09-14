@@ -28,8 +28,9 @@ function initDatabase() {
 }
 
 function initTables() {
-  db.prepare(SQL.initSettingsDatabaseSQL).run()
-  db.prepare(SQL.initAuthDatabaseSQL).run()
+  db.prepare(SQL.initCoreSettingsDatabaseSQL).run()
+  db.prepare(SQL.initUserSettingsDatabaseSQL).run()
+  db.prepare(SQL.initSessionDatabaseSQL).run()
 }
 
 function logActivity(value: any) {

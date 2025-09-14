@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Setting } from '@shared/types'
+import { UserSetting } from '@shared/types'
 
 import { useApp } from '~/libs/context/app'
 import { Button } from './ui/button'
@@ -7,10 +7,12 @@ import { Button } from './ui/button'
 import { ThemeSelector } from './theme-selector'
 import { Themes } from '~/libs/themes'
 
-type Changes = { setting: Setting; value: boolean | number | string }
+// TODO; Update types and func to handle both CORE and USER settings.
+// type Changes = { setting: Setting; value: boolean | number | string }
+type Changes = { setting: UserSetting; value: boolean | number | string }
 
 export function Settings() {
-  const { appSettings, updateAppSettings } = useApp()
+  const { userSettings, updateUserSettings } = useApp()
 
   const [changes, setChanges] = useState<Changes[]>([])
   const [success, setSuccess] = useState<boolean | undefined>(undefined)
@@ -24,11 +26,12 @@ export function Settings() {
   }
 
   async function saveChanges() {
-    const result = await updateAppSettings(changes)
+    // const result = await updateAppSettings(changes)
+    const result = await updateUserSettings(changes)
     setSuccess(result)
   }
 
-  const currentTheme = appSettings?.theme as Themes
+  const currentTheme = userSettings?.theme as Themes
 
   return (
     <div className="flex h-[calc(100vh-96px)] items-center justify-center">

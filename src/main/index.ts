@@ -1,11 +1,12 @@
 import { app, shell, BrowserWindow } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 import { startPolling } from './src/poll'
 import { registerIpcHandlers } from './src/ipc'
-import { currentRoute, suppressResizeEvent } from './src/app'
+import { currentRoute, handleDeepLink, suppressResizeEvent } from './src/app'
+import { defaultProtocol } from '@shared/constants'
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
@@ -88,6 +89,39 @@ app.whenReady().then(() => {
   createWindow()
   startPolling()
 
+  const gotTheLock = app.requestSingleInstanceLock()
+
+  if (!gotTheLock) {
+    console.error('[app] Failed to get instance lock')
+    app.quit()
+  } else {
+    // Called when second instance launched with args (Windows/Linux)
+    app.on('second-instance', (_event, commandLine) => {
+      const urlArg = commandLine.find((arg) => arg.startsWith(`${defaultProtocol}://`))
+      if (urlArg) handleDeepLink(urlArg)
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.focus()
+      }
+    })
+  }
+
+  // Mac OS
+  app.on('open-url', (_event, url) => {
+    handleDeepLink(url)
+  })
+
+  // Register protocol for deeplinking / Oauth with system browser.
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient(defaultProtocol, process.execPath, [
+        path.resolve(process.argv[1])
+      ])
+    }
+  } else {
+    app.setAsDefaultProtocolClient(defaultProtocol)
+  }
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -103,11 +137,5 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-// ipcMain.handle('resizeApp', () => {
-//   return getThisAppData()
-// })
 
 registerIpcHandlers()

@@ -1,13 +1,17 @@
-import axios from 'axios'
-
 import { mainWindow } from '@main/.'
-import { getBaseURl } from '@shared/api'
-import { getOAuthClients } from '@shared/auth'
 
-export const baseURL = getBaseURl()
+import { getBaseURL } from '@shared/api'
+import { getOAuthClients } from '@shared/auth'
+import { getApiBaseURL } from '@shared/constants'
+import { paths } from '@shared/lib/generated/api'
+
+import { getSession } from './db/session'
+
+export const baseURL = getBaseURL()
 const OauthClient = getOAuthClients()
 
 export async function requireSession(requireAuth: boolean = true) {
+  const { default: createClient } = await import('openapi-fetch')
   // const token = '1234' // TODO; get from storage.
 
   const validToken = 'TODO' // Temp
@@ -20,8 +24,8 @@ export async function requireSession(requireAuth: boolean = true) {
   //   }
   // }
 
-  const apiClient = axios.create({
-    baseURL,
+  const apiClient = createClient<paths>({
+    baseUrl: getApiBaseURL,
     headers: {
       ...(validToken ? { Authorization: `Bearer ${validToken}` } : {}),
       'Content-Type': 'application/json'
@@ -31,14 +35,19 @@ export async function requireSession(requireAuth: boolean = true) {
   return apiClient
 }
 
-export async function checkAccessToken(accessToken: string): Promise<string | undefined> {
-  if (accessToken && !isTokenExpired()) {
+export async function checkAccessToken({
+  userId,
+  accessToken
+}: {
+  userId: number
+  accessToken?: string
+}): Promise<string | undefined> {
+  if (accessToken && !isTokenExpired({ userId })) {
     return accessToken
   }
 
-  // TODO
-  const refreshToken = undefined
-  // const refreshToken = TODO; Get from storage
+  const refreshToken = await getSession({ userId, key: 'refreshToken' })
+
   if (refreshToken) {
     const response = await refreshTokenFunction(refreshToken)
     if (response?.access_token) {
@@ -50,11 +59,9 @@ export async function checkAccessToken(accessToken: string): Promise<string | un
   return undefined
 }
 
-export function isTokenExpired() {
+export async function isTokenExpired({ userId }: { userId: number }) {
   try {
-    // TODO;
-    const expiresAtstr = undefined
-    // const expiresAtstr = TODO; Get from storage
+    const expiresAtstr = await getSession({ userId, key: 'expiresAt' })
     const expiresAt = expiresAtstr ? parseInt(expiresAtstr, 10) : undefined
     const minutesUntilExpiration = getMinutesUntilExpiration(expiresAt ?? 0)
 
@@ -127,20 +134,4 @@ function updateTokens(response: any) {
   const expiresAt = Date.now() + response.expires_in * 1000
 
   // TODO
-}
-
-// TODO
-export function handleError(error: unknown) {
-  if (axios.isAxiosError(error)) {
-    if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
-      console.error('Server is offline or unreachable')
-      return undefined
-    } else {
-      console.error('Axios request failed:', error.message)
-      return { ok: false }
-    }
-  } else {
-    console.error('Unknown error:', error)
-    return undefined
-  }
 }

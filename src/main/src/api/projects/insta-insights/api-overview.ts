@@ -1,5 +1,5 @@
 import { updateDotSquadActivity } from '@main/src/app'
-import { handleError, requireSession } from '@main/src/session'
+import { requireSession } from '@main/src/session'
 import { Range } from '@shared/types'
 
 export async function apiInstaInsightsGetAccountsOverview({
@@ -16,25 +16,26 @@ export async function apiInstaInsightsGetAccountsOverview({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.get('/api/insta-insights/overview', {
+    const { response, data } = await apiClient.GET('/api/insta-insights/overview', {
       params: {
-        accounts: JSON.stringify(accounts),
-        platform,
-        range,
-        interval
+        query: {
+          accounts,
+          platform,
+          range,
+          interval
+        }
       }
     })
 
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'selectProject' })
-      return response.data
+      return data
     }
 
     console.error('Something went wrong')
 
     return { ok: false }
   } catch (error) {
-    handleError(error)
     return undefined
   }
 }

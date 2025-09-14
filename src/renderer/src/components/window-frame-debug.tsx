@@ -22,7 +22,8 @@ export function WindowFrameDebug() {
   const { navigateTo } = useNav()
   const { status } = useMrPingPing()
 
-  const { appSettings, updateAppSettings, startRenderTime } = useApp()
+  const { userSettings, appSettings, updateAppSettings, updateUserSettings, startRenderTime } =
+    useApp()
 
   function handleDebugRedirect() {
     countToDebug.current += 1
@@ -35,7 +36,7 @@ export function WindowFrameDebug() {
   }
 
   const isLogin = pathname === '/login'
-  const isStartRoute = appSettings?.startRoute === pathname
+  const isStartRoute = userSettings?.startRoute === pathname
 
   if (isLogin) {
     return (
@@ -55,7 +56,7 @@ export function WindowFrameDebug() {
             // disabled={isStartRoute}
             onClick={() => {
               if (isStartRoute) return
-              updateAppSettings([{ setting: settingKeys.startRoute, value: pathname }])
+              updateUserSettings([{ setting: settingKeys.startRoute, value: pathname }])
             }}
           >
             <Star size={18} className={cn(isStartRoute && 'text-accent')} />

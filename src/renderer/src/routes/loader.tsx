@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react'
 
 import { useApp } from '~/libs/context/app'
-import { AppSetting } from '~/libs/hooks/use-app-settings'
+import { AppSettings } from '~/libs/hooks/use-app-settings'
 import { useNav } from '~/libs/hooks/use-navigation'
 import { updateThemeUi } from '~/libs/utils/update-theme-ui'
+import { UserSettings } from '~/libs/hooks/use-user-settings'
+import { SessionKey } from '@shared/constants'
+import { windowModes } from '~/libs/hooks/use-app-window'
+import { WindowModes } from '@shared/types'
+
+type Settings = AppSettings & UserSettings
 
 export function LoaderRoute({
   fastLoad,
@@ -13,10 +19,17 @@ export function LoaderRoute({
   setLoaded: (v: boolean) => void
 }) {
   const { navigateTo } = useNav()
-  const { resizeApp, getAllAppSettings: updateContextWithAppSettings } = useApp()
+  const {
+    resizeApp,
+    appSettings,
+    userSettings,
+    windowControl,
+    getAllAppSettings: updateContextWithAppSettings,
+    getAllUserSettings: updateContextWithUserSettings
+  } = useApp()
 
   const [logs, setLogs] = useState<string>('')
-  const [appLoaded, setAppLoaded] = useState(false)
+  const [appLoaded, setAppLoaded] = useState({ loaded: false, isAuth: false })
 
   useEffect(() => {
     if (!fastLoad) {
@@ -27,14 +40,42 @@ export function LoaderRoute({
   }, [fastLoad])
 
   useEffect(() => {
-    if (appLoaded) {
+    if (appLoaded.loaded) {
       setLogs('Done..')
     }
-    if (appLoaded) {
-      setLoaded(true)
-      navigateTo('login')
+    if (appLoaded.loaded && appLoaded.isAuth) {
+      return handleLoadedAsAuthenticated()
+    }
+    if (appLoaded.loaded && !appLoaded.isAuth) {
+      return handleLoadedToLogin()
     }
   }, [appLoaded])
+
+  function handleLoadedToLogin() {
+    navigateTo('login')
+    setLoaded(true)
+  }
+
+  function handleLoadedAsAuthenticated() {
+    const startRoute = userSettings?.startRoute as string | undefined
+
+    setLoaded(true)
+    navigateTo(startRoute ?? '/')
+
+    // TODO; Fetch app width & height from storage or app context, before resizing.
+    const appWindowMode = appSettings?.appWindowMode as WindowModes
+    const height = appSettings?.appHeight as number
+    const width = appSettings?.appWidth as number
+
+    if (appWindowMode && windowModes.includes(appWindowMode)) {
+      return windowControl({ action: appWindowMode, width, height })
+    }
+    if (width && height) {
+      return resizeApp({ width, height, save: false })
+    }
+
+    resizeApp({ width: 900, height: 670, save: true })
+  }
 
   function setupOnLoaderProgress() {
     const handler = (_event: any, { msg }: { msg: string }) => {
@@ -46,8 +87,8 @@ export function LoaderRoute({
   }
 
   // Maybe a good place to update any app settings?
-  function applyAppSettingsToApp(appSettings: AppSetting) {
-    const currentTheme = appSettings?.theme as string | undefined
+  function applyAppSettingsToApp(settings: Settings) {
+    const currentTheme = settings?.theme as string | undefined
 
     updateThemeUi(currentTheme)
   }
@@ -62,11 +103,30 @@ export function LoaderRoute({
     }
 
     if (hasLoaded) {
-      const appSettings = await updateContextWithAppSettings()
+      const coreSettings = await updateContextWithAppSettings()
+      const userSettings = await updateContextWithUserSettings()
 
-      applyAppSettingsToApp(appSettings)
+      const settings = { ...coreSettings, ...userSettings } as Settings
 
-      return setAppLoaded(true)
+      applyAppSettingsToApp(settings)
+
+      const userId = (coreSettings?.activeAccountId as number | undefined) ?? 0
+
+      const maybeAccessToken = await window.api.db.getSession({
+        key: SessionKey.accessToken,
+        userId
+      })
+
+      if (maybeAccessToken) {
+        const validToken = await window.api.db.checkAccessToken({
+          accessToken: maybeAccessToken,
+          userId
+        })
+
+        return setAppLoaded({ loaded: true, isAuth: validToken ? true : false })
+      }
+
+      return setAppLoaded({ loaded: true, isAuth: false })
     }
 
     console.error('App init broke!')

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
-import { getBaseURl } from '@shared/api'
+import { getBaseURL } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 import { ApiTest, Setting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
@@ -17,7 +17,7 @@ import { LoadingIndicator } from '~/components/loading-indicator'
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
 
-const baseURL = getBaseURl()
+const baseURL = getBaseURL()
 const authClients = getOAuthClients()
 
 export function Debug() {
@@ -56,15 +56,20 @@ export function Debug() {
   async function getListenersCount() {
     const dotSquadLS = await window.api.app.listenerCount('dot-squad')
     const routerLS = await window.api.app.listenerCount('navigate-to')
-    const ResizeLS = await window.api.app.listenerCount('window-resized')
-    const ProcessLS = await window.api.app.listenerCount('emit-process-activity')
+    const resizeLS = await window.api.app.listenerCount('window-resized')
+    const processLS = await window.api.app.listenerCount('emit-process-activity')
+    const authLS = await window.api.app.listenerCount('auth:code')
 
-    setListenersCount({ dotSquadLS, routerLS, ResizeLS, ProcessLS })
+    setListenersCount({ dotSquadLS, routerLS, resizeLS, processLS, authLS })
   }
+
+  // ** TODO; update logic/func to handle CORE & USER settings.
 
   // Fetch setting directly from db.
   async function handleGetSettings(setting: Setting) {
-    const result = await window.api.db.getAppSetting({ key: setting })
+    // TODO; Fix this, needs a userID
+    // const result = await window.api.db.getAppSetting({ key: setting })
+    const result = 'HEEEELP; FIX ME'
 
     setOutput(JSON.parse(result))
   }
@@ -223,7 +228,7 @@ export function Debug() {
             </Button>
             <Button
               onClick={async () => {
-                const result = await window.api.db.getAuth({ key: 'access_token' })
+                const result = await window.api.db.getSession({ userId: 1, key: 'accessToken' })
                 setOutput(result)
               }}
             >
@@ -231,9 +236,10 @@ export function Debug() {
             </Button>
             <Button
               onClick={async () => {
-                const result = await window.api.db.setAuth({
-                  key: 'access_token',
-                  value: 'weeeee!'
+                const result = await window.api.db.setSession({
+                  userId: 1,
+                  key: 'accessToken',
+                  value: 'pewpew!'
                 })
                 setOutput(result)
               }}
