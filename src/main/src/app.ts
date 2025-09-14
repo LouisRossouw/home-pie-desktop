@@ -12,7 +12,8 @@ import { readAppDataJson, saveTimestamps } from './utils'
 import { initDatabase, dbExists } from './db'
 import { setCoreSetting } from './db/core-settings'
 import { setUserSetting } from './db/user-settings'
-import { getAppName, getAppWebsiteBaseURL } from '@shared/constants'
+import { appOriginName, getAppBaseURL } from '@shared/constants'
+import { apiGetLoginKey } from './api/auth/api-auth-login-key'
 
 const envMode = import.meta.env.MODE
 
@@ -180,32 +181,32 @@ export async function openDirectory({ path }: { path: string }) {
     console.error(`Failed to open directory: ${error}`)
   }
 }
+// We can either use a callback from the web client and send the auth codes that we
+// could convert into access_tokens
 
-export async function handleAuthBrowser() {
-  const loginKey = generateLoginKey()
-  const authUrl = `${getAppWebsiteBaseURL}/auth/authorize?loginKey=${loginKey}}&origin=${getAppName}`
-  // Open system browser to start auth process.
-  await shell.openExternal(authUrl)
+// or
+
+// We could poll to check if the loginKey has been paired if true the api will give this app
+// the code to convert into access_tokens
+
+export async function authorizeUserInDefaultBrowser() {
+  // Call auth/login-key, to generate a loginKey
+  const maybeLoginKey = await apiGetLoginKey()
+
+  if (maybeLoginKey) {
+    setCoreSetting({ key: 'loginKey', value: maybeLoginKey })
+    const authUrl = `${getAppBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}}&origin=${appOriginName}`
+    return await shell.openExternal(authUrl)
+  }
+
+  // Handle error
 }
 
-function generateLoginKey() {
-  // TODO; Generate a loginKey, this key is passed in the authUrl,
-  // it is saved in the backend API and returned back to this app. - i think
+export function handleDeepLink(urlStr: string) {
+  const urlObj = new URL(urlStr)
+  const maybeIntent = urlObj.searchParams.get('intent')
 
-  // TODO; save to the database
-
-  return 'TODO'
-}
-
-// TODO;
-// open app with homepie-dev://open
-export function handleDeepLink(url: string) {
-  const urlObj = new URL(url)
-  // const code = urlObj.searchParams.get('code')
-  const code = 'temp code 1234'
-  console.log('Deeplink works;', url)
-  if (code) {
-    console.log('Got auth code via deep link:', code)
-    mainWindow?.webContents.send('auth-code', { code })
+  if (maybeIntent) {
+    mainWindow?.webContents.send('auth:code', { code: maybeIntent })
   }
 }
