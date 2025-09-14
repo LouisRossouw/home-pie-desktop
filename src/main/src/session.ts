@@ -1,8 +1,11 @@
 import { mainWindow } from '@main/.'
+
 import { getBaseURL } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
 import { getApiBaseURL } from '@shared/constants'
 import { paths } from '@shared/lib/generated/api'
+
+import { getSession } from './db/session'
 
 export const baseURL = getBaseURL()
 const OauthClient = getOAuthClients()
@@ -32,14 +35,19 @@ export async function requireSession(requireAuth: boolean = true) {
   return apiClient
 }
 
-export async function checkAccessToken(accessToken: string): Promise<string | undefined> {
-  if (accessToken && !isTokenExpired()) {
+export async function checkAccessToken({
+  userId,
+  accessToken
+}: {
+  userId: number
+  accessToken?: string
+}): Promise<string | undefined> {
+  if (accessToken && !isTokenExpired({ userId })) {
     return accessToken
   }
 
-  // TODO
-  const refreshToken = undefined
-  // const refreshToken = TODO; Get from storage
+  const refreshToken = await getSession({ userId, key: 'refreshToken' })
+
   if (refreshToken) {
     const response = await refreshTokenFunction(refreshToken)
     if (response?.access_token) {
@@ -51,11 +59,9 @@ export async function checkAccessToken(accessToken: string): Promise<string | un
   return undefined
 }
 
-export function isTokenExpired() {
+export async function isTokenExpired({ userId }: { userId: number }) {
   try {
-    // TODO;
-    const expiresAtstr = undefined
-    // const expiresAtstr = TODO; Get from storage
+    const expiresAtstr = await getSession({ userId, key: 'expiresAt' })
     const expiresAt = expiresAtstr ? parseInt(expiresAtstr, 10) : undefined
     const minutesUntilExpiration = getMinutesUntilExpiration(expiresAt ?? 0)
 

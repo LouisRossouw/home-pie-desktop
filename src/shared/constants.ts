@@ -47,6 +47,7 @@ export enum IpcKey {
 export enum SessionKey {
   accessToken = 'accessToken'
 }
+
 export const getAppVersion = () => version
 export const getAppPlatform = () => process.platform
 export const isMac = () => getAppPlatform() === 'darwin'
