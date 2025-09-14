@@ -97,9 +97,8 @@ app.whenReady().then(() => {
   } else {
     // Called when second instance launched with args (Windows/Linux)
     app.on('second-instance', (_event, commandLine) => {
-      const url = commandLine.find((arg) => arg.startsWith(`${defaultProtocol}://`))
-      if (url) handleDeepLink(url)
-
+      const urlArg = commandLine.find((arg) => arg.startsWith(`${defaultProtocol}://`))
+      if (urlArg) handleDeepLink(urlArg)
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore()
         mainWindow.focus()

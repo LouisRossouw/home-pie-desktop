@@ -24,9 +24,10 @@ export default function Login() {
   const [waitingAuth, setWaitingAuth] = useState(false)
 
   const maybeForceLogout = searchParams.get('forceLogout')
+  const maybeIntent = searchParams.get('intent')
 
   async function handleAuthRedirect() {
-    window.api.app.signIn()
+    window.api.app.apiSignIn()
     setWaitingAuth(true)
   }
 
@@ -34,10 +35,17 @@ export default function Login() {
     windowControl({ action: 'login' })
     startPolling()
 
+    // TODO; Where to handle this flow? perhaps it is best to create a new route for final authorization?
+    if (maybeIntent === 'completed-auth-app') {
+      // TODO; Send a final request to the server using the current loginKey before it expires
+      // On success, return the access_token, set user session and redirect the the users favourite page.
+      alert('Made it here!')
+    }
+
     if (maybeForceLogout) {
       // TODO?
     }
-  }, [maybeForceLogout])
+  }, [maybeIntent, maybeForceLogout])
 
   async function tempSkipLogin() {
     const startRoute = userSettings?.startRoute as string | undefined

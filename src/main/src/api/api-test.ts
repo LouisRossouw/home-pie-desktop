@@ -4,13 +4,13 @@ import { updateDotSquadActivity } from '@main/src/app'
 export async function apiTest() {
   const apiClient = await requireSession()
 
-  const response = await apiClient.get('/api/timeinprogress/overview-data', {
+  const { response, data } = await apiClient.GET('/api/timeinprogress/overview-data', {
     headers: { 'Content-Type': 'application/json' }
   })
 
   if (response.status === 200) {
     updateDotSquadActivity({ activity: 'singleBlink' })
-    return { ok: true, data: response.data }
+    return { ok: true, data: data }
   }
 
   console.error('Something went wrong')

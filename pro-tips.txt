@@ -1,5 +1,9 @@
 
 
+homepie-dev://open?intent=completed-auth-app (To open the app via deeplink and complete auth)
+
+
+
 Should add this to the readme eventually, but this is a quick way to spit out ideas, isssues, quick tips, reminders AND STUFF while keeping writing informal
 
 

@@ -58,7 +58,7 @@ export function Debug() {
     const routerLS = await window.api.app.listenerCount('navigate-to')
     const resizeLS = await window.api.app.listenerCount('window-resized')
     const processLS = await window.api.app.listenerCount('emit-process-activity')
-    const authLS = await window.api.app.listenerCount('auth-code')
+    const authLS = await window.api.app.listenerCount('auth:code')
 
     setListenersCount({ dotSquadLS, routerLS, resizeLS, processLS, authLS })
   }
