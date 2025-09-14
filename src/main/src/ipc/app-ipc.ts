@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import {
-  handleAuthBrowser,
+  authorizeUserInDefaultBrowser,
   loadApp,
   maybeFastLoad,
   openDirectory,
@@ -31,7 +31,7 @@ export function appIpcHandlers() {
   })
 
   // ** Auth
-  ipcMain.handle(IpcKey.signIn, async (_event) => {
-    return await handleAuthBrowser()
+  ipcMain.handle(IpcKey.apiSignIn, async (_event) => {
+    return await authorizeUserInDefaultBrowser()
   })
 }
