@@ -1,14 +1,17 @@
-import axios from 'axios'
-
 import { mainWindow } from '@main/.'
-import { getBaseURl } from '@shared/api'
+
+import { getBaseURL } from '@shared/api'
 import { getOAuthClients } from '@shared/auth'
+import { getApiBaseURL } from '@shared/constants'
+import { paths } from '@shared/lib/generated/api'
+
 import { getSession } from './db/session'
 
-export const baseURL = getBaseURl()
+export const baseURL = getBaseURL()
 const OauthClient = getOAuthClients()
 
 export async function requireSession(requireAuth: boolean = true) {
+  const { default: createClient } = await import('openapi-fetch')
   // const token = '1234' // TODO; get from storage.
 
   const validToken = 'TODO' // Temp
@@ -21,8 +24,8 @@ export async function requireSession(requireAuth: boolean = true) {
   //   }
   // }
 
-  const apiClient = axios.create({
-    baseURL,
+  const apiClient = createClient<paths>({
+    baseUrl: getApiBaseURL,
     headers: {
       ...(validToken ? { Authorization: `Bearer ${validToken}` } : {}),
       'Content-Type': 'application/json'
@@ -131,20 +134,4 @@ function updateTokens(response: any) {
   const expiresAt = Date.now() + response.expires_in * 1000
 
   // TODO
-}
-
-// TODO
-export function handleError(error: unknown) {
-  if (axios.isAxiosError(error)) {
-    if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
-      console.error('Server is offline or unreachable')
-      return undefined
-    } else {
-      console.error('Axios request failed:', error.message)
-      return { ok: false }
-    }
-  } else {
-    console.error('Unknown error:', error)
-    return undefined
-  }
 }

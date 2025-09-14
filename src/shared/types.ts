@@ -132,3 +132,14 @@ export type ApiMrPingPingStatus = {
 }
 
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'
+
+export type UserSession = {
+  email: string
+  firstName: string
+  lastName: string
+  is_staff: boolean
+  userId: number | null
+  auth_type: string | undefined
+  uuid: string
+  is_premium?: boolean
+}

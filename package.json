@@ -20,7 +20,8 @@
     "build:win": "npm run build && electron-builder --win",
     "build:win-dev": "npm run build-no-ts && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "generate-api": "npx openapi-typescript http://127.0.0.1:8000/api/schema/ -o ./src/shared/lib/generated/api.ts"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -43,6 +44,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "openapi-fetch": "^0.14.0",
     "lucide-react": "^0.477.0",
     "react-resizable-panels": "^3.0.3",
     "react-router": "^7.2.0",
@@ -66,6 +68,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "openapi-typescript": "^7.9.1",
     "prettier": "^3.5.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
