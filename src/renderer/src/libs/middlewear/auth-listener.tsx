@@ -14,8 +14,10 @@ export function AuthListener() {
     const handler = (_event: IpcRendererEvent, { code }: { code: string }) => {
       if (code) {
         console.log('Received auth code:', code)
-        // navigateTo(`/auth/callback?code=${code}`)
-        navigateTo(`/`)
+        if (code === 'completed-auth-app') {
+          return navigateTo(`/authorize?intent=${code}`)
+        }
+        // navigateTo(`/`)
       }
     }
 
@@ -23,7 +25,7 @@ export function AuthListener() {
     console.log('AuthListener mounted.')
 
     return () => {
-      window.api.app.removeListener(handler, 'auth-code')
+      window.api.app.removeListener(handler, 'auth:code')
     }
   }
 
