@@ -1,5 +1,9 @@
-import * as settings from './settings'
+import * as coreSettings from './core-settings'
+import * as userSettings from './user-settings'
+import * as session from './session'
 
 export const SQL = {
-  ...settings
+  ...coreSettings,
+  ...userSettings,
+  ...session
 }

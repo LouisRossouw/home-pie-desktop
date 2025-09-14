@@ -1,5 +1,5 @@
 import { updateDotSquadActivity } from '@main/src/app'
-import { handleError, requireSession } from '@main/src/session'
+import { requireSession } from '@main/src/session'
 
 export async function apiInstaInsightsUpdateAccountStatus({
   account,
@@ -11,20 +11,26 @@ export async function apiInstaInsightsUpdateAccountStatus({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.patch(`/api/insta-insights/accounts/${account}`, {
-      active
-    })
-
+    const { response, data } = await apiClient.PATCH(
+      '/api/insta-insights/accounts/{account_name}',
+      {
+        params: {
+          path: { account_name: account },
+          query: {
+            active
+          }
+        }
+      }
+    )
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'selectProject' })
-      return response.data
+      return data
     }
 
     console.error('Something went wrong')
 
     return { ok: false }
   } catch (error) {
-    handleError(error)
     return undefined
   }
 }

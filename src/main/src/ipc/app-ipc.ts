@@ -1,5 +1,13 @@
 import { ipcMain } from 'electron'
-import { loadApp, maybeFastLoad, openDirectory, resizeApp, windowControl } from '../app'
+import {
+  authorizeUserInDefaultBrowser,
+  loadApp,
+  maybeFastLoad,
+  openDirectory,
+  resizeApp,
+  windowControl
+} from '../app'
+import { IpcKey } from '@shared/constants'
 
 export function appIpcHandlers() {
   ipcMain.handle('resize-app', (_event, { width, height }) => {
@@ -20,5 +28,10 @@ export function appIpcHandlers() {
 
   ipcMain.handle('open-directory', (_event, data) => {
     openDirectory(data)
+  })
+
+  // ** Auth
+  ipcMain.handle(IpcKey.apiSignIn, async (_event) => {
+    return await authorizeUserInDefaultBrowser()
   })
 }

@@ -1,31 +1,35 @@
 import { useState } from 'react'
 
-import { Setting } from '@shared/types'
+import { CoreSetting } from '@shared/types'
 import { arrayToObject } from '~/libs/utils/utils'
 
-type Value = string | boolean | number
-export type AppSetting = Record<Setting, Value> | undefined
+type Value = string | boolean | number | undefined
+export type AppSettings = Record<CoreSetting, Value> | undefined
 
 export type UseAppSettings = {
-  appSettings: AppSetting | undefined
-  getAppSetting: (v: Setting) => Promise<Value>
-  getAllAppSettings: () => Promise<AppSetting>
-  setAppSettings: React.Dispatch<React.SetStateAction<AppSetting>>
-  updateAppSettings: (v: { setting: Setting; value: Value }[]) => Promise<boolean>
+  appSettings: AppSettings | undefined
+  getAppSetting: (v: CoreSetting) => Promise<Value>
+  getAllAppSettings: () => Promise<AppSettings>
+  setAppSettings: React.Dispatch<React.SetStateAction<AppSettings>>
+  updateAppSettings: (v: { setting: CoreSetting; value: Value }[]) => Promise<boolean>
 }
 
-export function useAppSettings() {
-  const [appSettings, setAppSettings] = useState<AppSetting>(undefined)
+// ** !!
+// TODO; Rename file to use-core-settings
+// ** !!
 
-  async function getAppSetting(setting: Setting) {
+export function useAppSettings() {
+  const [appSettings, setAppSettings] = useState<AppSettings>(undefined)
+
+  async function getAppSetting(setting: CoreSetting) {
     if (appSettings) return appSettings[setting]
 
-    return JSON.parse(await window.api.db.getAppSetting({ setting }))
+    return JSON.parse(await window.api.db.getCoreSetting({ key: setting }))
   }
 
-  async function updateAppSettings(settings: { setting: Setting; value: Value }[]) {
+  async function updateAppSettings(settings: { setting: CoreSetting; value: Value }[]) {
     setAppSettings((prevSettings) => {
-      const updatedSettings = { ...prevSettings } as AppSetting
+      const updatedSettings = { ...prevSettings } as AppSettings
 
       for (const s of settings) {
         updatedSettings![s.setting] = s.value
@@ -35,7 +39,7 @@ export function useAppSettings() {
     })
 
     for (const s of settings) {
-      await window.api.db.setAppSetting({ setting: s.setting, value: s.value })
+      await window.api.db.setCoreSetting({ key: s.setting, value: s.value! })
     }
 
     return true
@@ -44,20 +48,12 @@ export function useAppSettings() {
   async function getAllAppSettings() {
     if (appSettings) return appSettings
 
-    const settingsArray = await window.api.db.getAllAppSettings()
-    const settingsObj = arrayToObject(settingsArray) as AppSetting
+    const settingsArray = await window.api.db.getAllCoreSettings()
+    const settingsObj = arrayToObject(settingsArray) as AppSettings
 
     setAppSettings(settingsObj)
     return settingsObj
   }
-
-  // TODO; Do i need this?
-  // async function deleteAppSetting({ setting }: { setting: Setting }) {
-  // TODO; Remove a specific key from useState and the db settings table.
-  // if(appSettings){
-  //   appSettings.dateFormat = ""
-  // }
-  // }
 
   return {
     appSettings,

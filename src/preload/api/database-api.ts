@@ -1,20 +1,62 @@
 import { electronAPI } from '@electron-toolkit/preload'
+import { IpcKey } from '@shared/constants'
 
-import type { Setting } from '@shared/types'
+import type { CoreSetting, Setting, UserSetting } from '@shared/types'
 
 const IPCR = electronAPI.ipcRenderer
 
+// prettier-ignore
+type GetSession = {userId: number | string, key: string}
+type SetSession = { userId: number | string; key: string; value: string }
+type GetAllSessions = { userId: number | string }
+
+type GetCoreSetting = { key: CoreSetting }
+type SetCoreSetting = { key: Setting; value: string | number | boolean }
+type GetUserSetting = { userId: number | string; key: UserSetting }
+// prettier-ignore
+type SetUserSetting = {userId: number | string; key: UserSetting; value: string | number | boolean}
+type GetAllUserSettings = { userId: number | string }
+
+type CheckAccessToken = { userId: number; accessToken?: string }
+
+// prettier-ignore
 export type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
-  getAppSetting: (data: { setting: Setting }) => Promise<any>
-  setAppSetting: (data: { setting: Setting; value: string | number | boolean }) => Promise<boolean>
-  getAllAppSettings: () => Promise<Record<string, string>[]> // TODO; Type
+
+  // ** Core Settings
+  getCoreSetting: (data: GetCoreSetting) => Promise<any>
+  setCoreSetting: (data: SetCoreSetting) => Promise<boolean>
+  getAllCoreSettings: () => Promise<Record<string, string>[]> // TODO; Type
+
+  // ** User Settings
+  getUserSetting: (data: GetUserSetting) => Promise<any>
+  setUserSetting: (data: SetUserSetting) => Promise<boolean>
+  getAllUserSettings: (data: GetAllUserSettings) => Promise<Record<string, string>[]> // TODO; Type
+
+  // ** Session
+  getSession: (data: GetSession) => Promise<any>
+  setSession: (data: SetSession) => Promise<any>
+  getAllSessions: (data: GetAllSessions) => Promise<Record<string, string>[]> // TODO; Type
+  checkAccessToken: (data: CheckAccessToken) => Promise<any> // TODO; Type
 }
 
 // prettier-ignore
 export const databaseAppSettingsAPI = {
   test: (data: { v: boolean }) => IPCR.invoke('test', data),
-  getAppSetting: async (data: { setting: Setting }) => IPCR.invoke('get-app-setting', data),
-  setAppSetting: async (data: { setting: Setting; value: string | number | boolean }) => IPCR.invoke('set-app-setting', data),
-  getAllAppSettings: async () => IPCR.invoke('get-all-app-settings')
+
+  // ** Core Settings
+  getCoreSetting: async (data: GetCoreSetting) => IPCR.invoke(IpcKey.getCoreSetting, data),
+  setCoreSetting: async (data: SetCoreSetting) => IPCR.invoke(IpcKey.setCoreSetting, data),
+  getAllCoreSettings: async () => IPCR.invoke(IpcKey.getAllCoreSettings),
+
+  // ** User Settings
+  getUserSetting: async (data: GetUserSetting) => IPCR.invoke(IpcKey.getUserSetting, data),
+  setUserSetting: async (data: SetUserSetting) => IPCR.invoke(IpcKey.setUserSetting, data),
+  getAllUserSettings: async (data: GetAllUserSettings) => IPCR.invoke(IpcKey.getAllUserSettings, data),
+
+  // ** Session
+  getSession: async (data: GetSession) => IPCR.invoke(IpcKey.getSession, data),
+  setSession: async (data: SetSession) => IPCR.invoke(IpcKey.setSession, data),
+  getAllSessions:async (data: GetAllSessions) => IPCR.invoke(IpcKey.getAllSessions, data),
+  checkAccessToken:async (data: CheckAccessToken) => IPCR.invoke(IpcKey.checkAccessToken, data),
 }

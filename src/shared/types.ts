@@ -1,6 +1,6 @@
 // TODO; Maybe switch to open-api, to generate api response types from my server.
 
-import { defaultAppSettings } from './default-app-settings'
+import { defaultCoreSettings, defaultUserSettings } from './default-app-settings'
 
 export type Project = {
   title: string
@@ -9,7 +9,9 @@ export type Project = {
   url: string
 }
 
-export type Setting = (typeof defaultAppSettings)[number]['key']
+export type CoreSetting = (typeof defaultCoreSettings)[number]['key']
+export type UserSetting = (typeof defaultUserSettings)[number]['key']
+export type Setting = CoreSetting | UserSetting
 
 export type ResizeApp = {
   width: number
@@ -130,3 +132,14 @@ export type ApiMrPingPingStatus = {
 }
 
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'
+
+export type UserSession = {
+  email: string
+  firstName: string
+  lastName: string
+  is_staff: boolean
+  userId: number | null
+  auth_type: string | undefined
+  uuid: string
+  is_premium?: boolean
+}

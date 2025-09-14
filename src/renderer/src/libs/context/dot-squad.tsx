@@ -1,6 +1,6 @@
 import { useContext, createContext, PropsWithChildren } from 'react'
 import { useDotSquad, UseDotSquadType } from '../hooks/use-dot-squad'
-import { defaultDotSquadColour } from '@shared/dot-squad/constants'
+import { defaultDotSquadColour } from '@shared/constants'
 
 const DotSquadContext = createContext<UseDotSquadType>({
   dotA: defaultDotSquadColour,
