@@ -7,7 +7,7 @@ const IPCR = electronAPI.ipcRenderer
 
 // prettier-ignore
 type GetSession = {userId: number | string, key: string}
-type SetSession = { userId: number | string; key: string }
+type SetSession = { userId: number | string; key: string; value: string }
 type GetAllSessions = { userId: number | string }
 
 type GetCoreSetting = { key: CoreSetting }
@@ -16,6 +16,8 @@ type GetUserSetting = { userId: number | string; key: UserSetting }
 // prettier-ignore
 type SetUserSetting = {userId: number | string; key: UserSetting; value: string | number | boolean}
 type GetAllUserSettings = { userId: number | string }
+
+type CheckAccessToken = { userId: number; accessToken?: string }
 
 // prettier-ignore
 export type DatabaseAppSettingsAPI = {
@@ -35,6 +37,7 @@ export type DatabaseAppSettingsAPI = {
   getSession: (data: GetSession) => Promise<any>
   setSession: (data: SetSession) => Promise<any>
   getAllSessions: (data: GetAllSessions) => Promise<Record<string, string>[]> // TODO; Type
+  checkAccessToken: (data: CheckAccessToken) => Promise<any> // TODO; Type
 }
 
 // prettier-ignore
@@ -55,4 +58,5 @@ export const databaseAppSettingsAPI = {
   getSession: async (data: GetSession) => IPCR.invoke(IpcKey.getSession, data),
   setSession: async (data: SetSession) => IPCR.invoke(IpcKey.setSession, data),
   getAllSessions:async (data: GetAllSessions) => IPCR.invoke(IpcKey.getAllSessions, data),
+  checkAccessToken:async (data: CheckAccessToken) => IPCR.invoke(IpcKey.checkAccessToken, data),
 }

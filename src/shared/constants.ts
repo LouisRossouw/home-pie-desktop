@@ -14,5 +14,10 @@ export enum IpcKey {
   // ** Session
   getSession = 'get-session',
   setSession = 'set-session',
-  getAllSessions = 'get-all-sessions'
+  getAllSessions = 'get-all-sessions',
+  checkAccessToken = 'check-access-token'
+}
+
+export enum SessionKey {
+  accessToken = 'accessToken'
 }

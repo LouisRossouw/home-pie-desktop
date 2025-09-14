@@ -225,7 +225,7 @@ export function Debug() {
             </Button>
             <Button
               onClick={async () => {
-                const result = await window.api.db.getAuth({ key: 'access_token' })
+                const result = await window.api.db.getSession({ userId: 1, key: 'accessToken' })
                 setOutput(result)
               }}
             >
@@ -233,9 +233,10 @@ export function Debug() {
             </Button>
             <Button
               onClick={async () => {
-                const result = await window.api.db.setAuth({
-                  key: 'access_token',
-                  value: 'weeeee!'
+                const result = await window.api.db.setSession({
+                  userId: 1,
+                  key: 'accessToken',
+                  value: 'pewpew!'
                 })
                 setOutput(result)
               }}

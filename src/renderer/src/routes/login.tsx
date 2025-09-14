@@ -12,7 +12,7 @@ import { windowModes } from '~/libs/hooks/use-app-window'
 import { Button } from '~/components/ui/button'
 
 export default function Login() {
-  const { appSettings, resizeApp, windowControl } = useApp()
+  const { appSettings, userSettings, resizeApp, windowControl } = useApp()
   const { navigateTo } = useNav()
 
   const { startPolling, stopPolling } = usePoll()
@@ -33,7 +33,7 @@ export default function Login() {
   }, [maybeForceLogout])
 
   function handleManualLogin() {
-    const startRoute = appSettings?.startRoute as string | undefined
+    const startRoute = userSettings?.startRoute as string | undefined
 
     stopPolling()
     navigateTo(startRoute ?? '/')
