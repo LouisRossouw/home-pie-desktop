@@ -1,5 +1,5 @@
 import { updateDotSquadActivity } from '@main/src/app'
-import { handleError, requireSession } from '@main/src/session'
+import { requireSession } from '@main/src/session'
 import { ApiTimeInProgressInsertHistoricalData } from '@shared/types'
 
 export async function apiTimeInProgressInsertHistoricalData({
@@ -15,22 +15,22 @@ export async function apiTimeInProgressInsertHistoricalData({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.post(`/api/time-in-progress/${platform}/data`, {
-      followers,
-      following,
-      likes
+    const { response, data } = await apiClient.POST(`/api/time-in-progress/{platform}/data`, {
+      params: {
+        path: { platform },
+        query: { followers, following, likes }
+      }
     })
 
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'simpleCheck' })
-      return response.data
+      return data
     }
 
     console.error('Something went wrong')
 
     return { ok: false }
   } catch (error) {
-    handleError(error)
     return undefined
   }
 }

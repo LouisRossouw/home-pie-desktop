@@ -1,5 +1,5 @@
 import { updateDotSquadActivity } from '@main/src/app'
-import { handleError, requireSession } from '@main/src/session'
+import { requireSession } from '@main/src/session'
 
 export async function apiInstaInsightsAddAccount({
   account,
@@ -11,18 +11,21 @@ export async function apiInstaInsightsAddAccount({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.post('/api/insta-insights/accounts', { account, active })
+    const { response, data } = await apiClient.POST('/api/insta-insights/accounts', {
+      params: {
+        query: { account, active }
+      }
+    })
 
     if (response.status === 201) {
       updateDotSquadActivity({ activity: 'selectProject' })
-      return response.data
+      return data
     }
 
     console.error('Something went wrong')
 
     return { ok: false }
   } catch (error) {
-    handleError(error)
     return undefined
   }
 }
