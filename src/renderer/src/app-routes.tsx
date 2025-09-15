@@ -31,6 +31,7 @@ import PingPingOverviewRoute from './routes/ping-ping/overview'
 import PingPingRoute from './routes/ping-ping'
 import SmartHomeRoute from './routes/smart-home'
 import SmartHomeOverviewRoute from './routes/smart-home/overview'
+import AuthorizationRoute from './routes/authorize'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -46,6 +47,7 @@ function renderRoutes(routes) {
 
 const routesConfig = [
   { path: 'login', element: <Login /> },
+  { path: 'authorize', element: <AuthorizationRoute /> },
   { path: 'no-connection', element: <NoConnectionRoute /> },
   {
     path: '/',

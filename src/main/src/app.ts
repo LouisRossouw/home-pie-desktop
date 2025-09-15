@@ -2,7 +2,7 @@ import { app, BrowserWindow, screen, shell } from 'electron'
 import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
-import { getBaseURl } from '@shared/api'
+import { getBaseURL } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
 import { ResizeApp, WindowControl } from '@shared/types'
 import { defaultCoreSettings, defaultUserSettings, settingKeys } from '@shared/default-app-settings'
@@ -12,6 +12,8 @@ import { readAppDataJson, saveTimestamps } from './utils'
 import { initDatabase, dbExists } from './db'
 import { setCoreSetting } from './db/core-settings'
 import { setUserSetting } from './db/user-settings'
+import { appOriginName, getAppBaseURL } from '@shared/constants'
+import { apiGetLoginKey } from './api/auth/api-auth-login-key'
 
 const envMode = import.meta.env.MODE
 
@@ -74,7 +76,7 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
 
   await updateOnLoaderProgress({ msg: `ENV: ${envMode}`, ms })
   await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}`, ms })
-  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURl()}`, ms })
+  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURL()}`, ms })
   await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}`, ms })
 
   updateAppStartTime()
@@ -177,5 +179,34 @@ export async function openDirectory({ path }: { path: string }) {
     }
   } catch (error) {
     console.error(`Failed to open directory: ${error}`)
+  }
+}
+// We can either use a callback from the web client and send the auth codes that we
+// could convert into access_tokens
+
+// or
+
+// We could poll to check if the loginKey has been paired if true the api will give this app
+// the code to convert into access_tokens
+
+export async function authorizeUserInDefaultBrowser() {
+  // Call auth/login-key, to generate a loginKey
+  const maybeLoginKey = await apiGetLoginKey()
+
+  if (maybeLoginKey) {
+    setCoreSetting({ key: 'loginKey', value: maybeLoginKey })
+    const authUrl = `${getAppBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}}&origin=${appOriginName}`
+    return await shell.openExternal(authUrl)
+  }
+
+  // Handle error
+}
+
+export function handleDeepLink(urlStr: string) {
+  const urlObj = new URL(urlStr)
+  const maybeIntent = urlObj.searchParams.get('intent')
+
+  if (maybeIntent) {
+    mainWindow?.webContents.send('auth:code', { code: maybeIntent })
   }
 }

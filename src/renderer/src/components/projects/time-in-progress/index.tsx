@@ -117,7 +117,7 @@ function SystemStatus({ systemData }: { systemData: any[] }) {
       {systemData?.map((data) => {
         const critical = data?.success ? false : true
 
-        const lastPingedMin = differenceInMinutes(new Date(), addHours(data.date_time, 2))
+        const lastPingedMin = differenceInMinutes(new Date(), addHours(data?.date_time, 2))
         const serverIconColor = critical
           ? 'red'
           : lastPingedMin <= 45

@@ -2,42 +2,18 @@ import { useOutletContext } from 'react-router'
 import { Button } from '../ui/button'
 import { LoadingIndicator } from '../loading-indicator'
 import { useMemo } from 'react'
-import TemperatureCompact from '../temperature-chart'
-import TempHumidComponent from '../temp-humid-chart'
+// import TemperatureCompact from '../charts/temperature-chart'
+import TempHumidComponent from '../charts/temp-humid-chart'
 
 // TODO; Show an overview of all on mr ping pings status, and the status of the projects it monitors.
 
 export function SmartHomeOverview() {
   const { data, isLoading, refetch } = useOutletContext<any>()
 
-  // const reshapeData = useMemo(() => {
-  //   const app = data[0]
-
-  //   return app.app_status.map((status) => {
-  //     const temperature = status.endpoints_res.find((e) => e.endpoint === 'temperature')?.response.data?.temperature ?? null
-  //     const humidity = status.endpoints_res.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
-
-  //     return {
-  //       date: status.date,
-  //       data: {
-  //         temperature,
-  //         humidity
-  //       }
-  //     }
-  //   })
-  // }, [data])
-
   const reshapeData = useMemo(() => {
     if (!data) return []
 
-    return data[0].app_status.map((status) => ({
-      date: status.date,
-      temperature:
-        status.endpoints_res.find((e) => e.endpoint === 'temperature')?.response.data
-          ?.temperature ?? null,
-      humidity:
-        status.endpoints_res.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
-    }))
+    return handleReshapeData({ data })
   }, [data])
 
   if (isLoading) {
@@ -54,14 +30,23 @@ export function SmartHomeOverview() {
         <Button className="w-20" onClick={refetch}>
           Reload
         </Button>
-        {/* <h2>Smart Home overview route</h2> */}
-        {/* {JSON.stringify(reshapeData, null, 2)} */}
         <div className="w-full h-full p-4 pb-12">
           <TempHumidComponent data={reshapeData} />
         </div>
       </div>
     </div>
   )
+}
+
+function handleReshapeData({ data }: { data: any }) {
+  return data[0].app_status.map((status) => ({
+    date: status.date,
+    temperature:
+      status.endpoints_res.find((e) => e.endpoint === 'temperature')?.response.data?.temperature ??
+      null,
+    humidity:
+      status.endpoints_res.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
+  }))
 }
 
 // ;[
@@ -88,3 +73,20 @@ export function SmartHomeOverview() {
 //     ]
 //   }
 // ]
+
+// const reshapeData = useMemo(() => {
+//   const app = data[0]
+
+//   return app.app_status.map((status) => {
+//     const temperature = status.endpoints_res.find((e) => e.endpoint === 'temperature')?.response.data?.temperature ?? null
+//     const humidity = status.endpoints_res.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
+
+//     return {
+//       date: status.date,
+//       data: {
+//         temperature,
+//         humidity
+//       }
+//     }
+//   })
+// }, [data])

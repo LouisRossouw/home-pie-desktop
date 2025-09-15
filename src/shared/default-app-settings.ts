@@ -14,7 +14,8 @@ export const defaultCoreSettings = [
   { label: 'Auto start app', slug: 'auto-start', key: 'autoStart', value: true },
   { label: 'App Width', slug: 'app-width', key: 'appWidth', value: 900 }, // ( Update the app width & height anytime the user changes width & height)
   { label: 'App Height', slug: 'app-height', key: 'appHeight', value: 670 }, // ^^^
-  { label: 'App Window Mode', slug: 'app-window-mode', key: 'appWindowMode', value: undefined }
+  { label: 'App Window Mode', slug: 'app-window-mode', key: 'appWindowMode', value: undefined },
+  { label: 'Login Key', slug: 'login-key', key: 'loginKey', value: undefined } // TODO; Remove this or exlucde it fromt his core settings
 ] as const
 
 export const defaultUserSettings = [

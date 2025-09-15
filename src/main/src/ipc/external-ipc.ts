@@ -17,6 +17,7 @@ import { apiMrPingPingAppsStatus } from '../api/mr-ping-ping/api-apps-status'
 import { apiMrPingPingAppStatus } from '../api/mr-ping-ping/api-app-status'
 import { apiGenGenStart } from '../api/gengen/api-gengen-start'
 import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
+import { apiCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
 
 export function externalIpcHandlers() {
@@ -75,5 +76,10 @@ export function externalIpcHandlers() {
   })
   ipcMain.handle('api-insta-insights-remove-account', async (_event, data) => {
     return await apiInstaInsightsRemoveAccount(data)
+  })
+
+  // * Auth
+  ipcMain.handle('api-complete-auth-app', (_event, data) => {
+    return apiCompleteAuthentication(data)
   })
 }

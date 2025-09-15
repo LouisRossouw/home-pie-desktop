@@ -1,5 +1,6 @@
 import { updateDotSquadActivity } from '@main/src/app'
-import { handleError, requireSession } from '@main/src/session'
+import { requireSession } from '@main/src/session'
+import { Range } from '@shared/types'
 
 // TODO; Rename
 export async function apiMrPingPingAppsData({
@@ -14,20 +15,19 @@ export async function apiMrPingPingAppsData({
   const apiClient = await requireSession()
 
   try {
-    const response = await apiClient.get(`/api/mr-ping-ping/apps/data/${appName}`, {
-      params: { range, interval }
+    const { response, data } = await apiClient.GET(`/api/mr-ping-ping/apps/data/{app_name}`, {
+      params: { path: { app_name: appName }, query: { range, interval } }
     })
 
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'simpleCheck' })
-      return response.data
+      return data
     }
 
     console.error('Something went wrong')
 
     return { ok: false }
   } catch (error) {
-    handleError(error)
     return undefined
   }
 }

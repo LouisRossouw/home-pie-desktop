@@ -35,19 +35,10 @@ export default function App(): JSX.Element {
         setTimeout(() => setBooted(true), 4000)
       }
 
-      handleCheckAuth()
       setFastLoad(fastLoad)
     }
     init()
   }, [])
-
-  function handleCheckAuth() {
-    // TODO; Check for active session;
-    // * IF access_token has not expired then skip login screen,
-    // * IF access_token has expired but refresh_token has not expired then fetch a new access_token, if success skip login screen,
-    // * If all fails then show login screen
-    // TODO; Also bypass the locked screen / screen saver? somehow if user opted out of that setting
-  }
 
   // Skip this screen if the app has started within the last ~8-12 hours
   if (!booted && fastLoad !== undefined) {
