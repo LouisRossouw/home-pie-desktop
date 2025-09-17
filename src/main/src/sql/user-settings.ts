@@ -26,11 +26,14 @@ SELECT userId, key, value FROM ${table} WHERE userId = ?
 const deleteUserSettingSQL = `
   DELETE FROM ${table} WHERE userId = ? AND key = ?
 `
-
+const deleteUserSettingsSQL = `
+  DELETE FROM ${table} WHERE userId = ?
+`
 export {
   initUserSettingsDatabaseSQL,
   setUserSettingSQL,
   getUserSettingSQL,
   getAllUserSettingsSQL,
-  deleteUserSettingSQL
+  deleteUserSettingSQL,
+  deleteUserSettingsSQL
 }
