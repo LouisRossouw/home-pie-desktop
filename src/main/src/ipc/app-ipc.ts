@@ -31,7 +31,7 @@ export function appIpcHandlers() {
   })
 
   // ** Auth
-  ipcMain.handle(IpcKey.apiSignIn, async (_event) => {
-    return await authorizeUserInDefaultBrowser()
+  ipcMain.handle(IpcKey.apiSignIn, async (_event, data) => {
+    return await authorizeUserInDefaultBrowser(data)
   })
 }
