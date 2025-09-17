@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { useApp } from '~/libs/context/app'
-import { AppSettings } from '~/libs/hooks/use-app-settings'
-import { useNav } from '~/libs/hooks/use-navigation'
-import { updateThemeUi } from '~/libs/utils/update-theme-ui'
-import { UserSettings } from '~/libs/hooks/use-user-settings'
-import { SessionKey } from '@shared/constants'
-import { windowModes } from '~/libs/hooks/use-app-window'
 import { WindowModes } from '@shared/types'
+import { generatedUserId, SessionKey } from '@shared/constants'
 
-type Settings = AppSettings & UserSettings
+import { useApp } from '~/libs/context/app'
+import { useNav } from '~/libs/hooks/use-navigation'
+import { useAppSession } from '~/libs/context/session'
+import { windowModes } from '~/libs/hooks/use-app-window'
 
 export function LoaderRoute({
   fastLoad,
@@ -24,9 +21,9 @@ export function LoaderRoute({
     appSettings,
     userSettings,
     windowControl,
-    getAllAppSettings: updateContextWithAppSettings,
-    getAllUserSettings: updateContextWithUserSettings
+    getAllAppSettings: updateContextWithAppSettings
   } = useApp()
+  const { loadUserSession } = useAppSession()
 
   const [logs, setLogs] = useState<string>('')
   const [appLoaded, setAppLoaded] = useState({ loaded: false, isAuth: false })
@@ -86,13 +83,6 @@ export function LoaderRoute({
     window.api.app.onLoaderProgress(handler)
   }
 
-  // Maybe a good place to update any app settings?
-  function applyAppSettingsToApp(settings: Settings) {
-    const currentTheme = settings?.theme as string | undefined
-
-    updateThemeUi(currentTheme)
-  }
-
   // First initialize if no db, then return core app settings table and push it to app context.
   async function handleLoadAppSettings() {
     const { hasLoaded, isFirstLoad } = await window.api.app.loadApp({ fastLoad })
@@ -104,13 +94,7 @@ export function LoaderRoute({
 
     if (hasLoaded) {
       const coreSettings = await updateContextWithAppSettings()
-      const userSettings = await updateContextWithUserSettings()
-
-      const settings = { ...coreSettings, ...userSettings } as Settings
-
-      applyAppSettingsToApp(settings)
-
-      const userId = (coreSettings?.activeAccountId as number | undefined) ?? 0
+      const userId = (coreSettings?.activeAccountId as number | undefined) ?? generatedUserId
 
       const maybeAccessToken = await window.api.db.getSession({
         key: SessionKey.accessToken,
@@ -122,6 +106,9 @@ export function LoaderRoute({
           accessToken: maybeAccessToken,
           userId
         })
+
+        // Load a user session
+        await loadUserSession({ userId })
 
         return setAppLoaded({ loaded: true, isAuth: validToken ? true : false })
       }

@@ -2,21 +2,21 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
 import { Check } from 'lucide-react'
+import invariant from 'tiny-invariant'
 
 import { WindowModes } from '@shared/types'
 
 import { useApp } from '~/libs/context/app'
-import { useLogin } from '~/libs/hooks/use-login'
 import { useNav } from '~/libs/hooks/use-navigation'
+import { useAccounts } from '~/libs/hooks/use-accounts'
 import { windowModes } from '~/libs/hooks/use-app-window'
 import { getAllSearchParams } from '~/libs/utils/search-params'
 
-import { Button } from '~/components/ui/button'
 import { LoadingIndicator } from '~/components/loading-indicator'
 
-export default function AuthorizationRoute() {
-  const loginUser = useLogin()
+export default function CompleteAuthorization() {
   const { appSettings, userSettings, windowControl, resizeApp } = useApp()
+  const { loginAccount } = useAccounts()
   const { navigateTo } = useNav()
 
   const [searchParams] = useSearchParams()
@@ -58,35 +58,18 @@ export default function AuthorizationRoute() {
   }
 
   async function handleCompleteAuthentication() {
-    // TODO; Call the api with the loginKey to return the access_tokens and user session
-
-    // TODO; Fetch loginKey from storage
+    // Call the api with the loginKey to return the access_tokens and user session
     const maybeLoginKey = await window.api.db.getCoreSetting({ key: 'loginKey' })
 
     if (maybeLoginKey) {
       const res = await window.api.app.apiCompleteAuthentication({ loginKey: maybeLoginKey })
 
-      // TODO; Save user session
-      // loginUser(res)
+      // Save user session
+      const success = await loginAccount(res)
 
-      console.log('Result:')
-      console.log(res)
+      invariant(success, 'Something went wrong saving user session')
 
-      // WIP
-
-      if (res?.status === 'pending') {
-        return setError(true)
-      }
-
-      if (res?.status === 'invalid') {
-        return setError(true)
-      }
-
-      if (res?.status === 'expired') {
-        return setError(true)
-      }
-
-      if (res) {
+      if (success) {
         setTimeout(() => {
           redirectToStartScreen()
         }, 2000)
@@ -100,17 +83,6 @@ export default function AuthorizationRoute() {
 
   return (
     <div className="flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background">
-      {error && (
-        <div className="grid gap-4 items-center justify-center">
-          <div className="w-full">
-            <h1>Something went wrong</h1>
-          </div>
-          <div className="flex w-full justify-center">
-            <Button onClick={() => navigateTo('/login')}>Retry</Button>
-          </div>
-        </div>
-      )}
-
       {success && (
         <div className="grid gap-4 items-center justify-center">
           <div className="flex w-full justify-center">
@@ -122,7 +94,7 @@ export default function AuthorizationRoute() {
         </div>
       )}
 
-      {!success && !error && (
+      {!success && (
         <div className="grid gap-4 items-center justify-center">
           <div className="flex w-full justify-center">
             <LoadingIndicator />

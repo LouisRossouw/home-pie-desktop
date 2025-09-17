@@ -27,7 +27,7 @@ export default function Login() {
   const maybeIntent = searchParams.get('intent')
 
   async function handleAuthRedirect() {
-    window.api.app.apiSignIn()
+    window.api.app.apiSignIn({})
     setWaitingAuth(true)
   }
 
