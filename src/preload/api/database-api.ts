@@ -1,18 +1,29 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import { IpcKey } from '@shared/constants'
 
-import type { CoreSetting, Setting, UserSetting } from '@shared/types'
+import type {
+  CoreSetting,
+  SessionAccessKey,
+  SessionsSQL,
+  Setting,
+  UserSessionKey,
+  UserSetting
+} from '@shared/types'
 
 const IPCR = electronAPI.ipcRenderer
 
 // prettier-ignore
-type GetSession = {userId: number | string, key: string}
+type GetSession = {userId: number | string, key: UserSessionKey | SessionAccessKey}
+type GetSessionByUserEmail = { userEmail: string }
 type SetSession = { userId: number | string; key: string; value: string }
-type GetAllSessions = { userId: number | string }
+type DeleteUserSessions = { userId: number | string }
+type GetAllUserSessions = { userId: number | string }
 
 type GetCoreSetting = { key: CoreSetting }
 type SetCoreSetting = { key: Setting; value: string | number | boolean }
 type GetUserSetting = { userId: number | string; key: UserSetting }
+type DeleteUserSettings = { userId: number | string }
+
 // prettier-ignore
 type SetUserSetting = {userId: number | string; key: UserSetting; value: string | number | boolean}
 type GetAllUserSettings = { userId: number | string }
@@ -31,12 +42,16 @@ export type DatabaseAppSettingsAPI = {
   // ** User Settings
   getUserSetting: (data: GetUserSetting) => Promise<any>
   setUserSetting: (data: SetUserSetting) => Promise<boolean>
+  deleteUserSettings: (data: DeleteUserSettings) => Promise<boolean>
   getAllUserSettings: (data: GetAllUserSettings) => Promise<Record<string, string>[]> // TODO; Type
 
   // ** Session
   getSession: (data: GetSession) => Promise<any>
   setSession: (data: SetSession) => Promise<any>
-  getAllSessions: (data: GetAllSessions) => Promise<Record<string, string>[]> // TODO; Type
+  deleteUserSessions: (data: DeleteUserSessions) => Promise<boolean>
+  getSessionByUserEmail: (data: GetSessionByUserEmail) => Promise<SessionsSQL | undefined>
+  getAllSessions: () => Promise<SessionsSQL[]> // TODO; Type
+  getAllUserSessions: (data: GetAllUserSessions) => Promise<Record<string, string>[]> // TODO; Type
   checkAccessToken: (data: CheckAccessToken) => Promise<any> // TODO; Type
 }
 
@@ -56,7 +71,10 @@ export const databaseAppSettingsAPI = {
 
   // ** Session
   getSession: async (data: GetSession) => IPCR.invoke(IpcKey.getSession, data),
+  getSessionByUserEmail: async (data: GetSessionByUserEmail) => IPCR.invoke(IpcKey.getSessionByUserEmail, data),
   setSession: async (data: SetSession) => IPCR.invoke(IpcKey.setSession, data),
-  getAllSessions:async (data: GetAllSessions) => IPCR.invoke(IpcKey.getAllSessions, data),
+  deleteUserSessions:async (data: DeleteUserSessions) => IPCR.invoke(IpcKey.deleteUserSessions, data),
+  getAllSessions:async () => IPCR.invoke(IpcKey.getAllSessions),
+  getAllUserSessions:async (data: GetAllUserSessions) => IPCR.invoke(IpcKey.getAllUserSessions, data),
   checkAccessToken:async (data: CheckAccessToken) => IPCR.invoke(IpcKey.checkAccessToken, data),
 }

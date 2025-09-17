@@ -1,5 +1,6 @@
 import { version } from '../../package.json'
-import { getBaseURL } from './api'
+import { getOAuthClients } from './auth'
+import { getRandomInteger } from './utils'
 
 const devApiBaseUrl = import.meta.env.VITE_DEV_API_BASEURL
 const prodApiBaseUrl = import.meta.env.VITE_PROD_API_BASEURL
@@ -32,12 +33,17 @@ export enum IpcKey {
   // ** User Settings
   getUserSetting = 'get-user-setting',
   setUserSetting = 'set-user-setting',
+  deleteUserSettings = 'delete-user-settings',
   getAllUserSettings = 'get-all-user-settings',
 
   // ** Session
   getSession = 'get-session',
   setSession = 'set-session',
   getAllSessions = 'get-all-sessions',
+  deleteUserSessions = 'delete-user-sessions',
+  getAllUserSessions = 'get-all-user-sessions',
+  getSessionByUserEmail = 'get-session-by-user-email',
+
   checkAccessToken = 'check-access-token',
 
   // ** Auth
@@ -55,6 +61,9 @@ export const isLinux = () => getAppPlatform() === 'linux'
 export const isWindows = () => getAppPlatform() === 'win32'
 export const isDevelopment = () => appEnvironment === 'development'
 // export const getAppBuildDate = () => new Date(import.meta.env.VITE_BUILD_DATE ?? '').toLocaleDateString(); // prettier-ignore
+export const generatedUserId = getRandomInteger(1, 1000)
+
+export const oAuthClients = getOAuthClients()
 
 export const DEBOUNCE_MILLIS = 100
 

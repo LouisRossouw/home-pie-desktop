@@ -1,11 +1,12 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-import type { OnResize, ResizeApp, WindowControl } from '@shared/types'
+import type { OnResize, ResizeApp, Schemas, WindowControl } from '@shared/types'
 import { DotSquadAnims } from '@shared/dot-squad'
 import { IpcKey } from '@shared/constants'
 
 const IPCR = electronAPI.ipcRenderer
+type CustomTokenResponse = Schemas['CustomTokenResponse'] & { application: string } // TODO; Fix this extra type
 
 export type AppAPI = {
   resizeApp: (v: ResizeApp) => void
@@ -21,9 +22,9 @@ export type AppAPI = {
   openDirectory: (v: { path: string }) => void // TODO; Return & handle error
   emitProcessActivity: (v: any) => Promise<any>
 
-  apiCompleteAuthentication: (v: { loginKey: string }) => Promise<any>
+  apiCompleteAuthentication: (v: { loginKey: string }) => Promise<CustomTokenResponse>
   onAuthCode: (v: any) => Promise<any>
-  apiSignIn: () => void
+  apiSignIn: (v: { addAccount?: boolean }) => void
 }
 
 // prettier-ignore
@@ -43,5 +44,5 @@ export const appAPI = {
 
   apiCompleteAuthentication: async (data: {loginKey: string}) => IPCR.invoke('api-complete-auth-app', data),
   onAuthCode: (callback: (event: IpcRendererEvent, data: {code: any}) => void) => {ipcRenderer.on('auth:code', callback)},
-  apiSignIn: async () => IPCR.invoke(IpcKey.apiSignIn),
+  apiSignIn: async (data: { addAccount?: boolean }) => IPCR.invoke(IpcKey.apiSignIn, data),
 }

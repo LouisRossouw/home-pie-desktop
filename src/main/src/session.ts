@@ -1,28 +1,33 @@
-import { mainWindow } from '@main/.'
-
-import { getBaseURL } from '@shared/api'
-import { getOAuthClients } from '@shared/auth'
-import { getApiBaseURL } from '@shared/constants'
+// import axios from 'axios'
 import { paths } from '@shared/lib/generated/api'
 
+import { mainWindow } from '@main/.'
 import { getSession } from './db/session'
-
-export const baseURL = getBaseURL()
-const OauthClient = getOAuthClients()
+import { generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
+import { getCoreSetting } from './db/core-settings'
 
 export async function requireSession(requireAuth: boolean = true) {
   const { default: createClient } = await import('openapi-fetch')
-  // const token = '1234' // TODO; get from storage.
 
-  const validToken = 'TODO' // Temp
-  // let validToken: string | undefined
+  // TODO; What can we do to call the database less ?
+  // I dont want to read the database everytime we do a request
 
-  // if (requireAuth && token) {
-  //   validToken = await checkAccessToken(token)
-  //   if (!validToken) {
-  //     throw new Error('No valid token available')
-  //   }
-  // }
+  const userId = parseInt(
+    (await getCoreSetting({ key: 'activeAccountId' })) ?? generatedUserId.toString()
+  )
+  const accessToken = await getSession({ userId, key: 'accessToken' })
+
+  let validToken: string | undefined
+
+  if (requireAuth && accessToken) {
+    validToken = await checkAccessToken({
+      userId,
+      accessToken
+    })
+    if (!validToken) {
+      throw new Error('No valid token available')
+    }
+  }
 
   const apiClient = createClient<paths>({
     baseUrl: getApiBaseURL,
@@ -42,14 +47,13 @@ export async function checkAccessToken({
   userId: number
   accessToken?: string
 }): Promise<string | undefined> {
-  if (accessToken && !isTokenExpired({ userId })) {
+  if (accessToken && !(await isTokenExpired({ userId }))) {
     return accessToken
   }
-
   const refreshToken = await getSession({ userId, key: 'refreshToken' })
 
   if (refreshToken) {
-    const response = await refreshTokenFunction(refreshToken)
+    const response = await refreshTokenFunction({ userId, refreshToken })
     if (response?.access_token) {
       updateTokens(response)
       return response.access_token
@@ -61,7 +65,7 @@ export async function checkAccessToken({
 
 export async function isTokenExpired({ userId }: { userId: number }) {
   try {
-    const expiresAtstr = await getSession({ userId, key: 'expiresAt' })
+    const expiresAtstr = await getSession({ userId, key: 'expiresIn' })
     const expiresAt = expiresAtstr ? parseInt(expiresAtstr, 10) : undefined
     const minutesUntilExpiration = getMinutesUntilExpiration(expiresAt ?? 0)
 
@@ -76,19 +80,21 @@ export async function isTokenExpired({ userId }: { userId: number }) {
   }
 }
 
-export async function refreshTokenFunction(refreshToken: string) {
-  console.log('Refreshing accessToken')
+export async function refreshTokenFunction({
+  userId,
+  refreshToken
+}: {
+  userId: number
+  refreshToken: string
+}) {
+  console.log('Refreshing accessToken using refreshToken:', refreshToken)
 
-  // TODO;
-  const userDataStr = undefined
-  // const userDataStr = TODO; Get from storage
-  const userData = userDataStr ? JSON.parse(userDataStr) : undefined
+  const auth_type = await getSession({ userId, key: 'auth_type' })
 
-  const auth_type = userData?.auth_type
+  const clientId =
+    auth_type === '' ? oAuthClients!.MANUAL_CLIENT_ID : oAuthClients!.GOOGLE_CLIENT_ID
 
-  const clientId = auth_type === '' ? OauthClient!.MANUAL_CLIENT_ID : OauthClient!.GOOGLE_CLIENT_ID
-
-  const response = await fetch(`${baseURL}/auth/token`, {
+  const response = await fetch(`${getApiBaseURL}/auth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
