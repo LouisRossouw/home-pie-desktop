@@ -12,7 +12,7 @@ import {
   getSessionByUserEmail,
   deleteUserSessions
 } from '@main/src/db/session'
-import { checkAccessToken } from '@main/src/session'
+import { checkAccessToken, findNextActiveAccessToken } from '@main/src/session'
 
 export function databaseIpcHandlers() {
   // * Settings
@@ -56,6 +56,9 @@ export function databaseIpcHandlers() {
 
   ipcMain.handle(IpcKey.checkAccessToken, async (_event, data) => {
     return await checkAccessToken(data)
+  })
+  ipcMain.handle(IpcKey.findNextActiveAccessToken, async (_event) => {
+    return await findNextActiveAccessToken()
   })
 
   ipcMain.handle(IpcKey.getSessionByUserEmail, async (_event, data) => {
