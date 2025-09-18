@@ -3,6 +3,7 @@ import {
   authorizeUserInDefaultBrowser,
   loadApp,
   maybeFastLoad,
+  openBrowserToUrl,
   openDirectory,
   resizeApp,
   windowControl
@@ -28,6 +29,10 @@ export function appIpcHandlers() {
 
   ipcMain.handle('open-directory', (_event, data) => {
     openDirectory(data)
+  })
+
+  ipcMain.handle('open-browser-url', (_event, data) => {
+    openBrowserToUrl(data)
   })
 
   // ** Auth
