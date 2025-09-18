@@ -37,4 +37,9 @@ function deleteUserSetting({ key }: { key: string }) {
   db.prepare(SQL.deleteUserSettingSQL).run(key)
 }
 
-export { getUserSetting, setUserSetting, getAllUserSettings, deleteUserSetting }
+function deleteUserSettings({ key }: { key: string }) {
+  logActivity(`deleteUserSettings ${key}`)
+  db.prepare(SQL.deleteUserSettingsSQL).run(key)
+}
+
+export { getUserSetting, setUserSetting, getAllUserSettings, deleteUserSetting, deleteUserSettings }

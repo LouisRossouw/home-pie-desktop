@@ -19,12 +19,38 @@ const getSessionSQL = `
   SELECT value FROM ${table} WHERE userId = ? AND key = ?
 `
 
+// const getAllSessionsSQL = `
+//   SELECT userId, key, value FROM ${table}
+// `
+const getAllUserSessionsSQL = `
+  SELECT key, value FROM  ${table} WHERE userId = ?
+`
+
 const getAllSessionsSQL = `
-  SELECT key, value FROM  ${table} WHERE user_id = ?
+SELECT userId, key, value FROM ${table}
+`
+
+const getSessionByUserEmailSQL = `
+  SELECT *
+  FROM ${table}
+  WHERE key = 'email'
 `
 
 const deleteSessionSQL = `
   DELETE FROM ${table} WHERE userId = ? AND key = ?
 `
 
-export { initSessionDatabaseSQL, setSessionSQL, getSessionSQL, getAllSessionsSQL, deleteSessionSQL }
+const deleteUserSessionsSQL = `
+  DELETE FROM ${table} WHERE userId = ?
+`
+
+export {
+  initSessionDatabaseSQL,
+  setSessionSQL,
+  getSessionSQL,
+  getAllUserSessionsSQL,
+  getAllSessionsSQL,
+  deleteSessionSQL,
+  getSessionByUserEmailSQL,
+  deleteUserSessionsSQL
+}

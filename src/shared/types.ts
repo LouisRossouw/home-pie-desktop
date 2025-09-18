@@ -1,6 +1,9 @@
 // TODO; Maybe switch to open-api, to generate api response types from my server.
 
 import { defaultCoreSettings, defaultUserSettings } from './default-app-settings'
+import { components } from './lib/generated/api'
+
+export type Schemas = components['schemas']
 
 export type Project = {
   title: string
@@ -133,13 +136,26 @@ export type ApiMrPingPingStatus = {
 
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'
 
-export type UserSession = {
-  email: string
-  firstName: string
-  lastName: string
-  is_staff: boolean
-  userId: number | null
-  auth_type: string | undefined
-  uuid: string
-  is_premium?: boolean
+export type SessionAccess = {
+  active: boolean
+  accessToken: string
+  refreshToken: string
+  expiresIn: number
+  expires: string
+  application: string
+}
+
+type UserSession = Schemas['CustomUser']
+
+export type UserSessionKey = keyof UserSession
+export type SessionAccessKey = keyof SessionAccess
+
+// **
+// **
+// **
+// ** SQL Related Types;
+export type SessionsSQL = {
+  userId: string
+  key: any
+  value: any
 }

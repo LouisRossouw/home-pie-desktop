@@ -3,6 +3,7 @@ import {
   authorizeUserInDefaultBrowser,
   loadApp,
   maybeFastLoad,
+  openBrowserToUrl,
   openDirectory,
   resizeApp,
   windowControl
@@ -30,8 +31,12 @@ export function appIpcHandlers() {
     openDirectory(data)
   })
 
+  ipcMain.handle('open-browser-url', (_event, data) => {
+    openBrowserToUrl(data)
+  })
+
   // ** Auth
-  ipcMain.handle(IpcKey.apiSignIn, async (_event) => {
-    return await authorizeUserInDefaultBrowser()
+  ipcMain.handle(IpcKey.apiSignIn, async (_event, data) => {
+    return await authorizeUserInDefaultBrowser(data)
   })
 }
