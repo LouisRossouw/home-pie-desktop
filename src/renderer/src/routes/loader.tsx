@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import { WindowModes } from '@shared/types'
-import { generatedUserId, SessionKey } from '@shared/constants'
+import { generatedUserId } from '@shared/constants'
 
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
-import { useAppSession } from '~/libs/context/session'
 import { windowModes } from '~/libs/hooks/use-app-window'
+import { useAccounts } from '~/libs/hooks/use-accounts'
 
 export function LoaderRoute({
   fastLoad,
@@ -23,7 +23,8 @@ export function LoaderRoute({
     windowControl,
     getAllAppSettings: updateContextWithAppSettings
   } = useApp()
-  const { loadUserSession } = useAppSession()
+
+  const { switchUserAccount } = useAccounts()
 
   const [logs, setLogs] = useState<string>('')
   const [appLoaded, setAppLoaded] = useState({ loaded: false, isAuth: false })
@@ -96,21 +97,10 @@ export function LoaderRoute({
       const coreSettings = await updateContextWithAppSettings()
       const userId = (coreSettings?.activeAccountId as number | undefined) ?? generatedUserId
 
-      const maybeAccessToken = await window.api.db.getSession({
-        key: SessionKey.accessToken,
-        userId
-      })
+      const success = await switchUserAccount({ userId })
 
-      if (maybeAccessToken) {
-        const validToken = await window.api.db.checkAccessToken({
-          accessToken: maybeAccessToken,
-          userId
-        })
-
-        // Load a user session
-        await loadUserSession({ userId })
-
-        return setAppLoaded({ loaded: true, isAuth: validToken ? true : false })
+      if (success) {
+        return setAppLoaded({ loaded: true, isAuth: true })
       }
 
       return setAppLoaded({ loaded: true, isAuth: false })
