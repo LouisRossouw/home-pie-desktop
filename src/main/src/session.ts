@@ -2,7 +2,7 @@
 import { paths } from '@shared/lib/generated/api'
 
 import { mainWindow } from '@main/.'
-import { getSession } from './db/session'
+import { getAllSessions, getSession, setSession } from './db/session'
 import { generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
 import { getCoreSetting } from './db/core-settings'
 
@@ -16,6 +16,8 @@ export async function requireSession(requireAuth: boolean = true) {
     (await getCoreSetting({ key: 'activeAccountId' })) ?? generatedUserId.toString()
   )
   const accessToken = await getSession({ userId, key: 'accessToken' })
+
+  console.log('***** - Requiring the session yo ! userId', userId)
 
   let validToken: string | undefined
 
@@ -50,17 +52,79 @@ export async function checkAccessToken({
   if (accessToken && !(await isTokenExpired({ userId }))) {
     return accessToken
   }
-  const refreshToken = await getSession({ userId, key: 'refreshToken' })
 
+  console.log('* Expired, getting refresh token')
+  const refreshToken = await getSession({ userId, key: 'refreshToken' })
+  const newAccessToken = await checkRefreshToken({ userId, refreshToken })
+
+  if (newAccessToken) {
+    return newAccessToken
+  }
+
+  // Set the account active to false after failure to refresh tokens.
+  await setSession({ userId, key: 'active', value: false })
+
+  return undefined
+}
+
+async function checkRefreshToken({
+  userId,
+  refreshToken
+}: {
+  userId: number
+  refreshToken: string
+}): Promise<string | undefined> {
   if (refreshToken) {
     const response = await refreshTokenFunction({ userId, refreshToken })
+
     if (response?.access_token) {
-      updateTokens(response)
+      updateTokens({ userId, response })
       return response.access_token
     }
   }
 
   return undefined
+}
+
+export async function findNextActiveAccessToken(): Promise<
+  { userId: number; accessToken: string } | undefined
+> {
+  // Find the next available account, try switch to that account.
+  const { ids } = await getAllExistingSessionIds()
+  if (ids.length === 0) return undefined
+
+  for (const id of ids) {
+    const isActive = await getSession({ userId: id, key: 'active' })
+
+    if (isActive) {
+      const accessToken = await getSession({ userId: id, key: 'accessToken' })
+
+      if (accessToken && !(await isTokenExpired({ userId: id }))) {
+        return { userId: id, accessToken }
+      }
+
+      const refreshToken = await getSession({ userId: id, key: 'refreshToken' })
+      const maybeAccessToken = await checkRefreshToken({ userId: id, refreshToken })
+
+      if (maybeAccessToken) {
+        return { userId: id, accessToken: maybeAccessToken }
+      }
+    }
+  }
+
+  return undefined
+}
+
+async function getAllExistingSessionIds() {
+  const data = await getAllSessions()
+
+  if (data.length === 0) {
+    return { ids: [], nextAvailableId: undefined }
+  }
+
+  const uniqueUserIds = Array.from(new Set(data.map((item) => Number(item.userId))))
+
+  return { ids: uniqueUserIds, nextAvailableId: generatedUserId }
 }
 
 export async function isTokenExpired({ userId }: { userId: number }) {
@@ -87,8 +151,6 @@ export async function refreshTokenFunction({
   userId: number
   refreshToken: string
 }) {
-  console.log('Refreshing accessToken using refreshToken:', refreshToken)
-
   const auth_type = await getSession({ userId, key: 'auth_type' })
 
   const clientId =
@@ -103,41 +165,44 @@ export async function refreshTokenFunction({
       client_id: clientId
     })
   })
+
   if (!response.ok) {
+    // TODO; Dont force logout if other active accounts exists, instead switch to them?
+
     return mainWindow?.webContents.send('navigate-to', { url: '/login?forceLogout=true' })
   } else {
-    const data = await response.json()
-    return data
+    return await response.json()
   }
 }
 
 export function getMinutesUntilExpiration(expiresAt: number) {
-  const now = Date.now()
-  const diff = expiresAt - now
-  const minutesLeft = Math.floor(diff / 1000 / 60)
-  return minutesLeft
+  const diff = expiresAt - Date.now()
+  return Math.floor(diff / 1000 / 60) // minutesLeft
 }
 
-type UserSession = any // TODO
-
-export function saveUserToStorage(data: any, userSession: UserSession) {
-  // TODO: add try catch errors, return true or false
-  const issuedAt = Date.now()
-  const expiresAt = issuedAt + data.expires_in * 1000
-
-  // TODO;
-
-  return true
-}
-
-export function removeUserFromStorage() {
-  // TODO
-
-  return true
-}
-
-function updateTokens(response: any) {
+async function updateTokens({
+  userId,
+  response
+}: {
+  userId: number
+  response: {
+    access_token: string
+    expires_in: number
+    token_type: string
+    scope: string
+    refresh_token: string
+  }
+}) {
   const expiresAt = Date.now() + response.expires_in * 1000
+  try {
+    await setSession({ userId, key: 'active', value: true })
+    await setSession({ userId, key: 'expiresIn', value: expiresAt.toString() })
+    await setSession({ userId, key: 'accessToken', value: response.access_token })
+    await setSession({ userId, key: 'refreshToken', value: response.refresh_token })
 
-  // TODO
+    return true
+  } catch (err) {
+    console.error('Failed to update session with new tokens.')
+    return false
+  }
 }
