@@ -73,10 +73,7 @@ export function useSession() {
 
     const uniqueUserIds = Array.from(new Set(data.map((item) => Number(item.userId))))
 
-    const ids: number[] = uniqueUserIds
-    const nextAvailableId = generatedUserId
-
-    return { ids, nextAvailableId }
+    return { ids: uniqueUserIds, nextAvailableId: generatedUserId }
   }
 
   async function loadUserSession({ userId }: { userId: number }) {
