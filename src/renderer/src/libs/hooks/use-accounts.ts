@@ -8,7 +8,7 @@ import {
   UserSessionKey,
   SessionAccessKey
 } from '@shared/types'
-import { generatedUserId } from '@shared/constants'
+import { generatedUserId, SessionKey } from '@shared/constants'
 import { defaultUserSettings } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
@@ -31,16 +31,47 @@ export function useAccounts() {
     const { ids } = await SSN.getAllExistingSessionIds()
 
     if (ids.includes(userId)) {
-      const hasUpdateSession = await SSN.switchUserSession({ userId })
-      const hasUpdatedSettings = await APP.updateAppSettings([
-        { setting: 'activeAccountId', value: userId }
-      ])
+      // Get current active users active token and check if it's not expired.
+      const maybeAccessToken = await window.api.db.getSession({
+        key: SessionKey.accessToken,
+        userId
+      })
 
-      return hasUpdateSession && hasUpdatedSettings
+      if (maybeAccessToken) {
+        const validToken = await window.api.db.checkAccessToken({
+          accessToken: maybeAccessToken,
+          userId
+        })
+
+        if (validToken) {
+          const hasUpdateSession = await SSN.switchUserSession({ userId })
+          const hasUpdatedSettings = await APP.updateAppSettings([
+            { setting: 'activeAccountId', value: userId }
+          ])
+          return hasUpdateSession && hasUpdatedSettings
+        }
+
+        // If active users access token & refresh token is expired then find next active session.
+        const maybeNexValidAccessToken = await window.api.db.findNextActiveAccessToken()
+
+        if (maybeNexValidAccessToken) {
+          const hasUpdateSession = await SSN.switchUserSession({
+            userId: maybeNexValidAccessToken.userId
+          })
+          const hasUpdatedSettings = await APP.updateAppSettings([
+            { setting: 'activeAccountId', value: maybeNexValidAccessToken.userId }
+          ])
+
+          return hasUpdateSession && hasUpdatedSettings
+        }
+
+        return false
+      }
+
+      console.error('Something went wrong switching accounts!')
+
+      return false
     }
-
-    console.error('Something went wrong switching accounts!')
-
     return false
   }
 
