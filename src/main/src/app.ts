@@ -213,3 +213,8 @@ export function handleDeepLink(urlStr: string) {
     mainWindow?.webContents.send('auth:code', { code: maybeIntent })
   }
 }
+
+export async function openBrowserToUrl({ url }: { url: string }) {
+  if (!url) return // TODO; Return an error or inform user something went wrong.
+  await shell.openExternal(url)
+}
