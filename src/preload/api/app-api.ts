@@ -20,6 +20,7 @@ export type AppAPI = {
   removeAllListeners: (v: any) => Promise<any>
   removeListener: (v: any, listener: string) => Promise<any>
   openDirectory: (v: { path: string }) => void // TODO; Return & handle error
+  openBrowserToUrl: (v: { url: string }) => void
   emitProcessActivity: (v: any) => Promise<any>
 
   apiCompleteAuthentication: (v: { loginKey: string }) => Promise<CustomTokenResponse>
@@ -40,6 +41,8 @@ export const appAPI = {
   removeAllListeners: (channel: any) => ipcRenderer.removeAllListeners(channel),
   removeListener: (cb: any, listener: any) => ipcRenderer.removeListener(listener, cb),
   openDirectory: async (data: {path: string}) => IPCR.invoke('open-directory', data),
+  openBrowserToUrl: async (data: {url: string}) => IPCR.invoke('open-browser-url', data),
+
   emitProcessActivity: (callback: (event: IpcRendererEvent, data: {activity: string}) => void) => {ipcRenderer.on('emit-process-activity', callback)},
 
   apiCompleteAuthentication: async (data: {loginKey: string}) => IPCR.invoke('api-complete-auth-app', data),

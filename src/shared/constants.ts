@@ -45,6 +45,7 @@ export enum IpcKey {
   getSessionByUserEmail = 'get-session-by-user-email',
 
   checkAccessToken = 'check-access-token',
+  findNextActiveAccessToken = 'find-next-active-access-token',
 
   // ** Auth
   apiSignIn = 'api-sign-in'
@@ -74,6 +75,8 @@ export const getApiBaseURL = isDev ? devApiBaseUrl : prodApiBaseUrl // API
 export const getWebBaseURL = isDev ? devWebBaseUrl : prodWebBaseUrl // The public-facing site
 export const getAppBaseURL = isDev ? devAppBaseUrl : prodAppBaseUrl // App site, docs, auth, maybe the actual app too.
 export const getOauthRedirectUrl = `${getAppBaseURL}/oauth/redirect`; // prettier-ignore
+export const getWebSupportUrl = `${getAppBaseURL}/support`
+export const getWebDashboardUrl = `${getAppBaseURL}/dashboard`
 
 export const appOriginName = `${getAppName.toLowerCase()}-desktop-app`
 export const defaultProtocol = `homepie${isDevelopment() ? '-dev' : ''}`

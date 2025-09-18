@@ -53,6 +53,7 @@ export type DatabaseAppSettingsAPI = {
   getAllSessions: () => Promise<SessionsSQL[]> // TODO; Type
   getAllUserSessions: (data: GetAllUserSessions) => Promise<Record<string, string>[]> // TODO; Type
   checkAccessToken: (data: CheckAccessToken) => Promise<any> // TODO; Type
+  findNextActiveAccessToken: () => Promise<{ userId: number; accessToken: string } | undefined>
 }
 
 // prettier-ignore
@@ -77,4 +78,5 @@ export const databaseAppSettingsAPI = {
   getAllSessions:async () => IPCR.invoke(IpcKey.getAllSessions),
   getAllUserSessions:async (data: GetAllUserSessions) => IPCR.invoke(IpcKey.getAllUserSessions, data),
   checkAccessToken:async (data: CheckAccessToken) => IPCR.invoke(IpcKey.checkAccessToken, data),
+  findNextActiveAccessToken:async () => IPCR.invoke(IpcKey.findNextActiveAccessToken),
 }
