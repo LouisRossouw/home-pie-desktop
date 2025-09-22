@@ -13,6 +13,7 @@ import { defaultUserSettings } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 import { useAppSession } from '~/libs/context/session'
+import { QueryClient } from '@tanstack/react-query'
 
 type Value = string | boolean | number | undefined
 type AvailableAccounts = { userId: number; email: string; active: boolean }[] | undefined
@@ -21,6 +22,7 @@ type UserSession = Schemas['CustomUser']
 
 export function useAccounts() {
   const navigate = useNavigate()
+  const queryClient = new QueryClient()
 
   const APP = useApp()
   const SSN = useAppSession()
@@ -48,6 +50,8 @@ export function useAccounts() {
           const hasUpdatedSettings = await APP.updateAppSettings([
             { setting: 'activeAccountId', value: userId }
           ])
+
+          queryClient.clear()
           return hasUpdateSession && hasUpdatedSettings
         }
 
@@ -62,6 +66,7 @@ export function useAccounts() {
             { setting: 'activeAccountId', value: maybeNexValidAccessToken.userId }
           ])
 
+          queryClient.clear()
           return hasUpdateSession && hasUpdatedSettings
         }
 
@@ -169,6 +174,7 @@ export function useAccounts() {
       await APP.updateAppSettings([{ setting: 'activeAccountId', value: generatedUserId }])
       await SSN.updateAccessSession([{ userId, session: 'active', value: false }])
       APP.setIsAuth(false)
+      queryClient.clear()
       return navigate('/login')
     }
 
