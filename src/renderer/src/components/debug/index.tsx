@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
-import { getOAuthClients } from '@shared/auth'
 import { ApiTest, Setting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
@@ -12,7 +11,7 @@ import { useDotSquadTest } from '~/libs/context/dot-squad'
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
-import { getApiBaseURL, oAuthClients } from '@shared/constants'
+import { appIpcKey, getApiBaseURL, oAuthClients } from '@shared/constants'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
@@ -51,11 +50,11 @@ export function Debug() {
   }, [])
 
   async function getListenersCount() {
-    const dotSquadLS = await window.api.app.listenerCount('dot-squad')
-    const routerLS = await window.api.app.listenerCount('navigate-to')
-    const resizeLS = await window.api.app.listenerCount('window-resized')
-    const processLS = await window.api.app.listenerCount('emit-process-activity')
-    const authLS = await window.api.app.listenerCount('auth:code')
+    const dotSquadLS = await window.api.app.listenerCount(appIpcKey.dotSquad)
+    const routerLS = await window.api.app.listenerCount(appIpcKey.navigateTo)
+    const resizeLS = await window.api.app.listenerCount(appIpcKey.windowResized)
+    const processLS = await window.api.app.listenerCount(appIpcKey.emitProcessActivity)
+    const authLS = await window.api.app.listenerCount(appIpcKey.authCode)
 
     setListenersCount({ dotSquadLS, routerLS, resizeLS, processLS, authLS })
   }

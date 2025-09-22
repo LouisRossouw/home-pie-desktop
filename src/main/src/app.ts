@@ -3,7 +3,6 @@ import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
 import { type DotSquadAnims } from '@shared/dot-squad'
-import { ResizeApp, WindowControl } from '@shared/types'
 import { defaultCoreSettings, defaultUserSettings, settingKeys } from '@shared/default-app-settings'
 
 import { readAppDataJson, saveTimestamps } from './utils'
@@ -11,7 +10,11 @@ import { readAppDataJson, saveTimestamps } from './utils'
 import { initDatabase, dbExists } from './db'
 import { setCoreSetting } from './db/core-settings'
 import { setUserSetting } from './db/user-settings'
+
+import { LoadApp, OpenBrowserToUrl, OpenDirectory, ResizeApp, WindowControl } from '@shared/types'
+
 import {
+  appIpcKey,
   appOriginName,
   generatedUserId,
   getApiBaseURL,
@@ -43,7 +46,7 @@ export async function maybeFastLoad() {
   return { skipSplash, skipLoader: dbExists }
 }
 
-export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
+export async function loadApp({ fastLoad }: LoadApp) {
   let ms = fastLoad ? 0 : 2000
   await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms })
 
@@ -156,7 +159,7 @@ export async function updateOnLoaderProgress({
 // Updates the dot squad to play an animation pattern as a "notification".
 export async function updateDotSquadActivity({ activity }: { activity: DotSquadAnims }) {
   console.log('Sending dot squad notification activity -', activity)
-  mainWindow?.webContents.send('dot-squad', { activity })
+  mainWindow?.webContents.send(appIpcKey.dotSquad, { activity })
 }
 
 async function updateAppStartTime() {
@@ -171,7 +174,7 @@ async function updateAppCloseTime() {
   saveTimestamps({ appEndTime: now })
 }
 
-export async function openDirectory({ path }: { path: string }) {
+export async function openDirectory({ path }: OpenDirectory) {
   try {
     const result = await shell.openPath(path)
 
@@ -210,11 +213,11 @@ export function handleDeepLink(urlStr: string) {
   const maybeIntent = urlObj.searchParams.get('intent')
 
   if (maybeIntent) {
-    mainWindow?.webContents.send('auth:code', { code: maybeIntent })
+    mainWindow?.webContents.send(appIpcKey.authCode, { code: maybeIntent })
   }
 }
 
-export async function openBrowserToUrl({ url }: { url: string }) {
+export async function openBrowserToUrl({ url }: OpenBrowserToUrl) {
   if (!url) return // TODO; Return an error or inform user something went wrong.
   await shell.openExternal(url)
 }

@@ -8,23 +8,23 @@ import {
   resizeApp,
   windowControl
 } from '../app'
-import { IpcKey } from '@shared/constants'
+import { dbIpcKey } from '@shared/constants'
 
 export function appIpcHandlers() {
-  ipcMain.handle('resize-app', (_event, { width, height }) => {
-    resizeApp({ width, height })
+  ipcMain.handle('resize-app', (_event, data) => {
+    resizeApp(data)
   })
 
   ipcMain.handle('maybe-fast-load', (_event) => {
     return maybeFastLoad()
   })
 
-  ipcMain.handle('load-app', (_event, { fastLoad }) => {
-    return loadApp({ fastLoad })
+  ipcMain.handle('load-app', (_event, data) => {
+    return loadApp(data)
   })
 
-  ipcMain.on('window-control', (_event, { action, width, height }) => {
-    windowControl({ action, width, height })
+  ipcMain.on('window-control', (_event, data) => {
+    windowControl(data)
   })
 
   ipcMain.handle('open-directory', (_event, data) => {
@@ -36,7 +36,7 @@ export function appIpcHandlers() {
   })
 
   // ** Auth
-  ipcMain.handle(IpcKey.apiSignIn, async (_event, data) => {
+  ipcMain.handle(dbIpcKey.apiSignIn, async (_event, data) => {
     return await authorizeUserInDefaultBrowser(data)
   })
 }

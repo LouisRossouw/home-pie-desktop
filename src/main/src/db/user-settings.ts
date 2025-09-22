@@ -1,45 +1,22 @@
 import { SQL } from '@main/src/sql'
-import { Setting } from '@shared/types'
+
+import type * as T from '@shared/types'
 
 import { db, logActivity } from '.'
 
-async function getUserSetting({
-  userId,
-  key
-}: {
-  userId: number | string
-  key: Setting
-}): Promise<string | undefined> {
-  logActivity(`getUserSetting user:${userId} key:${key}`)
-  return db.prepare(SQL.getUserSettingSQL).get(userId.toString(), key)?.value ?? undefined
+async function getUserSetting(v: T.GetUserSetting): T.ResGetUserSetting {
+  logActivity(`getUserSetting user:${v.userId} key:${v.key}`)
+  return db.prepare(SQL.getUserSettingSQL).get(v.userId.toString(), v.key)?.value ?? undefined
 }
 
-async function setUserSetting({
-  userId,
-  key,
-  value
-}: {
-  userId: number | string
-  key: string
-  value?: string | number | boolean
-}) {
-  logActivity(`setUserSetting user:${userId} key:${key} value:${value}`)
-  db.prepare(SQL.setUserSettingSQL).run(userId.toString(), key, JSON.stringify(value))
+async function setUserSetting(v: T.SetUserSetting) {
+  logActivity(`setUserSetting user:${v.userId} key:${v.key} value:${v.value}`)
+  db.prepare(SQL.setUserSettingSQL).run(v.userId.toString(), v.key, JSON.stringify(v.value))
 }
 
-async function getAllUserSettings({ userId }: { userId: number | string }) {
-  logActivity(`getAllUserSettings for user:${userId}`)
-  return db.prepare(SQL.getAllUserSettingsSQL).all(userId.toString())
+async function getAllUserSettings(v: T.GetAllUserSettings): T.ResGetAllUserSettings {
+  logActivity(`getAllUserSettings for user:${v.userId}`)
+  return db.prepare(SQL.getAllUserSettingsSQL).all(v.userId.toString())
 }
 
-function deleteUserSetting({ key }: { key: string }) {
-  logActivity(`deleteUserSetting ${key}`)
-  db.prepare(SQL.deleteUserSettingSQL).run(key)
-}
-
-function deleteUserSettings({ key }: { key: string }) {
-  logActivity(`deleteUserSettings ${key}`)
-  db.prepare(SQL.deleteUserSettingsSQL).run(key)
-}
-
-export { getUserSetting, setUserSetting, getAllUserSettings, deleteUserSetting, deleteUserSettings }
+export { getUserSetting, setUserSetting, getAllUserSettings }

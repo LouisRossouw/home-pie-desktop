@@ -4,6 +4,7 @@ import { IpcRendererEvent } from 'electron'
 // import { useApp } from '~/libs/context/app'
 import { type DotSquadAnims } from '@shared/dot-squad'
 import { useDotSquadTest } from '../context/dot-squad'
+import { appIpcKey } from '@shared/constants'
 
 export function DotSquadListener() {
   const { handleUpdateDotSquad } = useDotSquadTest()
@@ -23,7 +24,7 @@ export function DotSquadListener() {
     console.log('DotSquad mounted.')
 
     return () => {
-      window.api.app.removeListener(handler, 'dot-squad')
+      window.api.app.removeListener(handler, appIpcKey.dotSquad)
     }
   }
 

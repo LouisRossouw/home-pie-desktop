@@ -24,7 +24,7 @@ const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
 const appEnvironment = import.meta.env.MODE // development || production
 
-export enum IpcKey {
+export enum dbIpcKey {
   // ** Core Settings
   getCoreSetting = 'get-setting',
   setCoreSetting = 'set-setting',
@@ -51,10 +51,29 @@ export enum IpcKey {
   apiSignIn = 'api-sign-in'
 }
 
+export enum appIpcKey {
+  loadApp = 'load-app',
+  resizeApp = 'resize-app',
+  maybeFastLoad = 'maybe-fast-load',
+  loaderProgress = 'loader-progress',
+  windowControl = 'window-control',
+  windowResized = 'window-resized',
+  navigateTo = 'navigate-to',
+  openDirectory = 'open-directory',
+  emitProcessActivity = 'emit-process-activity',
+  openBrowserToUrl = 'open-browser-to-url',
+  completeAuthApp = 'complete-auth-app',
+  dotSquad = 'dot-squad',
+  authCode = 'auth:code'
+}
+
+export enum navIpcKey {
+  syncRoute = 'sync-route'
+}
+
 export enum SessionKey {
   accessToken = 'accessToken'
 }
-
 export const getAppVersion = () => version
 export const getAppPlatform = () => process.platform
 export const isMac = () => getAppPlatform() === 'darwin'
