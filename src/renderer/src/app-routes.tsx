@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router'
 import { NoMatch } from './routes/no-match'
 import NoConnectionRoute from './routes/no-connection'
 
-import { MainLayout } from './routes/main-layout'
+import { AppLayout } from './routes/app-layout'
 
 import Login from './routes/login'
 import DebugRoute from './routes/debug'
@@ -49,7 +49,7 @@ const routesConfig = [
   { path: 'no-connection', element: <NoConnectionRoute /> },
   {
     path: '/',
-    element: <MainLayout />,
+    element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
       {

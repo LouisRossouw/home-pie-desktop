@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Outlet, useSearchParams } from 'react-router'
 import { Edit2, Eye, EyeClosed, RefreshCcw, Server } from 'lucide-react'
 
@@ -12,6 +12,7 @@ import { LoadingIndicator } from '~/components/loading-indicator'
 import { IntervalSelector } from '~/components/interval-selector'
 
 import { AddAccountDialog } from './add-account-dialog'
+import { cn } from '~/libs/utils/cn'
 // TODO
 // type Data = {
 //   currentData: SocialData
@@ -41,8 +42,14 @@ export function InstaInsightsLayout({
   data,
   range
 }: Props) {
+  const mounted = useRef(false)
+
   const currentData = data?.currentData
   const historicData = data?.historicData
+
+  useEffect(() => {
+    mounted.current = true
+  }, [])
 
   const accountsDataWithPic = useMemo(() => {
     if (!currentData || !historicData || historicData?.length === 0) return currentData
@@ -120,7 +127,12 @@ export function InstaInsightsLayout({
   }
 
   return (
-    <div className="h-full w-full p-4 space-y-4 animate-in fade-in duration-800 ease-in-out">
+    <div
+      className={cn(
+        'h-full w-full p-4 space-y-4',
+        !mounted.current && 'animate-in fade-in duration-800 ease-in-out'
+      )}
+    >
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-2">
           <Label className="text-lg text-bold text-foreground">
