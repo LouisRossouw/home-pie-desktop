@@ -17,6 +17,7 @@ import {
 } from '~/components/ui/sidebar'
 
 import { Button } from './ui/button'
+import { AccountSelector } from './account-selector'
 
 const items = [
   {
@@ -104,7 +105,7 @@ export function AppSidebar({ close }: { close: () => void }) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="p-4">
-        <p className="text-xs">Account Here *</p>
+        <AccountSelector />
       </SidebarFooter>
     </Sidebar>
   )

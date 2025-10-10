@@ -52,6 +52,7 @@ export function useAccounts() {
           ])
 
           queryClient.clear()
+          navigate('/')
           return hasUpdateSession && hasUpdatedSettings
         }
 
@@ -67,6 +68,7 @@ export function useAccounts() {
           ])
 
           queryClient.clear()
+          navigate('/')
           return hasUpdateSession && hasUpdatedSettings
         }
 
