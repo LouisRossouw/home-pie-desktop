@@ -43,60 +43,80 @@ function renderRoutes(routes) {
   ))
 }
 
-const routesConfig = [
+const authRoutes = [
   { path: 'login', element: <Login /> },
   { path: 'authorize', element: <AuthorizationRoute /> },
-  { path: 'no-connection', element: <NoConnectionRoute /> },
+  { path: 'no-connection', element: <NoConnectionRoute /> }
+]
+
+const projectRoutes = [
+  {
+    path: 'projects',
+    element: <ProjectsRoute />,
+    children: [
+      { index: true, element: <ProjectsOverviewRoute /> },
+      { path: 'project-settings', element: <ProjectSettingsRoute /> },
+      { path: 'time-in-progress', element: <TimeInProgressRoute /> },
+      {
+        path: 'insta-insights',
+        element: <InstaInsightsRoute />,
+        children: [
+          { index: true, element: <InstaInsightsOverviewRoute /> },
+          {
+            path: ':account',
+            children: [{ path: 'insights', element: <InsightsRoute /> }]
+          }
+        ]
+      }
+    ]
+  }
+]
+
+const financeRoutes = [
+  {
+    path: 'my-finances',
+    element: <MyFinancesRoute />,
+    children: [
+      { index: true, element: <MyFinancesOverviewRoute /> },
+      { path: 'my-finances-settings', element: <div>TODO</div> }
+    ]
+  }
+]
+
+const gengenRoutes = [
+  {
+    path: 'gengen',
+    element: <GenGenRoute />,
+    children: [
+      { index: true, element: <GenGenOverviewRoute /> },
+      { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
+      { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
+    ]
+  }
+]
+
+const pingPingRoutes = [
+  {
+    path: 'ping-ping',
+    element: <PingPingRoute />,
+    children: [{ index: true, element: <PingPingOverviewRoute /> }]
+  }
+]
+
+const appRoutes = [
   {
     path: '/',
     element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
-      {
-        path: 'projects',
-        element: <ProjectsRoute />,
-        children: [
-          { index: true, element: <ProjectsOverviewRoute /> },
-          { path: 'project-settings', element: <ProjectSettingsRoute /> },
-          { path: 'time-in-progress', element: <TimeInProgressRoute /> },
-          {
-            path: 'insta-insights',
-            element: <InstaInsightsRoute />,
-            children: [
-              { index: true, element: <InstaInsightsOverviewRoute /> },
-              {
-                path: ':account',
-                children: [{ path: 'insights', element: <InsightsRoute /> }]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'my-finances',
-        element: <MyFinancesRoute />,
-        children: [
-          { index: true, element: <MyFinancesOverviewRoute /> },
-          { path: 'my-finances-settings', element: <div>TODO</div> }
-        ]
-      },
-      {
-        path: 'gengen',
-        element: <GenGenRoute />,
-        children: [
-          { index: true, element: <GenGenOverviewRoute /> },
-          { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
-          { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
-        ]
-      },
-      {
-        path: 'ping-ping',
-        element: <PingPingRoute />,
-        children: [{ index: true, element: <PingPingOverviewRoute /> }]
-      },
+      ...projectRoutes,
+      ...financeRoutes,
+      ...gengenRoutes,
+      ...pingPingRoutes,
       { path: 'debug', element: <DebugRoute /> },
       { path: 'settings', element: <SettingsRoute /> }
     ]
-  },
-  { path: '*', element: <NoMatch /> }
+  }
 ]
+
+const routesConfig = [...authRoutes, ...appRoutes, { path: '*', element: <NoMatch /> }]
