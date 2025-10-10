@@ -1,4 +1,4 @@
-export function SpinSVG({ className = 'text-white' }) {
+export function SpinSVG({ className }: { className?: string }) {
   return (
     <svg
       className={'animate-spin h-5 w-5 mr-3 ' + className}

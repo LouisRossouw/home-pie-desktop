@@ -9,17 +9,22 @@ import { AppRoutes } from './app-routes'
 import { SplashRoute } from './routes/splash'
 import { LoaderRoute } from './routes/loader'
 
-import { WindowFrame } from './components/window-frame'
-import { WindowFrameDebug } from './components/window-frame-debug'
 import { MrPingPingContextProvider } from './libs/context/mr-ping-ping'
 import { DotSquadContextProvider } from './libs/context/dot-squad'
 import { DotSquadListener } from './libs/middlewear/dot-squad-listener'
+import { useAppOverlay } from './libs/context/overlay'
+
+import { WindowFrame } from './components/window-frame'
+import { WindowFrameDebug } from './components/window-frame-debug'
+import { LoadingIndicator } from './components/loading-indicator'
 
 const queryClient = new QueryClient()
 
 type FastLoad = { skipSplash: boolean; skipLoader: boolean } | undefined
 
 export default function App(): JSX.Element {
+  const { showOverlay } = useAppOverlay()
+
   const [booted, setBooted] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -30,11 +35,20 @@ export default function App(): JSX.Element {
       const fastLoad = await window.api.app.maybeFastLoad()
 
       if (fastLoad.skipSplash) {
+        showOverlay({
+          animationType: 'fade',
+          mode: 'CHILDREN',
+          autoClose: 2000,
+          children: (
+            <div className="flex w-full items-center justify-center">
+              <LoadingIndicator />
+            </div>
+          )
+        })
         setBooted(true)
       } else {
         setTimeout(() => setBooted(true), 4000)
       }
-
       setFastLoad(fastLoad)
     }
     init()

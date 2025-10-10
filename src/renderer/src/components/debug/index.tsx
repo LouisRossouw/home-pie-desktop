@@ -11,6 +11,7 @@ import { useDotSquadTest } from '~/libs/context/dot-squad'
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
+import { useAppOverlay } from '~/libs/context/overlay'
 import { appIpcKey, getApiBaseURL, oAuthClients } from '@shared/constants'
 
 const MODE = import.meta.env.MODE
@@ -21,6 +22,8 @@ export function Debug() {
   const { navigateTo } = useNav()
   const { handleUpdateDotSquad } = useDotSquadTest()
   const { appSettings, getAppSetting, updateAppSettings, getAllAppSettings } = useApp()
+
+  const { showOverlay, closeOverlay } = useAppOverlay()
 
   const [output, setOutput] = useState<any>('')
   const [listenersCount, setListenersCount] = useState<Record<string, string>>({})
@@ -185,6 +188,22 @@ export function Debug() {
             <label>DotSquad:</label>
             <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
           </div>
+
+          <div className="grid gap-2 border-t py-4">
+            <label>Miscellaneous:</label>
+            <Button
+              onClick={() => {
+                showOverlay({
+                  disableClose: false,
+                  animationType: 'fade',
+                  mode: 'SWITCH-ACCOUNT'
+                })
+              }}
+            >
+              showOverlay
+            </Button>
+          </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Route Nav:</label>
             <Button onClick={() => navigateTo('/no-connection')}>no-connection</Button>
@@ -243,6 +262,22 @@ export function Debug() {
               setAuth
             </Button>
           </div>
+
+          <div className="grid gap-2 border-t py-4">
+            <label>App UI:</label>
+            <Button
+              onClick={() => {
+                showOverlay({
+                  disableClose: false,
+                  animationType: 'fade',
+                  mode: 'SWITCH-ACCOUNT'
+                })
+              }}
+            >
+              showOverlay
+            </Button>
+          </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Theme:</label>
             <ThemeSelector handleAddNewChanges={() => console.log('TODO')} />
