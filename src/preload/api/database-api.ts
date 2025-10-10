@@ -1,62 +1,56 @@
 import { electronAPI } from '@electron-toolkit/preload'
-import { IpcKey } from '@shared/constants'
+import { dbIpcKey } from '@shared/constants'
 
-import type { CoreSetting, Setting, UserSetting } from '@shared/types'
+import type * as T from '@shared/types'
 
 const IPCR = electronAPI.ipcRenderer
-
-// prettier-ignore
-type GetSession = {userId: number | string, key: string}
-type SetSession = { userId: number | string; key: string; value: string }
-type GetAllSessions = { userId: number | string }
-
-type GetCoreSetting = { key: CoreSetting }
-type SetCoreSetting = { key: Setting; value: string | number | boolean }
-type GetUserSetting = { userId: number | string; key: UserSetting }
-// prettier-ignore
-type SetUserSetting = {userId: number | string; key: UserSetting; value: string | number | boolean}
-type GetAllUserSettings = { userId: number | string }
-
-type CheckAccessToken = { userId: number; accessToken?: string }
 
 // prettier-ignore
 export type DatabaseAppSettingsAPI = {
   test: (v: { v: boolean }) => void
 
   // ** Core Settings
-  getCoreSetting: (data: GetCoreSetting) => Promise<any>
-  setCoreSetting: (data: SetCoreSetting) => Promise<boolean>
-  getAllCoreSettings: () => Promise<Record<string, string>[]> // TODO; Type
+  setCoreSetting: T.SetCoreSettingFunc
+  getAllCoreSettings: T.GetAllCoreSettingsFunc
+  getCoreSetting: T.GetCoreSettingFunc
 
   // ** User Settings
-  getUserSetting: (data: GetUserSetting) => Promise<any>
-  setUserSetting: (data: SetUserSetting) => Promise<boolean>
-  getAllUserSettings: (data: GetAllUserSettings) => Promise<Record<string, string>[]> // TODO; Type
+  setUserSetting: T.SetUserSettingFunc
+  getUserSetting: T.GetUserSettingFunc
+  getAllUserSettings: T.GetAllUserSettingsFunc
 
   // ** Session
-  getSession: (data: GetSession) => Promise<any>
-  setSession: (data: SetSession) => Promise<any>
-  getAllSessions: (data: GetAllSessions) => Promise<Record<string, string>[]> // TODO; Type
-  checkAccessToken: (data: CheckAccessToken) => Promise<any> // TODO; Type
+  setSession: T.SetSessionFunc
+  getAllSessions: T.GetAllSessionsFunc
+  getSession: T.GetSessionFunc
+  deleteUserSessions: T.DeleteUserSessionsFunc
+  getSessionByUserEmail: T.GetSessionByUserEmailFunc
+  getAllUserSessions: T.GetAllUserSessionsFunc
+  checkAccessToken: T.CheckAccessTokenFunc
+  findNextActiveAccessToken: T.FindNextActiveAccessTokenFunc
 }
 
 // prettier-ignore
 export const databaseAppSettingsAPI = {
-  test: (data: { v: boolean }) => IPCR.invoke('test', data),
+  test: (v: { v: boolean }) => IPCR.invoke('test', v),
 
   // ** Core Settings
-  getCoreSetting: async (data: GetCoreSetting) => IPCR.invoke(IpcKey.getCoreSetting, data),
-  setCoreSetting: async (data: SetCoreSetting) => IPCR.invoke(IpcKey.setCoreSetting, data),
-  getAllCoreSettings: async () => IPCR.invoke(IpcKey.getAllCoreSettings),
+  getCoreSetting: async (v: T.GetCoreSetting) => IPCR.invoke(dbIpcKey.getCoreSetting, v),
+  setCoreSetting: async (v: T.SetCoreSetting) => IPCR.invoke(dbIpcKey.setCoreSetting, v),
+  getAllCoreSettings: async () => IPCR.invoke(dbIpcKey.getAllCoreSettings),
 
   // ** User Settings
-  getUserSetting: async (data: GetUserSetting) => IPCR.invoke(IpcKey.getUserSetting, data),
-  setUserSetting: async (data: SetUserSetting) => IPCR.invoke(IpcKey.setUserSetting, data),
-  getAllUserSettings: async (data: GetAllUserSettings) => IPCR.invoke(IpcKey.getAllUserSettings, data),
+  getUserSetting: async (v: T.GetUserSetting) => IPCR.invoke(dbIpcKey.getUserSetting, v),
+  setUserSetting: async (v: T.SetUserSetting) => IPCR.invoke(dbIpcKey.setUserSetting, v),
+  getAllUserSettings: async (v: T.GetAllUserSettings) => IPCR.invoke(dbIpcKey.getAllUserSettings, v),
 
   // ** Session
-  getSession: async (data: GetSession) => IPCR.invoke(IpcKey.getSession, data),
-  setSession: async (data: SetSession) => IPCR.invoke(IpcKey.setSession, data),
-  getAllSessions:async (data: GetAllSessions) => IPCR.invoke(IpcKey.getAllSessions, data),
-  checkAccessToken:async (data: CheckAccessToken) => IPCR.invoke(IpcKey.checkAccessToken, data),
+  getSession: async (v: T.GetSession) => IPCR.invoke(dbIpcKey.getSession, v),
+  setSession: async (v: T.SetSession) => IPCR.invoke(dbIpcKey.setSession, v),
+  getAllSessions:async () => IPCR.invoke(dbIpcKey.getAllSessions),
+  getAllUserSessions:async (v: T.GetAllUserSessions) => IPCR.invoke(dbIpcKey.getAllUserSessions, v),
+  getSessionByUserEmail: async (v: T.GetSessionByUserEmail) => IPCR.invoke(dbIpcKey.getSessionByUserEmail, v),
+  deleteUserSessions:async (v: T.DeleteUserSessions) => IPCR.invoke(dbIpcKey.deleteUserSessions, v),
+  checkAccessToken:async (v: T.CheckAccessToken) => IPCR.invoke(dbIpcKey.checkAccessToken, v),
+  findNextActiveAccessToken:async () => IPCR.invoke(dbIpcKey.findNextActiveAccessToken),
 }

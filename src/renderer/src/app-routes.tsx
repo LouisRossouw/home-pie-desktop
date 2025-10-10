@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router'
 import { NoMatch } from './routes/no-match'
 import NoConnectionRoute from './routes/no-connection'
 
-import { MainLayout } from './routes/main-layout'
+import { AppLayout } from './routes/app-layout'
 
 import Login from './routes/login'
 import DebugRoute from './routes/debug'
@@ -45,66 +45,89 @@ function renderRoutes(routes) {
   ))
 }
 
-const routesConfig = [
+const authRoutes = [
   { path: 'login', element: <Login /> },
   { path: 'authorize', element: <AuthorizationRoute /> },
-  { path: 'no-connection', element: <NoConnectionRoute /> },
+  { path: 'no-connection', element: <NoConnectionRoute /> }
+]
+
+const projectRoutes = [
   {
-    path: '/',
-    element: <MainLayout />,
+    path: 'projects',
+    element: <ProjectsRoute />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <ProjectsOverviewRoute /> },
+      { path: 'project-settings', element: <ProjectSettingsRoute /> },
+      { path: 'time-in-progress', element: <TimeInProgressRoute /> },
       {
-        path: 'projects',
-        element: <ProjectsRoute />,
+        path: 'insta-insights',
+        element: <InstaInsightsRoute />,
         children: [
-          { index: true, element: <ProjectsOverviewRoute /> },
-          { path: 'project-settings', element: <ProjectSettingsRoute /> },
-          { path: 'time-in-progress', element: <TimeInProgressRoute /> },
+          { index: true, element: <InstaInsightsOverviewRoute /> },
           {
-            path: 'insta-insights',
-            element: <InstaInsightsRoute />,
-            children: [
-              { index: true, element: <InstaInsightsOverviewRoute /> },
-              {
-                path: ':account',
-                children: [{ path: 'insights', element: <InsightsRoute /> }]
-              }
-            ]
+            path: ':account',
+            children: [{ path: 'insights', element: <InsightsRoute /> }]
           }
         ]
-      },
-      {
-        path: 'my-finances',
-        element: <MyFinancesRoute />,
-        children: [
-          { index: true, element: <MyFinancesOverviewRoute /> },
-          { path: 'my-finances-settings', element: <div>TODO</div> }
-        ]
-      },
-      {
-        path: 'gengen',
-        element: <GenGenRoute />,
-        children: [
-          { index: true, element: <GenGenOverviewRoute /> },
-          { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
-          { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
-        ]
-      },
-      {
-        path: 'ping-ping',
-        element: <PingPingRoute />,
-        children: [{ index: true, element: <PingPingOverviewRoute /> }]
-      },
-      {
-        path: 'smart-home',
-        element: <SmartHomeRoute />,
-        children: [{ index: true, element: <SmartHomeOverviewRoute /> }]
-      },
+      }
+    ]
+  }
+]
 
+const financeRoutes = [
+  {
+    path: 'my-finances',
+    element: <MyFinancesRoute />,
+    children: [
+      { index: true, element: <MyFinancesOverviewRoute /> },
+      { path: 'my-finances-settings', element: <div>TODO</div> }
+    ]
+  }
+]
+
+const smartHomeRoutes = [
+  {
+    path: 'smart-home',
+    element: <SmartHomeRoute />,
+    children: [{ index: true, element: <SmartHomeOverviewRoute /> }]
+  }
+]
+
+const gengenRoutes = [
+  {
+    path: 'gengen',
+    element: <GenGenRoute />,
+    children: [
+      { index: true, element: <GenGenOverviewRoute /> },
+      { path: 'time-in-progress', element: <GenGenTimeInProgressRoute /> },
+      { path: 'gengen-settings', element: <GenGenSettingsRoute /> }
+    ]
+  }
+]
+
+const pingPingRoutes = [
+  {
+    path: 'ping-ping',
+    element: <PingPingRoute />,
+    children: [{ index: true, element: <PingPingOverviewRoute /> }]
+  }
+]
+
+const appRoutes = [
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      ...projectRoutes,
+      ...financeRoutes,
+      ...gengenRoutes,
+      ...pingPingRoutes,
+      ...smartHomeRoutes,
       { path: 'debug', element: <DebugRoute /> },
       { path: 'settings', element: <SettingsRoute /> }
     ]
-  },
-  { path: '*', element: <NoMatch /> }
+  }
 ]
+
+const routesConfig = [...authRoutes, ...appRoutes, { path: '*', element: <NoMatch /> }]

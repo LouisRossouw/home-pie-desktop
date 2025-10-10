@@ -5,6 +5,7 @@ import { OnResize } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
+import { appIpcKey } from '@shared/constants'
 
 export function WindowResizeListener() {
   const { appSettings, updateAppSettings, resetWindow } = useApp()
@@ -50,7 +51,7 @@ export function WindowResizeListener() {
     console.log('ResizeListener mounted.')
 
     return () => {
-      window.api.app.removeListener(handler, 'window-resized')
+      window.api.app.removeListener(handler, appIpcKey.windowResized)
     }
   }
 

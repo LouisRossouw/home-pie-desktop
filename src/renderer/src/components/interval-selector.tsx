@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
 import { Input } from '~/components/ui/input'
+import { useDebounce } from '~/libs/hooks/use-debounce'
 
 export function IntervalSelector({
   currentValue,
@@ -11,11 +13,18 @@ export function IntervalSelector({
 }) {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  function handleIntervalChange(value: any) {
-    const sp = new URLSearchParams(searchParams)
+  const [pendingInterval, setPendingInterval] = useState<string | number>(currentValue)
 
-    sp.set('interval', value)
+  const debouncedRange = useDebounce(pendingInterval, 2000)
+
+  useEffect(() => {
+    const sp = new URLSearchParams(searchParams)
+    sp.set('interval', String(debouncedRange))
     setSearchParams(sp)
+  }, [debouncedRange, searchParams, setSearchParams])
+
+  function handleIntervalChange(value: string) {
+    setPendingInterval(value)
   }
 
   return (

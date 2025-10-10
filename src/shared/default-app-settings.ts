@@ -1,12 +1,13 @@
 // TODO; Move this file somewhere else ?
 
+import { generatedUserId } from './constants'
 import { CoreSetting, UserSetting } from './types'
 
 const timestamp = Math.floor(Date.now() / 1000)
 
 // prettier-ignore
 export const defaultCoreSettings = [
-  {label: 'Active account ID',slug: 'active-account-id',key: 'activeAccountId',value: 0},
+  {label: 'Active account ID',slug: 'active-account-id',key: 'activeAccountId',value: generatedUserId},
   {label: 'App start time',slug: 'app-start-time',key: 'appStartTime',value: timestamp},
   {label: 'App end time',slug: 'app-end-time',key: 'appEndTime',value: ''},
   { label: 'Debug', slug: 'debug', key: 'debug', value: false },

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
-import { getBaseURL } from '@shared/api'
-import { getOAuthClients } from '@shared/auth'
-import { ApiTest, CoreSetting, Setting } from '@shared/types'
+import { ApiTest, Setting } from '@shared/types'
 import { settingKeys } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
@@ -13,18 +11,19 @@ import { useDotSquadTest } from '~/libs/context/dot-squad'
 import { Button } from '~/components/ui/button'
 import { ThemeSelector } from '~/components/theme-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
+import { useAppOverlay } from '~/libs/context/overlay'
+import { appIpcKey, getApiBaseURL, oAuthClients } from '@shared/constants'
 
 const MODE = import.meta.env.MODE
 const isDev = import.meta.env.DEV
-
-const baseURL = getBaseURL()
-const authClients = getOAuthClients()
 
 export function Debug() {
   // TODO; Only allow if user isStaff & isAdmin
   const { navigateTo } = useNav()
   const { handleUpdateDotSquad } = useDotSquadTest()
   const { appSettings, getAppSetting, updateAppSettings, getAllAppSettings } = useApp()
+
+  const { showOverlay, closeOverlay } = useAppOverlay()
 
   const [output, setOutput] = useState<any>('')
   const [listenersCount, setListenersCount] = useState<Record<string, string>>({})
@@ -54,11 +53,11 @@ export function Debug() {
   }, [])
 
   async function getListenersCount() {
-    const dotSquadLS = await window.api.app.listenerCount('dot-squad')
-    const routerLS = await window.api.app.listenerCount('navigate-to')
-    const resizeLS = await window.api.app.listenerCount('window-resized')
-    const processLS = await window.api.app.listenerCount('emit-process-activity')
-    const authLS = await window.api.app.listenerCount('auth:code')
+    const dotSquadLS = await window.api.app.listenerCount(appIpcKey.dotSquad)
+    const routerLS = await window.api.app.listenerCount(appIpcKey.navigateTo)
+    const resizeLS = await window.api.app.listenerCount(appIpcKey.windowResized)
+    const processLS = await window.api.app.listenerCount(appIpcKey.emitProcessActivity)
+    const authLS = await window.api.app.listenerCount(appIpcKey.authCode)
 
     setListenersCount({ dotSquadLS, routerLS, resizeLS, processLS, authLS })
   }
@@ -84,8 +83,8 @@ export function Debug() {
   const TokenExpires = 0 // TODO
   const connected = undefined // TODO
 
-  const PGCID = authClients?.GOOGLE_CLIENT_ID.length
-  const PMCID = authClients?.MANUAL_CLIENT_ID.length
+  const PGCID = oAuthClients?.GOOGLE_CLIENT_ID.length
+  const PMCID = oAuthClients?.MANUAL_CLIENT_ID.length
 
   const isDebug = appSettings?.debug
 
@@ -135,8 +134,8 @@ export function Debug() {
               <InfoRow label={`${isStaff ? '✔️' : '✖️'} isStaff`} value={String(isStaff)} />
               <InfoRow label={`${isDev ? '🌖' : '🌎'} appEnv`} value={MODE || 'N/A'} />
               <InfoRow
-                label={`${baseURL === 'http://127.0.0.1:8000' ? '🌖' : '🌎'} baseURL`}
-                value={baseURL || 'N/A'}
+                label={`${getApiBaseURL === 'http://127.0.0.1:8000' ? '🌖' : '🌎'} API-baseURL`}
+                value={getApiBaseURL || 'N/A'}
               />
               <InfoRow
                 label={`${PGCID === 40 ? '✔️' : '✖️'} PROD_GOOGLE_CLIENT_ID`}
@@ -189,6 +188,22 @@ export function Debug() {
             <label>DotSquad:</label>
             <Button onClick={() => handleUpdateDotSquad('notAuth')}>Test dotSquad</Button>
           </div>
+
+          <div className="grid gap-2 border-t py-4">
+            <label>Miscellaneous:</label>
+            <Button
+              onClick={() => {
+                showOverlay({
+                  disableClose: false,
+                  animationType: 'fade',
+                  mode: 'SWITCH-ACCOUNT'
+                })
+              }}
+            >
+              showOverlay
+            </Button>
+          </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Route Nav:</label>
             <Button onClick={() => navigateTo('/no-connection')}>no-connection</Button>
@@ -247,6 +262,22 @@ export function Debug() {
               setAuth
             </Button>
           </div>
+
+          <div className="grid gap-2 border-t py-4">
+            <label>App UI:</label>
+            <Button
+              onClick={() => {
+                showOverlay({
+                  disableClose: false,
+                  animationType: 'fade',
+                  mode: 'SWITCH-ACCOUNT'
+                })
+              }}
+            >
+              showOverlay
+            </Button>
+          </div>
+
           <div className="grid gap-2 border-t py-4">
             <label>Theme:</label>
             <ThemeSelector handleAddNewChanges={() => console.log('TODO')} />

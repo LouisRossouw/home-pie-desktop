@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { IpcRendererEvent } from 'electron'
 import { useMrPingPing } from '~/libs/context/mr-ping-ping'
+import { appIpcKey } from '@shared/constants'
 
 export function ProcessListener() {
   const mrPingPing = useMrPingPing()
@@ -27,7 +28,7 @@ export function ProcessListener() {
     console.log('EmitProcessListener mounted.')
 
     return () => {
-      window.api.app.removeListener(handler, 'emit-process-activity')
+      window.api.app.removeListener(handler, appIpcKey.emitProcessActivity)
     }
   }
 

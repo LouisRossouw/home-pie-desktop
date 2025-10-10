@@ -6,7 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import { startPolling } from './src/poll'
 import { registerIpcHandlers } from './src/ipc'
 import { currentRoute, handleDeepLink, suppressResizeEvent } from './src/app'
-import { defaultProtocol } from '@shared/constants'
+import { appIpcKey, defaultProtocol } from '@shared/constants'
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
@@ -42,20 +42,20 @@ function createWindow(): void {
     if (suppressResizeEvent) return
     if (!ignoreRoutes.includes(currentRoute)) {
       const size = mainWindow?.getBounds()
-      mainWindow?.webContents.send('window-resized', size)
+      mainWindow?.webContents.send(appIpcKey.windowResized, size)
     }
   })
 
   // Update the renderer that the app has moved, which will reset the appWindowMode.
   mainWindow.on('moved', () => {
     if (!ignoreRoutes.includes(currentRoute)) {
-      mainWindow?.webContents.send('window-resized', { hasMoved: true })
+      mainWindow?.webContents.send(appIpcKey.windowResized, { hasMoved: true })
     }
   })
 
   // mainWindow.on('move', () => {
   //   if (!ignoreRoutes.includes(currentRoute)) {
-  //     mainWindow?.webContents.send('window-resized', { isMoving: true })
+  //     mainWindow?.webContents.send(appIpcKey.windowResized, { isMoving: true })
   //   }
   // })
 
