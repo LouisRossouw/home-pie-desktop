@@ -1,30 +1,28 @@
 import { db, logActivity } from '.'
+
+import type * as T from '@shared/types'
+
 import { SQL } from '@main/src/sql'
 import { decryptValue, encryptValue } from '@main/src/encrypt'
-import { SessionsSQL } from '@shared/types'
 
-async function getSession({ userId, key }: { userId: number | string; key: string }) {
-  logActivity(`getSession user:${userId} key:${key}`)
-  const v = db.prepare(SQL.getSessionSQL).get(userId.toString(), key)?.value
-  return v ? JSON.parse(decryptValue(v)) : undefined
+async function getSession(v: T.GetSession): T.ResGetSession {
+  logActivity(`getSession user:${v.userId} key:${v.key}`)
+  const value = db.prepare(SQL.getSessionSQL).get(v.userId.toString(), v.key)?.value
+  return value ? JSON.parse(decryptValue(value)) : undefined
 }
 
-async function setSession({
-  userId,
-  key,
-  value
-}: {
-  userId: number | string
-  key: string
-  value?: string | number | boolean | object
-}) {
-  logActivity(`setSession user:${userId} key:${key} value:${value}`)
-  db.prepare(SQL.setSessionSQL).run(userId.toString(), key, encryptValue(JSON.stringify(value)))
+async function setSession(v: T.SetSession) {
+  logActivity(`setSession user:${v.userId} key:${v.key} value:${v.value}`)
+  db.prepare(SQL.setSessionSQL).run(
+    v.userId.toString(),
+    v.key,
+    encryptValue(JSON.stringify(v.value))
+  )
 }
 
-async function getAllUserSessions({ userId }: { userId: number | string }) {
-  logActivity(`getAllUserSessions for user:${userId}`)
-  const rows = db.prepare(SQL.getAllUserSessionsSQL).all(userId.toString())
+async function getAllUserSessions(v: T.GetAllUserSessions): T.ResGetAllUserSessions {
+  logActivity(`getAllUserSessions for user:${v.userId}`)
+  const rows = db.prepare(SQL.getAllUserSessionsSQL).all(v.userId.toString())
   const session: Record<string, any> = {}
 
   for (const row of rows) {
@@ -33,49 +31,43 @@ async function getAllUserSessions({ userId }: { userId: number | string }) {
   return session
 }
 
-async function getAllSessions() {
+async function getAllSessions(): T.ResgetAllSessions {
   logActivity(`getAllSessions`)
   const rows = db.prepare(SQL.getAllSessionsSQL).all()
 
-  const sessions: SessionsSQL[] = []
+  const sessions: T.SessionsSQL[] = []
   for (const row of rows) {
     sessions.push({ userId: row.userId, key: row.key, value: JSON.parse(decryptValue(row.value)) })
   }
   return sessions
 }
 
-async function getSessionByUserEmail({ userEmail }: { userEmail: string }) {
-  logActivity(`getSessionByUserEmail userEmail: ${userEmail}`)
+async function getSessionByUserEmail(v: T.GetSessionByUserEmail): T.ResGetSessionByUserEmail {
+  logActivity(`getSessionByUserEmail userEmail: ${v.userEmail}`)
   const encryptedRows = db.prepare(SQL.getSessionByUserEmailSQL).all()
 
-  const rows: SessionsSQL[] = []
+  const rows: T.SessionsSQL[] = []
 
   for (const r of encryptedRows) {
     rows.push({ userId: r.userId, key: r.key, value: JSON.parse(decryptValue(r.value)) })
   }
 
-  const maybeRow = rows.filter((item) => item?.value === userEmail)[0]
+  const maybeRow = rows.filter((item) => item?.value === v.userEmail)[0]
 
   return maybeRow
 }
 
-async function deleteSession({ userId, key }: { userId: number | string; key: string }) {
-  logActivity(`deleteSession user:${userId} key:${key}`)
-  db.prepare(SQL.deleteSessionSQL).run(userId.toString(), key)
-}
-
-async function deleteUserSessions({ userId }: { userId: number | string }) {
-  logActivity(`deleteUserSessions user:${userId}`)
-  db.prepare(SQL.deleteUserSessionsSQL).run(userId.toString())
+async function deleteUserSessions(v: T.DeleteUserSessions): T.ResDeleteUserSessions {
+  logActivity(`deleteUserSessions user:${v.userId}`)
+  db.prepare(SQL.deleteUserSessionsSQL).run(v.userId.toString())
   return true
 }
 
 export {
   getSession,
   setSession,
-  getAllUserSessions,
   getAllSessions,
-  deleteSession,
+  getAllUserSessions,
   getSessionByUserEmail,
   deleteUserSessions
 }

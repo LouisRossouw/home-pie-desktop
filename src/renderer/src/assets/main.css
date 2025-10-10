@@ -125,19 +125,21 @@
 }
 
 body {
+  overflow-y: hidden;
+
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgba(0,0,0,0);
+
 }
 
-/* * {
+* {
   box-sizing: border-box;
   font-weight:lighter;
-
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
- */
+
 
 .table-container {
   border: 1px solid lightgray;

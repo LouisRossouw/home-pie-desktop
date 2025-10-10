@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron'
 import { mainWindow } from '@main/index'
 import { apiTest } from '../api/api-test'
+import { appIpcKey } from '@shared/constants'
 
 export function testIpcHandlers() {
   ipcMain.handle('api-test', async (_event) => {
@@ -8,6 +9,6 @@ export function testIpcHandlers() {
   })
 
   ipcMain.handle('api-logout-test', async (_event) => {
-    return mainWindow?.webContents.send('navigate-to', { url: '/login?forceLogout=true' })
+    return mainWindow?.webContents.send(appIpcKey.navigateTo, { url: '/login?forceLogout=true' })
   })
 }

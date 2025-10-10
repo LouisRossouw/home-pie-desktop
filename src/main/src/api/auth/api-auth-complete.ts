@@ -2,12 +2,13 @@ import { updateDotSquadActivity } from '@main/src/app'
 import { getApiBaseURL } from '@shared/constants'
 
 import { paths } from '@shared/lib/generated/api'
+import { ApiCompleteAuth } from '@shared/types'
 
 // Completes the auth process; calls the API with the loginKey, and the API
 // Returns the correct loginKey with the accociated user, and returns the
 // access_token and users profile.
 
-export async function apiCompleteAuthentication({ loginKey }: { loginKey: string }) {
+export async function apiCompleteAuthentication({ loginKey }: ApiCompleteAuth) {
   const { default: createClient } = await import('openapi-fetch')
 
   const apiClient = createClient<paths>({

@@ -3,7 +3,7 @@ import { paths } from '@shared/lib/generated/api'
 
 import { mainWindow } from '@main/.'
 import { getAllSessions, getSession, setSession } from './db/session'
-import { generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
+import { appIpcKey, generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
 import { getCoreSetting } from './db/core-settings'
 
 export async function requireSession(requireAuth: boolean = true) {
@@ -54,7 +54,7 @@ export async function checkAccessToken({
   }
 
   console.log('* Expired, getting refresh token')
-  const refreshToken = await getSession({ userId, key: 'refreshToken' })
+  const refreshToken = (await getSession({ userId, key: 'refreshToken' })) ?? ''
   const newAccessToken = await checkRefreshToken({ userId, refreshToken })
 
   if (newAccessToken) {
@@ -103,7 +103,7 @@ export async function findNextActiveAccessToken(): Promise<
         return { userId: id, accessToken }
       }
 
-      const refreshToken = await getSession({ userId: id, key: 'refreshToken' })
+      const refreshToken = (await getSession({ userId: id, key: 'refreshToken' })) ?? ''
       const maybeAccessToken = await checkRefreshToken({ userId: id, refreshToken })
 
       if (maybeAccessToken) {
@@ -169,7 +169,7 @@ export async function refreshTokenFunction({
   if (!response.ok) {
     // TODO; Dont force logout if other active accounts exists, instead switch to them?
 
-    return mainWindow?.webContents.send('navigate-to', { url: '/login?forceLogout=true' })
+    return mainWindow?.webContents.send(appIpcKey.navigateTo, { url: '/login?forceLogout=true' })
   } else {
     return await response.json()
   }
