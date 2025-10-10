@@ -820,7 +820,7 @@ export interface operations {
                 /** @description Interval units */
                 interval?: number;
                 /** @description Time range for data */
-                range?: "day" | "hour" | "month" | "week";
+                range?: "day" | "hour" | "month" | "week" | "year";
             };
             header?: never;
             path: {

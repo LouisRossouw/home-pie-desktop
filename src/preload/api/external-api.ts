@@ -23,6 +23,7 @@ export type ExternalAPI = {
   apiMrPingPingAppsConfig: () => Promise<any>
   apiMrPingPingAppsStatus: () => Promise<any>
   apiMrPingPingAppStatus: (data: {appName: string}) => Promise<{ok: boolean, data: unknown}>
+  apiMrPingPingAppData: (data: {appName: string, range: string, interval: number}) => Promise<{ok: boolean, data: unknown}>
 
   // GenGen
   apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
@@ -49,6 +50,7 @@ export const externalAPI = {
   apiMrPingPingAppsConfig: async () => IPCR.invoke('api-mr-ping-ping-apps-config'),
   apiMrPingPingAppsStatus: async () => IPCR.invoke('api-mr-ping-ping-apps-status'),
   apiMrPingPingAppStatus: async (data: {appName: string}) => IPCR.invoke('api-mr-ping-ping-app-status', data),
+  apiMrPingPingAppData: async (data: {appName: string, range: string, interval: number}) => IPCR.invoke('api-mr-ping-ping-apps-data', data),
 
   // GenGen
   apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data),

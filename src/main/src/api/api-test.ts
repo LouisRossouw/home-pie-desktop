@@ -1,6 +1,8 @@
 import { requireSession } from '@main/src/session'
 import { updateDotSquadActivity } from '@main/src/app'
 
+let ledStatus = false
+
 export async function apiTest() {
   const apiClient = await requireSession()
 

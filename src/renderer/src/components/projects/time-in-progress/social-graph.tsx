@@ -7,7 +7,7 @@ import type { Social } from '@shared/types'
 
 import { Label } from '~/components/ui/label'
 import { PingSVG } from '~/components/svg-icons'
-import LineChartComponent from '~/components/composed-chart'
+import LineChartComponent from '~/components/projects/time-in-progress/composed-chart'
 
 import { SocialIndicator, SocialStatsCard } from './social-stats-card'
 import { AddHistoricalDataDialog } from './add-historical-data-dialog'

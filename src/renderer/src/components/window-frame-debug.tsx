@@ -15,15 +15,30 @@ import { AppVersion } from './app-version'
 import { useMrPingPing } from '~/libs/context/mr-ping-ping'
 
 import { MrPingPingIndicator } from './mr-ping-ping'
+import { TemperatureHumidity } from './temperature-humidity'
+import { useQuery } from '@tanstack/react-query'
+import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+
+const tenMin = 1000 * 60 * 10
 
 export function WindowFrameDebug() {
   const countToDebug = useRef(0)
   const { pathname } = useLocation()
   const { navigateTo } = useNav()
   const { status } = useMrPingPing()
+  const { getAppStatus } = useMrPingPingService()
 
   const { userSettings, appSettings, updateAppSettings, updateUserSettings, startRenderTime } =
     useApp()
+
+  const { data: tempData, isPending } = useQuery({
+    queryKey: ['temperature-humidity'],
+    queryFn: async () => {
+      return await getAppStatus({ appNames: ['temperature_humidity'] })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
+  })
 
   function handleDebugRedirect() {
     countToDebug.current += 1
@@ -77,6 +92,7 @@ export function WindowFrameDebug() {
         </div>
         <div className="flex justify-center items-center gap-4"></div>
         <div className="flex justify-end items-center gap-4">
+          <TemperatureHumidity tempData={tempData} isLoading={isPending} />
           <MrPingPingIndicator
             resTime={status?.res_time}
             lastPingedRaw={status?.last_pinged}
