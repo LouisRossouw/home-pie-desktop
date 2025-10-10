@@ -23,7 +23,7 @@ import { PingSVG } from '~/components/svg-icons'
 const fiveMin = 1000 * 60 * 5
 const tenMin = 1000 * 60 * 10
 
-export function TimeInProgress() {
+export function TimeInProgressLayout() {
   const [searchParams] = useSearchParams()
   const { getAppStatus } = useMrPingPingService()
 

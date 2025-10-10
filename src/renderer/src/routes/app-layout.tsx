@@ -5,11 +5,11 @@ import { SidebarProvider } from '~/components/ui/sidebar'
 import { AppSidebar } from '~/components/app-sidebar'
 import { Star } from 'lucide-react'
 
-export function MainLayout() {
+export function AppLayout() {
   const [sideBarOpen, setSideBarOpen] = useState(false)
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-background">
+    <div className="h-[calc(100vh-68px)] bg-background">
       <SidebarProvider
         style={{
           // @ts-ignore

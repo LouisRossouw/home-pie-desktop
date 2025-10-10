@@ -1,5 +1,6 @@
 import { version } from '../../package.json'
-import { getBaseURL } from './api'
+import { getOAuthClients } from './auth'
+import { getRandomInteger } from './utils'
 
 const devApiBaseUrl = import.meta.env.VITE_DEV_API_BASEURL
 const prodApiBaseUrl = import.meta.env.VITE_PROD_API_BASEURL
@@ -23,7 +24,7 @@ const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
 const appEnvironment = import.meta.env.MODE // development || production
 
-export enum IpcKey {
+export enum dbIpcKey {
   // ** Core Settings
   getCoreSetting = 'get-setting',
   setCoreSetting = 'set-setting',
@@ -32,22 +33,47 @@ export enum IpcKey {
   // ** User Settings
   getUserSetting = 'get-user-setting',
   setUserSetting = 'set-user-setting',
+  deleteUserSettings = 'delete-user-settings',
   getAllUserSettings = 'get-all-user-settings',
 
   // ** Session
   getSession = 'get-session',
   setSession = 'set-session',
   getAllSessions = 'get-all-sessions',
+  deleteUserSessions = 'delete-user-sessions',
+  getAllUserSessions = 'get-all-user-sessions',
+  getSessionByUserEmail = 'get-session-by-user-email',
+
   checkAccessToken = 'check-access-token',
+  findNextActiveAccessToken = 'find-next-active-access-token',
 
   // ** Auth
   apiSignIn = 'api-sign-in'
 }
 
+export enum appIpcKey {
+  loadApp = 'load-app',
+  resizeApp = 'resize-app',
+  maybeFastLoad = 'maybe-fast-load',
+  loaderProgress = 'loader-progress',
+  windowControl = 'window-control',
+  windowResized = 'window-resized',
+  navigateTo = 'navigate-to',
+  openDirectory = 'open-directory',
+  emitProcessActivity = 'emit-process-activity',
+  openBrowserToUrl = 'open-browser-to-url',
+  completeAuthApp = 'complete-auth-app',
+  dotSquad = 'dot-squad',
+  authCode = 'auth:code'
+}
+
+export enum navIpcKey {
+  syncRoute = 'sync-route'
+}
+
 export enum SessionKey {
   accessToken = 'accessToken'
 }
-
 export const getAppVersion = () => version
 export const getAppPlatform = () => process.platform
 export const isMac = () => getAppPlatform() === 'darwin'
@@ -55,6 +81,9 @@ export const isLinux = () => getAppPlatform() === 'linux'
 export const isWindows = () => getAppPlatform() === 'win32'
 export const isDevelopment = () => appEnvironment === 'development'
 // export const getAppBuildDate = () => new Date(import.meta.env.VITE_BUILD_DATE ?? '').toLocaleDateString(); // prettier-ignore
+export const generatedUserId = getRandomInteger(1, 1000)
+
+export const oAuthClients = getOAuthClients()
 
 export const DEBOUNCE_MILLIS = 100
 
@@ -65,6 +94,8 @@ export const getApiBaseURL = isDev ? devApiBaseUrl : prodApiBaseUrl // API
 export const getWebBaseURL = isDev ? devWebBaseUrl : prodWebBaseUrl // The public-facing site
 export const getAppBaseURL = isDev ? devAppBaseUrl : prodAppBaseUrl // App site, docs, auth, maybe the actual app too.
 export const getOauthRedirectUrl = `${getAppBaseURL}/oauth/redirect`; // prettier-ignore
+export const getWebSupportUrl = `${getAppBaseURL}/support`
+export const getWebDashboardUrl = `${getAppBaseURL}/dashboard`
 
 export const appOriginName = `${getAppName.toLowerCase()}-desktop-app`
 export const defaultProtocol = `homepie${isDevelopment() ? '-dev' : ''}`

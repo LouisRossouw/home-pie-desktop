@@ -35,7 +35,9 @@ const userSettingsInit: UseUserSettings = {
   setUserSettings: () => {},
   getUserSetting: async () => '',
   updateUserSettings: async () => false,
-  getAllUserSettings: async () => ({}) as UserSettings
+  getAllUserSettings: async () => ({}) as UserSettings,
+  applyUserSettingsToApp: async () => false,
+  deleteUserSettings: async () => false
 }
 
 type AppExtensions = UseAppWindow & UseAppSettings & UseUserSettings
@@ -57,7 +59,7 @@ export const AppContext = createContext<AppContextType>({
 
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
   const coreSettings = useAppSettings()
-  const userSettings = useUserSettings({ userId: coreSettings.appSettings?.activeAccountId ?? '0' })
+  const userSettings = useUserSettings({ userId: coreSettings.appSettings?.activeAccountId })
   const appWindow = useAppWindow(coreSettings)
 
   const startRenderTime = useRef(null)
