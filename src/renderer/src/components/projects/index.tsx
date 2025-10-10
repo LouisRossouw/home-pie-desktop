@@ -18,7 +18,7 @@ import { OutletPanel } from './outlet-panel'
 import { ProjectsPanel } from './projects-panel'
 import { projectsAppRoutes } from './projects-routes-list'
 
-export default function ProjectsRoute() {
+export default function ProjectsLayout() {
   const { navigateTo } = useNav()
   const { pathname } = useLocation()
 

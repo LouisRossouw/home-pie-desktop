@@ -46,6 +46,8 @@ export function WindowFrameDebug() {
 
   const duration = calculateRenderTime(startRenderTime.current)
 
+  const startRoute = userSettings?.startRoute as string | undefined
+
   return (
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
       <div className="grid grid-cols-3 w-full">
@@ -61,9 +63,15 @@ export function WindowFrameDebug() {
           >
             <Star size={18} className={cn(isStartRoute && 'text-accent')} />
           </Button>
-          <Button variant={'ghost'} className="w-6 h-6" onClick={() => navigateTo('/')}>
-            <House size={18} />
-          </Button>
+          {startRoute && (
+            <Button
+              variant={'ghost'}
+              className="w-6 h-6"
+              onClick={() => navigateTo(startRoute ?? '/')}
+            >
+              <House size={18} />
+            </Button>
+          )}
 
           <p className="text-xs">{pathname}</p>
         </div>

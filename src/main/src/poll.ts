@@ -1,3 +1,4 @@
+import { appIpcKey } from '@shared/constants'
 import { mainWindow } from '..'
 import { currentRoute, updateDotSquadActivity } from './app'
 
@@ -81,7 +82,7 @@ function emitEventToRender(event: string) {
     return updateDotSquadActivity({ activity: 'singleBlink' })
   }
   if (event === 'is-check-mr-ping-ping-status') {
-    return mainWindow?.webContents.send('emit-process-activity', { activity: event })
+    return mainWindow?.webContents.send(appIpcKey.emitProcessActivity, { activity: event })
   }
 
   return

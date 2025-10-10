@@ -2,9 +2,7 @@ import { app, BrowserWindow, screen, shell } from 'electron'
 import { differenceInHours } from 'date-fns'
 
 import { mainWindow } from '@main/.'
-import { getBaseURL } from '@shared/api'
 import { type DotSquadAnims } from '@shared/dot-squad'
-import { ResizeApp, WindowControl } from '@shared/types'
 import { defaultCoreSettings, defaultUserSettings, settingKeys } from '@shared/default-app-settings'
 
 import { readAppDataJson, saveTimestamps } from './utils'
@@ -12,7 +10,17 @@ import { readAppDataJson, saveTimestamps } from './utils'
 import { initDatabase, dbExists } from './db'
 import { setCoreSetting } from './db/core-settings'
 import { setUserSetting } from './db/user-settings'
-import { appOriginName, getAppBaseURL } from '@shared/constants'
+
+import { LoadApp, OpenBrowserToUrl, OpenDirectory, ResizeApp, WindowControl } from '@shared/types'
+
+import {
+  appIpcKey,
+  appOriginName,
+  generatedUserId,
+  getApiBaseURL,
+  getAppBaseURL,
+  getWebBaseURL
+} from '@shared/constants'
 import { apiGetLoginKey } from './api/auth/api-auth-login-key'
 
 const envMode = import.meta.env.MODE
@@ -25,10 +33,7 @@ export async function syncRoute(route: string) {
   currentRoute = route
 }
 
-// Not sure about this, but maybe we can check if the app can skip the loadApp func.
 export async function maybeFastLoad() {
-  // TODO; Maybe add more things here, token expiry, etc?
-
   const now = new Date()
 
   const appData = readAppDataJson()
@@ -36,13 +41,12 @@ export async function maybeFastLoad() {
 
   const lastOpened = maybeAppEndTime ? differenceInHours(now, new Date(maybeAppEndTime)) : undefined
   console.log('lastOpened:', lastOpened ? `${lastOpened} hour(s) ago` : '..First time!')
-
   const skipSplash = lastOpened ? lastOpened < 8 : lastOpened === 0 // TODO; Make it 12, or based on if it is a new day?
 
   return { skipSplash, skipLoader: dbExists }
 }
 
-export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
+export async function loadApp({ fastLoad }: LoadApp) {
   let ms = fastLoad ? 0 : 2000
   await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms })
 
@@ -62,7 +66,7 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
     })
 
     defaultUserSettings.forEach(async ({ key, value }) => {
-      setUserSetting({ userId: 0, key, value })
+      setUserSetting({ userId: generatedUserId, key, value })
       await updateOnLoaderProgress({
         msg: `Adding default user setting:', ${key} - ${value}`,
         enableDelay: false
@@ -76,7 +80,9 @@ export async function loadApp({ fastLoad }: { fastLoad: boolean }) {
 
   await updateOnLoaderProgress({ msg: `ENV: ${envMode}`, ms })
   await updateOnLoaderProgress({ msg: `dbExists: ${dbExists}`, ms })
-  await updateOnLoaderProgress({ msg: `BaseURL: ${getBaseURL()}`, ms })
+  await updateOnLoaderProgress({ msg: `API-BaseURL: ${getApiBaseURL}`, ms })
+  await updateOnLoaderProgress({ msg: `APP-BaseURL: ${getAppBaseURL}`, ms })
+  await updateOnLoaderProgress({ msg: `WEB-BaseURL: ${getWebBaseURL}`, ms })
   await updateOnLoaderProgress({ msg: `UserPath: ${app.getPath('userData')}`, ms })
 
   updateAppStartTime()
@@ -153,7 +159,7 @@ export async function updateOnLoaderProgress({
 // Updates the dot squad to play an animation pattern as a "notification".
 export async function updateDotSquadActivity({ activity }: { activity: DotSquadAnims }) {
   console.log('Sending dot squad notification activity -', activity)
-  mainWindow?.webContents.send('dot-squad', { activity })
+  mainWindow?.webContents.send(appIpcKey.dotSquad, { activity })
 }
 
 async function updateAppStartTime() {
@@ -168,7 +174,7 @@ async function updateAppCloseTime() {
   saveTimestamps({ appEndTime: now })
 }
 
-export async function openDirectory({ path }: { path: string }) {
+export async function openDirectory({ path }: OpenDirectory) {
   try {
     const result = await shell.openPath(path)
 
@@ -189,13 +195,13 @@ export async function openDirectory({ path }: { path: string }) {
 // We could poll to check if the loginKey has been paired if true the api will give this app
 // the code to convert into access_tokens
 
-export async function authorizeUserInDefaultBrowser() {
+export async function authorizeUserInDefaultBrowser({ addAccount }: { addAccount?: boolean }) {
   // Call auth/login-key, to generate a loginKey
   const maybeLoginKey = await apiGetLoginKey()
 
   if (maybeLoginKey) {
     setCoreSetting({ key: 'loginKey', value: maybeLoginKey })
-    const authUrl = `${getAppBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}}&origin=${appOriginName}`
+    const authUrl = `${getAppBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}}&origin=${appOriginName}${addAccount ? '&addAccount=true' : ''}`
     return await shell.openExternal(authUrl)
   }
 
@@ -207,6 +213,11 @@ export function handleDeepLink(urlStr: string) {
   const maybeIntent = urlObj.searchParams.get('intent')
 
   if (maybeIntent) {
-    mainWindow?.webContents.send('auth:code', { code: maybeIntent })
+    mainWindow?.webContents.send(appIpcKey.authCode, { code: maybeIntent })
   }
+}
+
+export async function openBrowserToUrl({ url }: OpenBrowserToUrl) {
+  if (!url) return // TODO; Return an error or inform user something went wrong.
+  await shell.openExternal(url)
 }
