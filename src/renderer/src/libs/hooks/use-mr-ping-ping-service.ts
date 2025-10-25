@@ -1,5 +1,5 @@
-import { ApiMrPingPingStatus } from '@shared/types'
 import { useState } from 'react'
+import { ApiMrPingPingStatus } from '@shared/types'
 
 export function useMrPingPingService() {
   const [status, setStatus] = useState<ApiMrPingPingStatus | undefined>(undefined)
