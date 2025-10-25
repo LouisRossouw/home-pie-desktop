@@ -1,38 +1,25 @@
+import { useNavigate } from 'react-router'
 import { format } from 'date-fns'
-import { Droplet, Thermometer } from 'lucide-react'
-import { Button } from './ui/button'
+import { ArrowDown, ArrowRightLeft, ArrowUp, Droplet, Thermometer } from 'lucide-react'
 import { TooltipInfo } from './tooltip-info'
 import { PingSVG, SpinSVG } from './svg-icons'
-import { useNavigate } from 'react-router'
-import { useMemo } from 'react'
+import { Button } from './ui/button'
 
 export function TemperatureHumidity({
-  tempData,
+  label,
+  data,
   isLoading
 }: {
-  tempData?: any[]
+  label?: string
+  data?: any
   isLoading: boolean
 }) {
   const navigateTo = useNavigate()
   if (isLoading) return <SpinSVG />
 
-  const tempHumidity = useMemo(() => {
-    if (!tempData) return undefined
+  const formattedPinged = data?.date_time ? format(data?.date_time, 'yyyy-MM-dd HH:mm') : ''
 
-    const item = tempData[0]
-    const tempEndpoint = item.endpoints_res.find((e: any) => e.endpoint === 'temperature')
-    const humidityEndpoint = item.endpoints_res.find((e: any) => e.endpoint === 'humidity')
-
-    return {
-      temperature: tempEndpoint?.response?.data?.temperature,
-      humidity: humidityEndpoint?.response?.data?.humidity,
-      date_time: item.date_time
-    }
-  }, [tempData])
-
-  const formattedPinged = tempHumidity?.date_time
-    ? format(tempHumidity?.date_time, 'yyyy-MM-dd HH:mm')
-    : ''
+  const isHot = data?.temperature >= 35
 
   return (
     <TooltipInfo
@@ -40,36 +27,56 @@ export function TemperatureHumidity({
       children={
         <Button
           size={'sm'}
-          className="h-6"
+          className="h-6 gap-0"
           variant={'ghost'}
           onClick={() => navigateTo('/smart-home')}
         >
+          <p className="text-xs">{label}</p>
           <PingSVG
-            bgColor={undefined}
+            bgColor={isHot ? 'bg-orange-500' : undefined}
             toPing={false}
             children={
               <Thermometer
-                size={14}
-                // color={iconColor}
+                size={12}
+                color={isHot ? 'orange' : undefined}
                 // className={}
               />
             }
           />
-          <p className="text-xs">{tempHumidity?.temperature?.toFixed(1)} °C</p>
+          <p className="text-xs">{data?.temperature?.toFixed(1)} °C</p>
+          <TrendIndicator trend={data?.temperatureTrend} />
+          /
           <PingSVG
             bgColor={undefined}
             toPing={false}
             children={
               <Droplet
-                size={14}
+                size={12}
                 // color={iconColor}
                 // className={}
               />
             }
           />
-          <p className="text-xs">{tempHumidity?.humidity?.toFixed(0)} %</p>
+          <p className="text-xs">{data?.humidity?.toFixed(0)} %</p>
+          <TrendIndicator trend={data?.humidityTrend} />
         </Button>
       }
     />
+  )
+}
+
+function TrendIndicator({
+  trend,
+  className
+}: {
+  trend: 'up' | 'down' | 'stable'
+  className?: string
+}) {
+  return (
+    <span className={className}>
+      {trend === 'up' && <ArrowUp color="lime" size={12} />}
+      {trend === 'down' && <ArrowDown color="red" size={12} />}
+      {trend === 'stable' && <ArrowRightLeft color="yellow" size={12} />}
+    </span>
   )
 }
