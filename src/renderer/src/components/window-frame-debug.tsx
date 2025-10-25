@@ -1,7 +1,7 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useLocation } from 'react-router'
 
-import { Bug, House, Star } from 'lucide-react'
+import { Bug, Diff, House, Infinity, Star } from 'lucide-react'
 
 import { settingKeys } from '@shared/default-app-settings'
 
@@ -18,6 +18,7 @@ import { MrPingPingIndicator } from './mr-ping-ping'
 import { TemperatureHumidity } from './temperature-humidity'
 import { useQuery } from '@tanstack/react-query'
 import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
 
 const tenMin = 1000 * 60 * 10
 
@@ -26,19 +27,9 @@ export function WindowFrameDebug() {
   const { pathname } = useLocation()
   const { navigateTo } = useNav()
   const { status } = useMrPingPing()
-  const { getAppStatus } = useMrPingPingService()
 
   const { userSettings, appSettings, updateAppSettings, updateUserSettings, startRenderTime } =
     useApp()
-
-  const { data: tempData, isPending } = useQuery({
-    queryKey: ['temperature-humidity'],
-    queryFn: async () => {
-      return await getAppStatus({ appNames: ['temperature_humidity'] })
-    },
-    refetchInterval: tenMin,
-    staleTime: tenMin
-  })
 
   function handleDebugRedirect() {
     countToDebug.current += 1
@@ -65,8 +56,8 @@ export function WindowFrameDebug() {
 
   return (
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
-      <div className="grid grid-cols-3 w-full">
-        <div className="flex gap-4 justify-start items-center">
+      <div className="grid grid-cols-5 w-full">
+        <div className="flex col-span-1 gap-4 justify-start items-center">
           <Button
             variant={'ghost'}
             className="w-6 h-6"
@@ -90,9 +81,11 @@ export function WindowFrameDebug() {
 
           <p className="text-xs">{pathname}</p>
         </div>
-        <div className="flex justify-center items-center gap-4"></div>
-        <div className="flex justify-end items-center gap-4">
-          <TemperatureHumidity tempData={tempData} isLoading={isPending} />
+        <div className="flex col-span-3 justify-center items-center gap-4">
+          <TempHumStats />
+        </div>
+
+        <div className="flex col-span-1 justify-end items-center gap-4">
           <MrPingPingIndicator
             resTime={status?.res_time}
             lastPingedRaw={status?.last_pinged}
@@ -111,6 +104,77 @@ export function WindowFrameDebug() {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function TempHumStats() {
+  const { getAppRecordedData } = useMrPingPingService()
+
+  const interval = 3
+  const range = 'hour'
+
+  const { data: tempDataUpstairsRaw, isPending } = useQuery({
+    queryKey: ['temperature-humidity'],
+    queryFn: async () => {
+      return await getAppRecordedData({
+        appNames: ['temperature_humidity'],
+        interval,
+        range
+      })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
+  })
+
+  const { data: tempDataDownStairsRaw, isPending: isTempDownStairsPending } = useQuery({
+    queryKey: ['temperature-humidity-down-stairs'],
+    queryFn: async () => {
+      return await getAppRecordedData({
+        appNames: ['temperature_humidity_02'],
+        interval,
+        range
+      })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
+  })
+
+  const { tempDataUpstairs, tempDataDownstairs } = useMemo(() => {
+    return {
+      tempDataUpstairs: formatDHT11SensorHistoricData({ data: tempDataUpstairsRaw }),
+      tempDataDownstairs: formatDHT11SensorHistoricData({ data: tempDataDownStairsRaw })
+    }
+  }, [tempDataUpstairsRaw, tempDataDownStairsRaw])
+
+  const diffTemp = (tempDataUpstairs?.temperature - tempDataDownstairs?.temperature)
+    .toFixed(1)
+    .replace('-', '')
+
+  const diffHumid = (tempDataUpstairs?.humidity - tempDataDownstairs?.humidity)
+    .toFixed(1)
+    .replace('-', '')
+
+  return (
+    <div className="flex items-center justify-center w-full gap-2">
+      {tempDataUpstairs && tempDataDownstairs && (
+        <>
+          <TemperatureHumidity
+            label="TV:"
+            data={tempDataDownstairs}
+            isLoading={isTempDownStairsPending}
+          />
+
+          <TemperatureHumidity label="PC:" data={tempDataUpstairs} isLoading={isPending} />
+          {diffTemp && diffHumid && (
+            <div className="flex items-center gap-1">
+              <p className="text-xs">Diff:</p>
+              <p className="text-xs">{diffTemp} °C /</p>
+              <p className="text-xs">{diffHumid} %</p>
+            </div>
+          )}
+        </>
+      )}
     </div>
   )
 }
