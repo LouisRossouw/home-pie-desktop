@@ -10,9 +10,10 @@ Home pie is basically a side project, built to monitor/support - my side project
 - This repo will always be in an unfinished state / mess, as there is no clear end goal, it is super low priority.
 - It runs on my local machines & network.
 
-## Recommended IDE Setup
+v1.0.2 (Alpha)
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+![app](https://github.com/user-attachments/assets/542c042f-f889-479e-a96c-b9c5dad6fc74)
+
 
 ## Project Setup
 
