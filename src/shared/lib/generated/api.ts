@@ -86,6 +86,30 @@ export interface paths {
         patch: operations["api_insta_insights_accounts_partial_update"];
         trace?: never;
     };
+    "/api/insta-insights/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get project config
+         * @description Returns the app's recorded configuration.
+         */
+        get: operations["api_insta_insights_config_retrieve"];
+        /**
+         * Update project config
+         * @description Updates the configuration. Returns no content on success.
+         */
+        put: operations["api_insta_insights_config_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/insta-insights/overview": {
         parameters: {
             query?: never;
@@ -289,6 +313,23 @@ export interface paths {
         put?: never;
         /** @description Allows user to add historical data, *Needed for TikTok */
         post: operations["api_time_in_progress_data_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/time-in-progress/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Config */
+        get: operations["api_time_in_progress_config_retrieve"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -509,6 +550,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Account: {
+            account: string;
+            active: boolean;
+        };
+        AccountRequest: {
+            account: string;
+            active: boolean;
+        };
         AppRecordedData: {
             appName: string;
             app_status: components["schemas"]["AppStatus"][];
@@ -525,6 +574,16 @@ export interface components {
              *     * `invalid` - invalid
              *     * `expired` - expired */
             status: components["schemas"]["StatusEnum"];
+        };
+        Config: {
+            track_accounts: components["schemas"]["Account"][];
+            poll_interval: number;
+            poll_range: string;
+        };
+        ConfigRequest: {
+            track_accounts: components["schemas"]["AccountRequest"][];
+            poll_interval: number;
+            poll_range: string;
         };
         CreateLoginKey: {
             login_key: string;
@@ -758,6 +817,50 @@ export interface operations {
             };
         };
     };
+    api_insta_insights_config_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current configuration */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Config"];
+                };
+            };
+        };
+    };
+    api_insta_insights_config_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfigRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ConfigRequest"];
+                "multipart/form-data": components["schemas"]["ConfigRequest"];
+            };
+        };
+        responses: {
+            /** @description Config updated successfully (no content) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     api_insta_insights_overview_retrieve: {
         parameters: {
             query?: never;
@@ -976,6 +1079,24 @@ export interface operations {
             path: {
                 platform: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_time_in_progress_config_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
