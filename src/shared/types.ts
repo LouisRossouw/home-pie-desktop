@@ -256,6 +256,56 @@ export type GetAllUserSessionsFunc = (v: GetAllUserSessions) => ResGetAllUserSes
 export type CheckAccessTokenFunc = (v: CheckAccessToken) => ResCheckAccessToken
 export type FindNextActiveAccessTokenFunc = () => ResFindNextActiveAccessToken
 
+// - External API
+export type ApiMrPingPingAppConfig = { appName: string }
+export type ApiMrPingPingAppStatus = { appName: string }
+export type ApiMrPingPingAppData = { appName: string; range: string; interval: number }
+export type ApiGenGenStart = { project: string }
+export type ApiGenGenCheckProgress = { project: string }
+export type ApiGetProjectConfig = { project: string }
+export type ApiPutProjectConfig = { project: string; config: Schemas['Config'] }
+
+// - External API - func types
+export type ApiMrPingPingStatusFunc = () => Promise<ApiMrPingPingStatus>
+export type ApiMrPingPingAppConfigFunc = (v: ApiMrPingPingAppConfig) => Promise<any>
+export type ApiMrPingPingAppsConfigFunc = () => Promise<any>
+export type ApiMrPingPingAppsStatusFunc = () => Promise<any>
+export type ApiMrPingPingAppStatusFunc = (
+  v: ApiMrPingPingAppStatus
+) => Promise<{ ok: boolean; data: unknown }>
+export type ApiMrPingPingAppDataFunc = (v: {
+  appName: string
+  range: string
+  interval: number
+}) => Promise<{ ok: boolean; data: unknown }>
+
+export type ApiGenGenCheckProgressFunc = (v: ApiGenGenCheckProgress) => Promise<any>
+export type ApiGenGenStartFunc = (v: ApiGenGenStart) => Promise<any>
+export type ApiProjectListFunc = () => Promise<ApiProjectsList>
+export type ApiGetProjectConfigFunc = (v: ApiGetProjectConfig) => Promise<any>
+export type ApiPutProjectConfigFunc = (v: ApiPutProjectConfig) => Promise<boolean>
+export type ApiTimeInProgressOverviewFunc = (
+  v: ApiTimeInProgressOverview
+) => Promise<ApiTimeInProgressOverviewResponse>
+export type ApiTimeInProgressInsertHistoricalDataFunc = (
+  v: ApiTimeInProgressInsertHistoricalData
+) => Promise<{ ok: boolean }>
+export type ApiInstaInsightsGetAllAccountsFunc = () => Promise<{
+  ok: boolean
+  data: ApiInstaInsightsAccount[]
+}>
+export type ApiInstaInsightsGetAccountsOverviewFunc = (
+  data: ApiInstaInsightsAccountsOverview
+) => Promise<ApiInstaInsightsAccountsOverviewResponse>
+export type ApiInstaInsightsAddAccountFunc = (
+  v: ApiInstaInsightsAccount
+) => Promise<{ ok: boolean }>
+export type ApiInstaInsightsUpdateAccountStatusFunc = (
+  v: ApiInstaInsightsAccount
+) => Promise<{ ok: boolean }>
+export type ApiInstaInsightsRemoveAccountFunc = (
+  v: ApiInstaInsightsAccount
+) => Promise<{ ok: boolean }>
 // ***
 // **
 // *
