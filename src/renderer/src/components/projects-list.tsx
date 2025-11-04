@@ -23,16 +23,17 @@ export function ProjectsList({
       {isLoading ? (
         'Loading'
       ) : (
-        <div className="grid justift-center gap-2 p-2">
+        <div className="grid justift-center gap-4 p-2">
           {projects?.map((project: Project) => {
             const variant =
-              selectedProject === project.slug ? 'default' : isExpanded ? 'outline' : 'ghost'
+              selectedProject === project.slug ? 'secondary' : isExpanded ? 'outline' : 'ghost'
 
             return (
               <Button
-                size={'icon'}
+                size={'sm'}
                 variant={variant}
                 key={project.slug}
+                className="w-8 h-8 p-0 m-0"
                 onClick={() => handleSelectedProject(project.url)}
               >
                 {project?.img ? (
