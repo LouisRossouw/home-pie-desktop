@@ -19,6 +19,7 @@ import { apiGenGenStart } from '../api/gengen/api-gengen-start'
 import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
 import { apiCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
+import { apiGetProjectConfig, apiPutProjectConfig } from '../api/projects/api-project-config'
 
 export function externalIpcHandlers() {
   ipcMain.handle('api-projects-list', async (_event) => {
@@ -53,7 +54,15 @@ export function externalIpcHandlers() {
     return await apiGenGenCheckProgress(data)
   })
 
-  // * TIme In Progress related API
+  // Projects
+  ipcMain.handle('api-get-project-config', async (_event, data) => {
+    return await apiGetProjectConfig(data)
+  })
+  ipcMain.handle('api-put-project-config', async (_event, data) => {
+    return await apiPutProjectConfig(data)
+  })
+
+  // * Projects; TIme In Progress related API
   ipcMain.handle('api-timeinprogress-overview', async (_event, data) => {
     return await apiTimeInProgressOverview(data)
   })
@@ -61,7 +70,7 @@ export function externalIpcHandlers() {
     return await apiTimeInProgressInsertHistoricalData(data)
   })
 
-  // * Insta insights related API
+  // * Projects; Insta insights related API
   ipcMain.handle('api-insta-insights-get-all-accounts', async (_event) => {
     return await apiInstaInsightsGetAllAccounts()
   })
