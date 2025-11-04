@@ -6,11 +6,11 @@ export async function apiInstaInsightsRemoveAccount({ account }: { account: stri
 
   try {
     const { response, data } = await apiClient.DELETE(
-      '/api/insta-insights/accounts/{account_name}',
+      '/api/insta-insights/accounts/{accountName}',
       {
         params: {
           path: {
-            account_name: account
+            accountName: account
           }
         }
       }
