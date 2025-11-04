@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router'
+import { Outlet, Route, Routes } from 'react-router'
 
 import { NoMatch } from './routes/no-match'
 import NoConnectionRoute from './routes/no-connection'
@@ -32,6 +32,9 @@ import PingPingRoute from './routes/ping-ping'
 import SmartHomeRoute from './routes/smart-home'
 import SmartHomeOverviewRoute from './routes/smart-home/overview'
 import AuthorizationRoute from './routes/authorize'
+import InstaInsightsConfigRoute from './routes/sub-projects/insta-insights/config'
+import ServersRoute from './routes/servers'
+import ServersOverviewRoute from './routes/servers/overview'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -58,6 +61,7 @@ const projectRoutes = [
     children: [
       { index: true, element: <ProjectsOverviewRoute /> },
       { path: 'project-settings', element: <ProjectSettingsRoute /> },
+
       { path: 'time-in-progress', element: <TimeInProgressRoute /> },
       {
         path: 'insta-insights',
@@ -67,6 +71,10 @@ const projectRoutes = [
           {
             path: ':account',
             children: [{ path: 'insights', element: <InsightsRoute /> }]
+          },
+          {
+            path: 'config',
+            element: <InstaInsightsConfigRoute />
           }
         ]
       }
@@ -82,6 +90,14 @@ const financeRoutes = [
       { index: true, element: <MyFinancesOverviewRoute /> },
       { path: 'my-finances-settings', element: <div>TODO</div> }
     ]
+  }
+]
+
+const serversRoutes = [
+  {
+    path: 'servers',
+    element: <ServersRoute />,
+    children: [{ index: true, element: <ServersOverviewRoute /> }]
   }
 ]
 
@@ -121,6 +137,7 @@ const appRoutes = [
       { index: true, element: <Home /> },
       ...projectRoutes,
       ...financeRoutes,
+      ...serversRoutes,
       ...gengenRoutes,
       ...pingPingRoutes,
       ...smartHomeRoutes,
