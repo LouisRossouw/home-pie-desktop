@@ -67,6 +67,27 @@ export enum appIpcKey {
   authCode = 'auth:code'
 }
 
+export enum externalIpcKey {
+  apiMrPingPingStatus = 'api-mr-ping-ping-status',
+  apiMrPingPingAppConfig = 'api-mr-ping-ping-app-config',
+  apiMrPingPingAppsConfig = 'api-mr-ping-ping-apps-config',
+  apiMrPingPingAppsStatus = 'api-mr-ping-ping-apps-status',
+  apiMrPingPingAppStatus = 'api-mr-ping-ping-app-status',
+  apiMrPingPingAppData = 'api-mr-ping-ping-apps-data',
+  apiGenGenStart = 'api-gengen-start',
+  apiGenGenCheckProgress = 'api-gengen-check-progress',
+  apiProjectList = 'api-projects-list',
+  apiGetProjectConfig = 'api-get-project-config',
+  apiPutProjectConfig = 'api-put-project-config',
+  apiTimeInProgressOverview = 'api-timeinprogress-overview',
+  apiTimeInProgressInsertHistoricalData = 'api-timeinprogress-insert-historical-data',
+  apiInstaInsightsGetAllAccounts = 'api-insta-insights-get-all-accounts',
+  apiInstaInsightsGetAccountsOverview = 'api-insta-insights-get-accounts-overview',
+  apiInstaInsightsAddAccount = 'api-insta-insights-add-account',
+  apiInstaInsightsUpdateAccountStatus = 'api-insta-insights-update-account-status',
+  apiInstaInsightsRemoveAccount = 'api-insta-insights-remove-account'
+}
+
 export enum navIpcKey {
   syncRoute = 'sync-route'
 }
