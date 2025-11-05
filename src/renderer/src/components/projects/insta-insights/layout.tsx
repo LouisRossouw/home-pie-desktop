@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Outlet, useLocation, useSearchParams } from 'react-router'
-import { Edit2, Eye, EyeClosed, RefreshCcw, Server } from 'lucide-react'
+import { Eye, EyeClosed, RefreshCcw, Server } from 'lucide-react'
 
 import { AccountsDataWithPic, ApiInstaInsightsAccount, Range } from '@shared/types'
 
@@ -69,7 +69,7 @@ export function InstaInsightsLayout({
 
             return {
               ...account,
-              profile_picture_url: lastItem.profile_picture_url,
+              profilePictureUrl: lastItem.profilePictureUrl,
               historical: matchedHistory
             }
           }
@@ -97,7 +97,7 @@ export function InstaInsightsLayout({
           account: raw.account,
           active: false,
           historical: [],
-          profile_picture_url: null
+          profilePictureUrl: null
         })
       }
     })
@@ -106,7 +106,7 @@ export function InstaInsightsLayout({
     updatedAccounts.sort((a, b) => {
       if (a.active && !b.active) return -1
       if (!a.active && b.active) return 1
-      return (b.followers_difference || 0) - (a.followers_difference || 0)
+      return (b.followersDifference || 0) - (a.followersDifference || 0)
     })
 
     return updatedAccounts

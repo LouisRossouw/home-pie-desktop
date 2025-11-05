@@ -6,7 +6,7 @@ import { ApiCompleteAuth } from '@shared/types'
 
 // Completes the auth process; calls the API with the loginKey, and the API
 // Returns the correct loginKey with the accociated user, and returns the
-// access_token and users profile.
+// accessToken and users profile.
 
 export async function apiCompleteAuthentication({ loginKey }: ApiCompleteAuth) {
   const { default: createClient } = await import('openapi-fetch')

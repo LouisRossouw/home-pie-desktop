@@ -12,7 +12,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns the current progress of the time in progress content generation. */
-        get: operations["api_gengen_check_progress_retrieve"];
+        get: operations["apiGengenCheckProgressRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -31,7 +31,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Starts the content generation process for time in progress. */
-        post: operations["api_gengen_start_create"];
+        post: operations["apiGengenStartCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -45,7 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["api_health_retrieve"];
+        get: operations["apiHealthRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -61,29 +61,29 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["api_insta_insights_accounts_retrieve"];
+        get: operations["apiInstaInsightsAccountsRetrieve"];
         put?: never;
-        post: operations["api_insta_insights_accounts_create"];
+        post: operations["apiInstaInsightsAccountsCreate"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/insta-insights/accounts/{account_name}": {
+    "/api/insta-insights/accounts/{accountName}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["api_insta_insights_accounts_retrieve_2"];
+        get: operations["apiInstaInsightsAccountsRetrieve2"];
         put?: never;
         post?: never;
-        delete: operations["api_insta_insights_accounts_destroy"];
+        delete: operations["apiInstaInsightsAccountsDestroy"];
         options?: never;
         head?: never;
-        patch: operations["api_insta_insights_accounts_partial_update"];
+        patch: operations["apiInstaInsightsAccountsPartialUpdate"];
         trace?: never;
     };
     "/api/insta-insights/config": {
@@ -97,12 +97,12 @@ export interface paths {
          * Get project config
          * @description Returns the app's recorded configuration.
          */
-        get: operations["api_insta_insights_config_retrieve"];
+        get: operations["apiInstaInsightsConfigRetrieve"];
         /**
          * Update project config
          * @description Updates the configuration. Returns no content on success.
          */
-        put: operations["api_insta_insights_config_update"];
+        put: operations["apiInstaInsightsConfigUpdate"];
         post?: never;
         delete?: never;
         options?: never;
@@ -118,7 +118,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns current data & historical data for a tracked account. */
-        get: operations["api_insta_insights_overview_retrieve"];
+        get: operations["apiInstaInsightsOverviewRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -135,7 +135,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns an apps status */
-        get: operations["api_mr_ping_ping_apps_configs_retrieve"];
+        get: operations["apiMrPingPingAppsConfigsRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -144,7 +144,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/mr-ping-ping/apps/configs/{app_name}": {
+    "/api/mr-ping-ping/apps/configs/{appName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -152,7 +152,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns an apps status */
-        get: operations["api_mr_ping_ping_apps_configs_retrieve_2"];
+        get: operations["apiMrPingPingAppsConfigsRetrieve2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -161,7 +161,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/mr-ping-ping/apps/data/{app_name}": {
+    "/api/mr-ping-ping/apps/data/{appName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -172,7 +172,7 @@ export interface paths {
          * Apps recorded data
          * @description Returns the apps recorded data
          */
-        get: operations["api_mr_ping_ping_apps_data_retrieve"];
+        get: operations["apiMrPingPingAppsDataRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -189,7 +189,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns an apps status */
-        get: operations["api_mr_ping_ping_apps_status_retrieve"];
+        get: operations["apiMrPingPingAppsStatusRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -198,7 +198,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/mr-ping-ping/apps/status/{app_name}": {
+    "/api/mr-ping-ping/apps/status/{appName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -206,7 +206,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns an apps status */
-        get: operations["api_mr_ping_ping_apps_status_retrieve_2"];
+        get: operations["apiMrPingPingAppsStatusRetrieve2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -223,7 +223,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns the current state of mr ping ping. */
-        get: operations["api_mr_ping_ping_config_retrieve"];
+        get: operations["apiMrPingPingConfigRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -240,7 +240,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns the current state of mr ping ping. */
-        get: operations["api_mr_ping_ping_status_retrieve"];
+        get: operations["apiMrPingPingStatusRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -259,7 +259,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Create account */
-        post: operations["api_sign_up_create"];
+        post: operations["apiSignUpCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -277,7 +277,7 @@ export interface paths {
          * Stats Check
          * @description Returns the current stats of the API.
          */
-        get: operations["api_stats_retrieve"];
+        get: operations["apiStatsRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -293,7 +293,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["api_test_retrieve"];
+        get: operations["apiTestRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -312,7 +312,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Allows user to add historical data, *Needed for TikTok */
-        post: operations["api_time_in_progress_data_create"];
+        post: operations["apiTimeInProgressDataCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -327,7 +327,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Config */
-        get: operations["api_time_in_progress_config_retrieve"];
+        get: operations["apiTimeInProgressConfigRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -344,7 +344,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description Returns current data & historical data for time in progress on all platforms. */
-        get: operations["api_time_in_progress_overview_retrieve"];
+        get: operations["apiTimeInProgressOverviewRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -368,7 +368,7 @@ export interface paths {
          *
          *     * Authorization code
          *     * Client credentials */
-        post: operations["auth_convert_token_create"];
+        post: operations["authConvertTokenCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -385,7 +385,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description An endpoint for disconnect social auth backend providers such as Facebook. */
-        post: operations["auth_disconnect_backend_create"];
+        post: operations["authDisconnectBackendCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -402,7 +402,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Invalidate all refresh tokens associated with a client id. */
-        post: operations["auth_invalidate_refresh_tokens_create"];
+        post: operations["authInvalidateRefreshTokensCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -419,7 +419,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Delete all access tokens associated with a client id. */
-        post: operations["auth_invalidate_sessions_create"];
+        post: operations["authInvalidateSessionsCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -439,7 +439,7 @@ export interface paths {
          * Creates a loginKey (Desktop apps)
          * @description Creates and returns a loginKey for the desktop app in order to complete the handshake.
          */
-        post: operations["auth_login_key_create"];
+        post: operations["authLoginKeyCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -457,7 +457,7 @@ export interface paths {
          * Poll for a loginKey (Desktop apps)
          * @description Checks the status of a loginKey and, if authenticated, returns tokens.
          */
-        get: operations["auth_login_key_retrieve"];
+        get: operations["authLoginKeyRetrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -479,7 +479,7 @@ export interface paths {
          * Complete the loginKey (Desktop apps)
          * @description Assigns the user to the loginKey that was generated for the desktop app.
          */
-        post: operations["auth_login_key_complete_create"];
+        post: operations["authLoginKeyCompleteCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -499,7 +499,7 @@ export interface paths {
          * OAuth2 Token
          * @description Obtain an access token using username/password or refresh token.
          */
-        post: operations["auth_login_manual_create"];
+        post: operations["authLoginManualCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -516,7 +516,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** @description Implements an endpoint to revoke access or refresh tokens */
-        post: operations["auth_revoke_token_create"];
+        post: operations["authRevokeTokenCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -539,7 +539,7 @@ export interface paths {
          *     * Authorization code
          *     * Password
          *     * Client credentials */
-        post: operations["auth_token_create"];
+        post: operations["authTokenCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -560,33 +560,36 @@ export interface components {
         };
         AppRecordedData: {
             appName: string;
-            app_status: components["schemas"]["AppStatus"][];
+            appStatus: components["schemas"]["AppStatus"][];
         };
         AppStatus: {
             /** Format: date-time */
             date: string;
-            endpoints_res: components["schemas"]["EndpointRes"][];
+            endpointsRes: components["schemas"]["EndpointRes"][];
         };
         CompleteLoginKey: {
-            /** @description Status of the login key process
+            /**
+             * @description Status of the login key process
              *
              *     * `complete` - complete
              *     * `invalid` - invalid
-             *     * `expired` - expired */
-            status: components["schemas"]["StatusEnum"];
+             *     * `expired` - expired
+             * @enum {string}
+             */
+            status: "complete" | "invalid" | "expired";
         };
         Config: {
-            track_accounts: components["schemas"]["Account"][];
-            poll_interval: number;
-            poll_range: string;
+            trackAccounts: components["schemas"]["Account"][];
+            pollInterval: number;
+            pollRange: string;
         };
         ConfigRequest: {
-            track_accounts: components["schemas"]["AccountRequest"][];
-            poll_interval: number;
-            poll_range: string;
+            trackAccounts: components["schemas"]["AccountRequest"][];
+            pollInterval: number;
+            pollRange: string;
         };
         CreateLoginKey: {
-            login_key: string;
+            loginKey: string;
         };
         CustomToken: {
             /** Format: date-time */
@@ -597,19 +600,19 @@ export interface components {
         CustomTokenRequestRequest: {
             username?: string;
             password?: string;
-            client_id?: string;
-            auth_type?: string;
-            grant_type: string;
+            clientId?: string;
+            authType?: string;
+            grantType: string;
         };
         CustomTokenResponse: {
             /** Format: date-time */
             expires: string;
             scope?: string;
             readonly user: components["schemas"]["CustomUser"];
-            access_token: string;
-            refresh_token: string;
-            token_type: string;
-            expires_in: number;
+            accessToken: string;
+            refreshToken: string;
+            tokenType: string;
+            expiresIn: number;
         };
         CustomUser: {
             readonly id: number;
@@ -619,25 +622,25 @@ export interface components {
              */
             email: string;
             username: string;
-            first_name?: string;
-            last_name?: string;
-            auth_type?: string;
-            is_staff?: boolean;
+            firstName?: string;
+            lastName?: string;
+            authType?: string;
+            isStaff?: boolean;
         };
         EndpointRes: {
             endpoint: string;
             /** Format: uri */
-            full_url: string;
+            fullUrl: string;
             /** Format: double */
-            res_time: number;
+            resTime: number;
             response: components["schemas"]["ResponseData"];
         };
         PollLoginKeyToken: {
-            access_token: string;
-            refresh_token: string;
+            accessToken: string;
+            refreshToken: string;
             application: string;
             user: components["schemas"]["CustomToken"];
-            expires_in: number;
+            expiresIn: number;
             /** Format: date-time */
             expires: string;
             scope: string;
@@ -649,15 +652,8 @@ export interface components {
         };
         Stats: {
             active: boolean;
-            db_time_ms?: number;
+            dbTimeMs?: number;
         };
-        /**
-         * @description * `complete` - complete
-         *     * `invalid` - invalid
-         *     * `expired` - expired
-         * @enum {string}
-         */
-        StatusEnum: "complete" | "invalid" | "expired";
     };
     responses: never;
     parameters: never;
@@ -667,7 +663,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    api_gengen_check_progress_retrieve: {
+    apiGengenCheckProgressRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -685,7 +681,7 @@ export interface operations {
             };
         };
     };
-    api_gengen_start_create: {
+    apiGengenStartCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -703,7 +699,7 @@ export interface operations {
             };
         };
     };
-    api_health_retrieve: {
+    apiHealthRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -721,7 +717,7 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_accounts_retrieve: {
+    apiInstaInsightsAccountsRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -739,7 +735,7 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_accounts_create: {
+    apiInstaInsightsAccountsCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -757,12 +753,12 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_accounts_retrieve_2: {
+    apiInstaInsightsAccountsRetrieve2: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                account_name: string;
+                accountName: string;
             };
             cookie?: never;
         };
@@ -777,12 +773,12 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_accounts_destroy: {
+    apiInstaInsightsAccountsDestroy: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                account_name: string;
+                accountName: string;
             };
             cookie?: never;
         };
@@ -797,12 +793,12 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_accounts_partial_update: {
+    apiInstaInsightsAccountsPartialUpdate: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                account_name: string;
+                accountName: string;
             };
             cookie?: never;
         };
@@ -817,7 +813,7 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_config_retrieve: {
+    apiInstaInsightsConfigRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -837,7 +833,7 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_config_update: {
+    apiInstaInsightsConfigUpdate: {
         parameters: {
             query?: never;
             header?: never;
@@ -861,7 +857,7 @@ export interface operations {
             };
         };
     };
-    api_insta_insights_overview_retrieve: {
+    apiInstaInsightsOverviewRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -879,7 +875,7 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_apps_configs_retrieve: {
+    apiMrPingPingAppsConfigsRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -897,12 +893,12 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_apps_configs_retrieve_2: {
+    apiMrPingPingAppsConfigsRetrieve2: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                app_name: string;
+                appName: string;
             };
             cookie?: never;
         };
@@ -917,7 +913,7 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_apps_data_retrieve: {
+    apiMrPingPingAppsDataRetrieve: {
         parameters: {
             query?: {
                 /** @description Interval units */
@@ -927,7 +923,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                app_name: string;
+                appName: string;
             };
             cookie?: never;
         };
@@ -943,7 +939,7 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_apps_status_retrieve: {
+    apiMrPingPingAppsStatusRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -961,12 +957,12 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_apps_status_retrieve_2: {
+    apiMrPingPingAppsStatusRetrieve2: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                app_name: string;
+                appName: string;
             };
             cookie?: never;
         };
@@ -981,7 +977,7 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_config_retrieve: {
+    apiMrPingPingConfigRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -999,7 +995,7 @@ export interface operations {
             };
         };
     };
-    api_mr_ping_ping_status_retrieve: {
+    apiMrPingPingStatusRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1017,7 +1013,7 @@ export interface operations {
             };
         };
     };
-    api_sign_up_create: {
+    apiSignUpCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1035,7 +1031,7 @@ export interface operations {
             };
         };
     };
-    api_stats_retrieve: {
+    apiStatsRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1054,7 +1050,7 @@ export interface operations {
             };
         };
     };
-    api_test_retrieve: {
+    apiTestRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1072,7 +1068,7 @@ export interface operations {
             };
         };
     };
-    api_time_in_progress_data_create: {
+    apiTimeInProgressDataCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1092,7 +1088,7 @@ export interface operations {
             };
         };
     };
-    api_time_in_progress_config_retrieve: {
+    apiTimeInProgressConfigRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1110,7 +1106,7 @@ export interface operations {
             };
         };
     };
-    api_time_in_progress_overview_retrieve: {
+    apiTimeInProgressOverviewRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1128,7 +1124,7 @@ export interface operations {
             };
         };
     };
-    auth_convert_token_create: {
+    authConvertTokenCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1146,7 +1142,7 @@ export interface operations {
             };
         };
     };
-    auth_disconnect_backend_create: {
+    authDisconnectBackendCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1164,7 +1160,7 @@ export interface operations {
             };
         };
     };
-    auth_invalidate_refresh_tokens_create: {
+    authInvalidateRefreshTokensCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1182,7 +1178,7 @@ export interface operations {
             };
         };
     };
-    auth_invalidate_sessions_create: {
+    authInvalidateSessionsCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1200,7 +1196,7 @@ export interface operations {
             };
         };
     };
-    auth_login_key_create: {
+    authLoginKeyCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1219,7 +1215,7 @@ export interface operations {
             };
         };
     };
-    auth_login_key_retrieve: {
+    authLoginKeyRetrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -1240,7 +1236,7 @@ export interface operations {
             };
         };
     };
-    auth_login_key_complete_create: {
+    authLoginKeyCompleteCreate: {
         parameters: {
             query: {
                 loginKey: string;
@@ -1261,7 +1257,7 @@ export interface operations {
             };
         };
     };
-    auth_login_manual_create: {
+    authLoginManualCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1286,7 +1282,7 @@ export interface operations {
             };
         };
     };
-    auth_revoke_token_create: {
+    authRevokeTokenCreate: {
         parameters: {
             query?: never;
             header?: never;
@@ -1304,7 +1300,7 @@ export interface operations {
             };
         };
     };
-    auth_token_create: {
+    authTokenCreate: {
         parameters: {
             query?: never;
             header?: never;

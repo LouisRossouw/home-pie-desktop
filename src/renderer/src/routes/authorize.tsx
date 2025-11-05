@@ -58,7 +58,7 @@ export default function CompleteAuthorization() {
   }
 
   async function handleCompleteAuthentication() {
-    // Call the api with the loginKey to return the access_tokens and user session
+    // Call the api with the loginKey to return the accessTokens and user session
     const maybeLoginKey = await window.api.db.getCoreSetting({ key: 'loginKey' })
 
     if (maybeLoginKey) {

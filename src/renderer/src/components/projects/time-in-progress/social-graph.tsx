@@ -3,16 +3,16 @@ import { CircleCheck, ServerIcon } from 'lucide-react'
 
 import { differenceInMinutes, format } from 'date-fns'
 
+import { cn } from '~/libs/utils/cn'
 import type { Social } from '@shared/types'
 
 import { Label } from '~/components/ui/label'
 import { PingSVG } from '~/components/svg-icons'
+import { LoadingIndicator } from '~/components/loading-indicator'
 import LineChartComponent from '~/components/projects/time-in-progress/composed-chart'
 
 import { SocialIndicator, SocialStatsCard } from './social-stats-card'
 import { AddHistoricalDataDialog } from './add-historical-data-dialog'
-import { LoadingIndicator } from '~/components/loading-indicator'
-import { cn } from '~/libs/utils/cn'
 
 export function SocialGraph({
   title,
@@ -28,8 +28,8 @@ export function SocialGraph({
   const [edit, setEdit] = useState(false)
 
   const platform = data?.data?.platform
-  const followersDiff = data?.data?.followers_difference ?? 0
-  const followersCount = data?.data?.latest_followers
+  const followersDiff = data?.data?.followersDifference ?? 0
+  const followersCount = data?.data?.latestFollowers
   const historyData = data?.historical
 
   const fill =
@@ -41,8 +41,8 @@ export function SocialGraph({
 
   const currentDate = new Date()
 
-  const fromDate = new Date(String(data?.data?.from_date ?? new Date()))
-  const toDate = new Date(String(data?.data?.to_date ?? new Date()))
+  const fromDate = new Date(String(data?.data?.fromDate ?? new Date()))
+  const toDate = new Date(String(data?.data?.toDate ?? new Date()))
 
   const timeDifference = differenceInMinutes(currentDate, fromDate)
   const dataStaleTime = differenceInMinutes(currentDate, toDate)
