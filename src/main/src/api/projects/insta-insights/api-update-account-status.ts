@@ -11,17 +11,14 @@ export async function apiInstaInsightsUpdateAccountStatus({
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.PATCH(
-      '/api/insta-insights/accounts/{account_name}',
-      {
-        params: {
-          path: { account_name: account },
-          query: {
-            active
-          }
+    const { response, data } = await apiClient.PATCH('/api/insta-insights/accounts/{accountName}', {
+      params: {
+        path: { accountName: account },
+        query: {
+          active
         }
       }
-    )
+    })
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'selectProject' })
       return data

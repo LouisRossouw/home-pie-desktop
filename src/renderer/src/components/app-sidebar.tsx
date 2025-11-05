@@ -1,7 +1,8 @@
-import { Bot, Box, Bug, CircleDollarSign, Home, Settings, X } from 'lucide-react'
+import { Bug, X } from 'lucide-react'
 
 import { useNav } from '~/libs/hooks/use-navigation'
 import { useApp } from '~/libs/context/app'
+import { menus } from '~/libs/menus'
 
 import {
   Sidebar,
@@ -18,35 +19,6 @@ import {
 
 import { Button } from './ui/button'
 import { AccountSelector } from './account-selector'
-
-const items = [
-  {
-    title: 'Home',
-    url: '/',
-    icon: Home
-  },
-  {
-    title: 'Projects',
-    url: '/projects',
-    icon: Box
-  },
-  {
-    title: 'My Finances',
-    url: '/my-finances',
-    icon: CircleDollarSign
-  },
-  {
-    title: 'GenGen',
-    url: '/gengen',
-    icon: Bot
-  },
-
-  {
-    title: 'Settings',
-    url: '/settings',
-    icon: Settings
-  }
-]
 
 export function AppSidebar({ close }: { close: () => void }) {
   const { navigateTo } = useNav()
@@ -67,13 +39,13 @@ export function AppSidebar({ close }: { close: () => void }) {
           <div>
             <SidebarGroupContent className="border-y py-4">
               <SidebarMenu>
-                {items.map((item) => (
+                {menus.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
                       onClick={() => {
                         close()
-                        navigateTo(item.url)
+                        navigateTo(item.route)
                       }}
                       variant={'outline'}
                     >

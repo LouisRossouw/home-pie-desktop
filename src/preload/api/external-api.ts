@@ -1,69 +1,75 @@
 import { electronAPI } from '@electron-toolkit/preload'
+import { externalIpcKey } from '@shared/constants'
 
 import type {
-  ApiProjectsList,
-  ApiMrPingPingStatus,
   ApiInstaInsightsAccount,
   ApiTimeInProgressOverview,
   ApiInstaInsightsAccountsOverview,
-  ApiTimeInProgressOverviewResponse,
-  ApiTimeInProgressInsertHistoricalData,
-  ApiInstaInsightsAccountsOverviewResponse
+  ApiTimeInProgressInsertHistoricalData
 } from '@shared/types'
+import type * as T from '@shared/types'
 
 const IPCR = electronAPI.ipcRenderer
 
 // prettier-ignore
 export type ExternalAPI = {
-  apiProjectList: () => Promise<ApiProjectsList>
 
   // Mr PingPing
-  apiMrPingPingStatus: () => Promise<ApiMrPingPingStatus>
-  apiMrPingPingAppConfig: (data: {appName: string}) => Promise<any>
-  apiMrPingPingAppsConfig: () => Promise<any>
-  apiMrPingPingAppsStatus: () => Promise<any>
-  apiMrPingPingAppStatus: (data: {appName: string}) => Promise<{ok: boolean, data: unknown}>
-  apiMrPingPingAppData: (data: {appName: string, range: string, interval: number}) => Promise<{ok: boolean, data: unknown}>
+  apiMrPingPingStatus: T.ApiMrPingPingStatusFunc
+  apiMrPingPingAppConfig: T.ApiMrPingPingAppConfigFunc
+  apiMrPingPingAppsConfig: T.ApiMrPingPingAppsConfigFunc
+  apiMrPingPingAppsStatus: T.ApiMrPingPingAppsStatusFunc
+  apiMrPingPingAppStatus: T.ApiMrPingPingAppStatusFunc
+  apiMrPingPingAppData: T.ApiMrPingPingAppDataFunc
 
   // GenGen
-  apiGenGenCheckProgress: (data: {project: string}) => Promise<any> // TODO; type
-  apiGenGenStart: (data: {project: string}) => Promise<any> // TODO; type
+  apiGenGenCheckProgress: T.ApiGenGenCheckProgressFunc
+  apiGenGenStart: T.ApiGenGenStartFunc
 
-  // Time In Progress
-  apiTimeInProgressOverview: (data: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse>
-  apiTimeInProgressInsertHistoricalData: (data: ApiTimeInProgressInsertHistoricalData) => Promise<{ok: boolean}>
+  // Projects;
+  apiProjectList: T.ApiProjectListFunc
+  apiGetProjectConfig: T.ApiGetProjectConfigFunc
+  apiPutProjectConfig: T.ApiPutProjectConfigFunc
 
-  // Insta Insights
-  apiInstaInsightsGetAllAccounts: () => Promise<{ok: boolean, data: ApiInstaInsightsAccount[]}>
-  apiInstaInsightsGetAccountsOverview: (data: ApiInstaInsightsAccountsOverview) => Promise<ApiInstaInsightsAccountsOverviewResponse>
-  apiInstaInsightsAddAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
-  apiInstaInsightsUpdateAccountStatus: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
-  apiInstaInsightsRemoveAccount: (data: ApiInstaInsightsAccount) => Promise<{ok: boolean}>
+  // Projects; Time In Progress
+  apiTimeInProgressOverview: T.ApiTimeInProgressOverviewFunc
+  apiTimeInProgressInsertHistoricalData: T.ApiTimeInProgressInsertHistoricalDataFunc
+
+  // Projects; Insta Insights
+  apiInstaInsightsGetAllAccounts: T.ApiInstaInsightsGetAllAccountsFunc
+  apiInstaInsightsGetAccountsOverview: T.ApiInstaInsightsGetAccountsOverviewFunc
+  apiInstaInsightsAddAccount: T.ApiInstaInsightsAddAccountFunc
+  apiInstaInsightsUpdateAccountStatus: T.ApiInstaInsightsUpdateAccountStatusFunc
+  apiInstaInsightsRemoveAccount: T.ApiInstaInsightsRemoveAccountFunc
 }
 // prettier-ignore
 export const externalAPI = {
-  apiProjectList: async () => IPCR.invoke('api-projects-list'),
 
   // Mr PingPing
-  apiMrPingPingStatus: async () => IPCR.invoke('api-mr-ping-ping-status'),
-  apiMrPingPingAppConfig: async (data: {appName: string}) => IPCR.invoke('api-mr-ping-ping-app-config', data),
-  apiMrPingPingAppsConfig: async () => IPCR.invoke('api-mr-ping-ping-apps-config'),
-  apiMrPingPingAppsStatus: async () => IPCR.invoke('api-mr-ping-ping-apps-status'),
-  apiMrPingPingAppStatus: async (data: {appName: string}) => IPCR.invoke('api-mr-ping-ping-app-status', data),
-  apiMrPingPingAppData: async (data: {appName: string, range: string, interval: number}) => IPCR.invoke('api-mr-ping-ping-apps-data', data),
+  apiMrPingPingStatus: async () => IPCR.invoke(externalIpcKey.apiMrPingPingStatus),
+  apiMrPingPingAppConfig: async (v: T.ApiMrPingPingAppConfig) => IPCR.invoke(externalIpcKey.apiMrPingPingAppConfig, v),
+  apiMrPingPingAppsConfig: async () => IPCR.invoke(externalIpcKey.apiMrPingPingAppsConfig),
+  apiMrPingPingAppsStatus: async () => IPCR.invoke(externalIpcKey.apiMrPingPingAppsStatus),
+  apiMrPingPingAppStatus: async (v: T.ApiMrPingPingAppStatus) => IPCR.invoke(externalIpcKey.apiMrPingPingAppStatus, v),
+  apiMrPingPingAppData: async (v: T.ApiMrPingPingAppData) => IPCR.invoke(externalIpcKey.apiMrPingPingAppData, v),
 
   // GenGen
-  apiGenGenStart: async (data: {project: string}) => IPCR.invoke('api-gengen-start', data),
-  apiGenGenCheckProgress: async (data: {project: string}) => IPCR.invoke('api-gengen-check-progress', data),
+  apiGenGenStart: async (v: T.ApiGenGenStart) => IPCR.invoke(externalIpcKey.apiGenGenStart, v),
+  apiGenGenCheckProgress: async (v: T.ApiGenGenCheckProgress) => IPCR.invoke(externalIpcKey.apiGenGenCheckProgress, v),
 
-  // Time In Progress
-  apiTimeInProgressOverview: async (data: ApiTimeInProgressOverview) => IPCR.invoke('api-timeinprogress-overview', data),
-  apiTimeInProgressInsertHistoricalData: async (data: ApiTimeInProgressInsertHistoricalData) => IPCR.invoke('api-timeinprogress-insert-historical-data', data),
+  // Projects;
+  apiProjectList: async () => IPCR.invoke(externalIpcKey.apiProjectList),
+  apiGetProjectConfig: async (v: T.ApiGetProjectConfig) => IPCR.invoke(externalIpcKey.apiGetProjectConfig, v),
+  apiPutProjectConfig: async (v: T.ApiPutProjectConfig) => IPCR.invoke(externalIpcKey.apiPutProjectConfig, v),
 
-  // Insta Insights
-  apiInstaInsightsGetAllAccounts: async () => IPCR.invoke('api-insta-insights-get-all-accounts'),
-  apiInstaInsightsGetAccountsOverview: async (data: ApiInstaInsightsAccountsOverview) => IPCR.invoke('api-insta-insights-get-accounts-overview', data),
-  apiInstaInsightsAddAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-add-account', data),
-  apiInstaInsightsUpdateAccountStatus: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-update-account-status', data),
-  apiInstaInsightsRemoveAccount: async (data: ApiInstaInsightsAccount) => IPCR.invoke('api-insta-insights-remove-account', data)
+  // Projects; Time In Progress
+  apiTimeInProgressOverview: async (v: ApiTimeInProgressOverview) => IPCR.invoke(externalIpcKey.apiTimeInProgressOverview, v),
+  apiTimeInProgressInsertHistoricalData: async (v: ApiTimeInProgressInsertHistoricalData) => IPCR.invoke(externalIpcKey.apiTimeInProgressInsertHistoricalData, v),
+
+  // Projects; Insta Insights
+  apiInstaInsightsGetAllAccounts: async () => IPCR.invoke(externalIpcKey.apiInstaInsightsGetAllAccounts),
+  apiInstaInsightsGetAccountsOverview: async (v: ApiInstaInsightsAccountsOverview) => IPCR.invoke(externalIpcKey.apiInstaInsightsGetAccountsOverview, v),
+  apiInstaInsightsAddAccount: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsAddAccount, v),
+  apiInstaInsightsUpdateAccountStatus: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsUpdateAccountStatus, v),
+  apiInstaInsightsRemoveAccount: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsRemoveAccount, v)
 }

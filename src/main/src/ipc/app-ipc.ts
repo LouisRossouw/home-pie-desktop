@@ -8,30 +8,30 @@ import {
   resizeApp,
   windowControl
 } from '../app'
-import { dbIpcKey } from '@shared/constants'
+import { appIpcKey, dbIpcKey } from '@shared/constants'
 
 export function appIpcHandlers() {
-  ipcMain.handle('resize-app', (_event, data) => {
+  ipcMain.handle(appIpcKey.resizeApp, (_event, data) => {
     resizeApp(data)
   })
 
-  ipcMain.handle('maybe-fast-load', (_event) => {
+  ipcMain.handle(appIpcKey.maybeFastLoad, (_event) => {
     return maybeFastLoad()
   })
 
-  ipcMain.handle('load-app', (_event, data) => {
+  ipcMain.handle(appIpcKey.loadApp, (_event, data) => {
     return loadApp(data)
   })
 
-  ipcMain.on('window-control', (_event, data) => {
+  ipcMain.on(appIpcKey.windowControl, (_event, data) => {
     windowControl(data)
   })
 
-  ipcMain.handle('open-directory', (_event, data) => {
+  ipcMain.handle(appIpcKey.openDirectory, (_event, data) => {
     openDirectory(data)
   })
 
-  ipcMain.handle('open-browser-url', (_event, data) => {
+  ipcMain.handle(appIpcKey.openBrowserToUrl, (_event, data) => {
     openBrowserToUrl(data)
   })
 

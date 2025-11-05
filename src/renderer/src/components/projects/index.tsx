@@ -40,7 +40,7 @@ export default function ProjectsLayout() {
   }, [projectsRaw]) as Project[]
 
   const currentSubRoutes = pathname.split('/')
-  const selectedProject = currentSubRoutes[currentSubRoutes.length - 1]
+  const selectedProject = currentSubRoutes[2]
 
   return (
     <div className="flex h-[calc(100vh-111px)] items-center justify-center">

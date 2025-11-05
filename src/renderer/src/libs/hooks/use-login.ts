@@ -1,4 +1,4 @@
-import { UserSession } from '@shared/types'
+import { CustomToken } from '@shared/types'
 import { useApp } from '~/libs//context/app'
 
 // TODO; Can we get the userSession type from open api?
@@ -6,15 +6,15 @@ import { useApp } from '~/libs//context/app'
 export function useLogin() {
   const { setIsAuth } = useApp()
 
-  const loginUser = (data: any) => {
+  const loginUser = (data: CustomToken) => {
     const userSession = {
       email: data.user.email,
-      userId: data?.user?.id,
-      firstName: data.user.first_name,
-      lastName: data.user.last_name,
-      is_staff: data.user.is_staff ?? false, // todo
-      auth_type: data.user.auth_type ?? undefined // todo
-    } as UserSession
+      id: data?.user?.id,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      isStaff: data.user.isStaff ?? false, // todo
+      authType: data.user.authType ?? undefined // todo
+    }
 
     // const success = saveUserToStorage(data, userSession);
 

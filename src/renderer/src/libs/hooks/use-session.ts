@@ -43,7 +43,7 @@ export function useSession() {
     return true
   }
 
-  // User related session, ie; username, email, is_staff etc.
+  // User related session, ie; username, email, isStaff etc.
   async function updateUserSession(
     sessions: { userId: number; session: UserSessionKey; value: any }[]
   ) {
@@ -81,17 +81,17 @@ export function useSession() {
 
     const sessionArray = (await window.api.db.getAllUserSessions({ userId })) as any
 
-    const { id, email, username, first_name, last_name, auth_type, is_staff } =
+    const { id, email, username, firstName, lastName, authType, isStaff } =
       sessionArray as UserSession
 
     const userSessionObj = {
       id,
       email,
       username,
-      first_name,
-      last_name,
-      auth_type,
-      is_staff
+      firstName,
+      lastName,
+      authType,
+      isStaff
     }
 
     setSession(userSessionObj)

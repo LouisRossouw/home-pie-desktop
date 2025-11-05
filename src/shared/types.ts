@@ -2,7 +2,7 @@
 
 import { IpcRendererEvent } from 'electron'
 import { defaultCoreSettings, defaultUserSettings } from './default-app-settings'
-import { components } from './lib/generated/api'
+import { components, paths } from './lib/generated/api'
 import { DotSquadAnims } from './dot-squad'
 
 export type Schemas = components['schemas']
@@ -51,19 +51,19 @@ export type ApiProjectsList = { ok: boolean; data?: Project[] }
 
 export type SocialData = {
   account: string
-  to_date: string
-  latest_post_value: number
-  latest_followers: number
-  from_date: string
-  past_post_value: number
-  past_followers_value: number
-  post_difference: number
-  followers_difference: number
-  average_per_10_min: number
-  average_per_1_hour: number
-  average_per_1_day: number
-  average_per_1_week: number
-  average_per_1_month: number
+  toDate: string
+  latestPostValue: number
+  latestFollowers: number
+  fromDate: string
+  pastPostValue: number
+  pastFollowersValue: number
+  postDifference: number
+  followersDifference: number
+  averagePer10Min: number
+  averagePer1Hour: number
+  averagePer1Day: number
+  averagePer1Week: number
+  averagePer1Month: number
   platform: Platforms
 }
 
@@ -75,7 +75,7 @@ export type Social = {
 export type ApiTimeInProgressOverview = { account: string; range: Range; interval: number }
 
 export type ApiTimeInProgressOverviewResponse = {
-  db_elapsed_time: number
+  dbElapsedTime: number
   ok: boolean
   datetime: string
   instagram: Social
@@ -97,13 +97,13 @@ export type ApiInstaInsightsAccount = { account: string; active: boolean }
 export type ApiInstaInsightsAccountsOverviewResponse = {
   ok: true
   datetime: string
-  db_elapsed_time: string
+  dbElapsedTime: string
   data: SocialData
   historical: SocialData[]
 }
 
 export type AccountsDataWithPic = SocialData & {
-  profile_picture_url: string
+  profilePictureUrl: string
   historical: any[]
   active: boolean
 }
@@ -127,9 +127,9 @@ export type ApiTimeInProgressInsertHistoricalData = {
 export type ApiMrPingPingStatus = {
   ok: boolean
   date: string
-  res_time: number
-  last_pinged: string
-  db_elapsed_time: number
+  resTime: number
+  lastPinged: string
+  dbElapsedTime: number
 }
 
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'
@@ -143,7 +143,8 @@ export type SessionAccess = {
   application: string
 }
 
-type UserSession = Schemas['CustomUser']
+export type UserSession = Schemas['CustomUser']
+export type CustomToken = Schemas['CustomToken']
 
 export type UserSessionKey = keyof UserSession
 export type SessionAccessKey = keyof SessionAccess
@@ -217,6 +218,11 @@ export type UpdateDotSquadHandler = (event: IpcRendererEvent, v: UpdateDotSquad)
 export type EmitProcessActivityHandler = (event: IpcRendererEvent, v: { activity: string }) => void
 export type OnAuthCodeHandler = (event: IpcRendererEvent, v: AuthCode) => void
 
+// - API expected params and queries
+// TODO: Get the params from the paths below and use to define the ipc types
+// But it needs to be defined / extended in djangos decorators
+export type ApiGetConfigsParams = paths['/api/mr-ping-ping/apps/configs']['get']['parameters']['path'] // prettier-ignore
+
 // *
 // **
 // ***
@@ -256,6 +262,41 @@ export type GetAllUserSessionsFunc = (v: GetAllUserSessions) => ResGetAllUserSes
 export type CheckAccessTokenFunc = (v: CheckAccessToken) => ResCheckAccessToken
 export type FindNextActiveAccessTokenFunc = () => ResFindNextActiveAccessToken
 
+// - External API
+export type ApiMrPingPingAppConfig = { appName: string }
+export type ApiMrPingPingAppStatus = { appName: string }
+export type ApiMrPingPingAppData = { appName: string; range: string; interval: number }
+export type ApiGenGenStart = { project: string }
+export type ApiGenGenCheckProgress = { project: string }
+export type ApiGetProjectConfig = { project: string }
+export type ApiPutProjectConfig = { project: string; config: Schemas['Config'] }
+
+// - External API - func types
+export type ApiMrPingPingStatusFunc = () => Promise<ApiMrPingPingStatus>
+export type ApiMrPingPingAppConfigFunc = (v: ApiMrPingPingAppConfig) => Promise<any>
+export type ApiMrPingPingAppsConfigFunc = () => Promise<any>
+export type ApiMrPingPingAppsStatusFunc = () => Promise<any>
+export type ApiMrPingPingAppStatusFunc = (
+  v: ApiMrPingPingAppStatus
+) => Promise<{ ok: boolean; data: unknown }>
+export type ApiMrPingPingAppDataFunc = (v: {
+  appName: string
+  range: string
+  interval: number
+}) => Promise<{ ok: boolean; data: unknown }>
+
+export type ApiGenGenCheckProgressFunc = (v: ApiGenGenCheckProgress) => Promise<any>
+export type ApiGenGenStartFunc = (v: ApiGenGenStart) => Promise<any>
+export type ApiProjectListFunc = () => Promise<ApiProjectsList>
+export type ApiGetProjectConfigFunc = (v: ApiGetProjectConfig) => Promise<any>
+export type ApiPutProjectConfigFunc = (v: ApiPutProjectConfig) => Promise<boolean>
+export type ApiTimeInProgressOverviewFunc = (v: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse> // prettier-ignore
+export type ApiTimeInProgressInsertHistoricalDataFunc = (v: ApiTimeInProgressInsertHistoricalData) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiInstaInsightsGetAllAccountsFunc = () => Promise<{ok: boolean, data: ApiInstaInsightsAccount[]}> // prettier-ignore
+export type ApiInstaInsightsGetAccountsOverviewFunc = (data: ApiInstaInsightsAccountsOverview) => Promise<ApiInstaInsightsAccountsOverviewResponse> // prettier-ignore
+export type ApiInstaInsightsAddAccountFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiInstaInsightsUpdateAccountStatusFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiInstaInsightsRemoveAccountFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
 // ***
 // **
 // *

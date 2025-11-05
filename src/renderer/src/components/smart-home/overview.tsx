@@ -1,18 +1,19 @@
-import { useOutletContext, useSearchParams } from 'react-router'
-import { Button } from '../ui/button'
-import { LoadingIndicator } from '../loading-indicator'
 import { useMemo } from 'react'
-import TemperatureChart from '../charts/temperature-chart'
-import { RangeSelector } from '../range-selector'
-import { IntervalSelector } from '../interval-selector'
-import { getAllSearchParams } from '~/libs/utils/search-params'
-import { Label } from '../ui/label'
+import { useOutletContext, useSearchParams } from 'react-router'
 import { RefreshCcw } from 'lucide-react'
+
+import { Label } from '~/components/ui/label'
+import { Button } from '~/components/ui/button'
+import { RangeSelector } from '~/components/range-selector'
+import { LoadingIndicator } from '~/components/loading-indicator'
+import TemperatureChart from '~/components/charts/temperature-chart'
+import { IntervalSelector } from '~/components/interval-selector'
+import { getAllSearchParams } from '~/libs/utils/search-params'
 
 // TODO; Show an overview of all on mr ping pings status, and the status of the projects it monitors.
 
 export function SmartHomeOverview() {
-  const { data, isLoading, refetch } = useOutletContext<any>()
+  const { data, isLoading, refetch } = useOutletContext<any>() // TODO; Types
 
   const [searchParams] = useSearchParams()
   const SP = getAllSearchParams(searchParams)
@@ -35,8 +36,8 @@ export function SmartHomeOverview() {
   }
 
   // Temp; wip
-  const dataNow = data[0]?.app_status[data[0]?.app_status.length - 1]
-  const tempEndpoint = dataNow.endpoints_res.find((e: any) => e.endpoint === 'temperature')
+  const dataNow = data[0]?.appStatus[data[0]?.appStatus.length - 1]
+  const tempEndpoint = dataNow.endpointsRes.find((e: any) => e.endpoint === 'temperature')
 
   return (
     <div className="flex h-[calc(100vh-96px)] items-center justify-center">
@@ -66,12 +67,12 @@ export function SmartHomeOverview() {
 }
 
 function handleReshapeData({ data }: { data: any }) {
-  return data[0].app_status.map((status) => ({
+  return data[0].appStatus.map((status) => ({
     date: status.date,
     temperature:
-      status.endpoints_res.find((e) => e.endpoint === 'temperature')?.response.data?.temperature ??
+      status.endpointsRes.find((e) => e.endpoint === 'temperature')?.response.data?.temperature ??
       null,
     humidity:
-      status.endpoints_res.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
+      status.endpointsRes.find((e) => e.endpoint === 'humidity')?.response.data?.humidity ?? null
   }))
 }

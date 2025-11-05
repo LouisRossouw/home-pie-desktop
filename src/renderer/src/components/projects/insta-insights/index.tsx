@@ -20,7 +20,11 @@ export function InstaInsights() {
   const range: Range = SP.range ?? 'hour'
   const interval: number = SP.interval ?? 12 // 1 Hour
 
-  const { data: accountsRaw } = useQuery({
+  const {
+    data: accountsRaw,
+    isPending: isAccountsPending,
+    isFetching: isAccountsFetching
+  } = useQuery({
     queryKey: ['insta-insights-all-accounts'],
     queryFn: getAllAccounts,
     staleTime: fiveMin
@@ -35,8 +39,13 @@ export function InstaInsights() {
     return filteredAccounts
   }, [accountsRaw])
 
-  const { data, refetch, isPending, isFetching } = useQuery({
-    queryKey: ['insta-insights-accounts-data', { accounts, range, interval }],
+  const {
+    data,
+    refetch,
+    isPending: isDataPending,
+    isFetching: isDataFetching
+  } = useQuery({
+    queryKey: ['insta-insights-accounts-data', { accounts: accounts.length, range, interval }],
     queryFn: () => apiGetAccountsOverview({ platform, accounts, interval, range }),
     enabled: accounts?.length > 0,
     refetchInterval: fiveMin,
@@ -47,8 +56,8 @@ export function InstaInsights() {
     <InstaInsightsLayout
       selectedAccount={maybeSelectedAccount}
       accountsRaw={accountsRaw}
-      isFetching={isFetching}
-      isPending={isPending}
+      isFetching={isDataFetching || isAccountsFetching}
+      isPending={isAccountsPending || isDataPending}
       interval={interval}
       refetch={refetch}
       dbTime={data?.dbTime}
@@ -85,6 +94,6 @@ async function apiGetAccountsOverview({
   return {
     currentData: res.data ?? [],
     historicData: res.historical ?? [],
-    dbTime: res.db_elapsed_time
+    dbTime: res.dbElapsedTime
   }
 }

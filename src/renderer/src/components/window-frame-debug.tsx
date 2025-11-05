@@ -157,24 +157,27 @@ function TempHumStats() {
 
   return (
     <div className="flex items-center justify-center w-full gap-2">
-      {tempDataUpstairs && tempDataDownstairs && (
-        <>
+      <>
+        {tempDataDownstairs && (
           <TemperatureHumidity
             label="TV:"
             data={tempDataDownstairs}
             isLoading={isTempDownStairsPending}
           />
+        )}
 
+        {tempDataUpstairs && (
           <TemperatureHumidity label="PC:" data={tempDataUpstairs} isLoading={isPending} />
-          {diffTemp && diffHumid && (
-            <div className="flex items-center gap-1">
-              <p className="text-xs">Diff:</p>
-              <p className="text-xs">{diffTemp} °C /</p>
-              <p className="text-xs">{diffHumid} %</p>
-            </div>
-          )}
-        </>
-      )}
+        )}
+
+        {tempDataDownstairs && tempDataUpstairs && (
+          <div className="flex items-center gap-1">
+            <p className="text-xs">Diff:</p>
+            <p className="text-xs">{diffTemp} °C /</p>
+            <p className="text-xs">{diffHumid} %</p>
+          </div>
+        )}
+      </>
     </div>
   )
 }

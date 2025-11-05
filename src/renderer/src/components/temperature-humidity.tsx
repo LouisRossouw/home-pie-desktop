@@ -17,7 +17,7 @@ export function TemperatureHumidity({
   const navigateTo = useNavigate()
   if (isLoading) return <SpinSVG />
 
-  const formattedPinged = data?.date_time ? format(data?.date_time, 'yyyy-MM-dd HH:mm') : ''
+  const formattedPinged = data?.dateTime ? format(data?.dateTime, 'yyyy-MM-dd HH:mm') : ''
 
   const isHot = data?.temperature >= 35
 

@@ -1,14 +1,16 @@
-import { CheckCircle, Clipboard, File, Folder, RefreshCcw, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { File, RefreshCcw } from 'lucide-react'
+import { format } from 'date-fns'
+
+import { useQuery } from '@tanstack/react-query'
+
+import { Copy } from '~/components/copy'
+import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
 import { Textarea } from '~/components/ui/textarea'
-import { Label } from '../ui/label'
-import { ProgressBar } from '../progressbar'
-import { Copy } from '../copy'
-import { LoadingIndicator } from '../loading-indicator'
-import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { Separator } from '../ui/separator'
+import { Separator } from '~/components/ui/separator'
+import { ProgressBar } from '~/components/progressbar'
+import { LoadingIndicator } from '~/components/loading-indicator'
 
 const projectsPath = import.meta.env.VITE_LOCAL_SERVER_PROJECTS_PATH
 
@@ -112,10 +114,10 @@ export function GenGenTimeInProgress() {
               </div>
               <div className="grid border rounded-lg p-4 gap-4">
                 <div className="flex justify-center border-b pb-4">
-                  <Label>{progressData?.manifest?.gengen_title}</Label>
+                  <Label>{progressData?.manifest?.gengenTitle}</Label>
                   <Copy
                     copied={false}
-                    handleCopy={() => handleCopyText(progressData?.manifest?.gengen_title)}
+                    handleCopy={() => handleCopyText(progressData?.manifest?.gengenTitle)}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -124,11 +126,11 @@ export function GenGenTimeInProgress() {
                     <Copy
                       copied={false}
                       handleCopy={() =>
-                        handleCopyText(progressData?.manifest?.gengen_description_str)
+                        handleCopyText(progressData?.manifest?.gengenDescriptionStr)
                       }
                     />
                   </div>
-                  <Textarea defaultValue={progressData?.manifest?.gengen_description_str} />
+                  <Textarea defaultValue={progressData?.manifest?.gengenDescriptionStr} />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex justify-between">
@@ -158,7 +160,7 @@ export function GenGenTimeInProgress() {
                     <Label>Open directory</Label>
                     <Button
                       variant={'ghost'}
-                      onClick={() => OpenDirectory(progressData?.files?.file_output_dir_short)}
+                      onClick={() => OpenDirectory(progressData?.files?.fileOutputDirShort)}
                     >
                       <File />
                     </Button>

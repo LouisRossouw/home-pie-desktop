@@ -6,8 +6,8 @@ export async function apiMrPingPingAppConfig({ appName }: { appName: string }) {
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.GET(`/api/mr-ping-ping/apps/configs/{app_name}`, {
-      params: { path: { app_name: appName } }
+    const { response, data } = await apiClient.GET(`/api/mr-ping-ping/apps/configs/{appName}`, {
+      params: { path: { appName } }
     })
 
     if (response.status === 200) {

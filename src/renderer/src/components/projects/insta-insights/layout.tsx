@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Outlet, useSearchParams } from 'react-router'
-import { Edit2, Eye, EyeClosed, RefreshCcw, Server } from 'lucide-react'
+import { Outlet, useLocation, useSearchParams } from 'react-router'
+import { Eye, EyeClosed, RefreshCcw, Server } from 'lucide-react'
 
 import { AccountsDataWithPic, ApiInstaInsightsAccount, Range } from '@shared/types'
 
@@ -13,6 +13,7 @@ import { IntervalSelector } from '~/components/interval-selector'
 
 import { AddAccountDialog } from './add-account-dialog'
 import { cn } from '~/libs/utils/cn'
+import { ProjectMenuDropdown } from '~/components/project-menu'
 // TODO
 // type Data = {
 //   currentData: SocialData
@@ -43,6 +44,7 @@ export function InstaInsightsLayout({
   range
 }: Props) {
   const mounted = useRef(false)
+  const { pathname } = useLocation()
 
   const currentData = data?.currentData
   const historicData = data?.historicData
@@ -67,7 +69,7 @@ export function InstaInsightsLayout({
 
             return {
               ...account,
-              profile_picture_url: lastItem.profile_picture_url,
+              profilePictureUrl: lastItem.profilePictureUrl,
               historical: matchedHistory
             }
           }
@@ -95,7 +97,7 @@ export function InstaInsightsLayout({
           account: raw.account,
           active: false,
           historical: [],
-          profile_picture_url: null
+          profilePictureUrl: null
         })
       }
     })
@@ -104,7 +106,7 @@ export function InstaInsightsLayout({
     updatedAccounts.sort((a, b) => {
       if (a.active && !b.active) return -1
       if (!a.active && b.active) return 1
-      return (b.followers_difference || 0) - (a.followers_difference || 0)
+      return (b.followersDifference || 0) - (a.followersDifference || 0)
     })
 
     return updatedAccounts
@@ -118,7 +120,7 @@ export function InstaInsightsLayout({
     )
   }
 
-  if (!isPending && !data) {
+  if (!isPending && !accountsDataWithPic) {
     return (
       <div className="flex w-full h-full items-center justify-center">
         <p>Something went wrong..</p>
@@ -129,8 +131,8 @@ export function InstaInsightsLayout({
   return (
     <div
       className={cn(
-        'h-full w-full p-4 space-y-4',
-        !mounted.current && 'animate-in fade-in duration-800 ease-in-out'
+        'h-full w-full p-4 space-y-4'
+        // !mounted.current && 'animate-in fade-in duration-800 ease-in-out'
       )}
     >
       <div className="flex w-full justify-between items-center">
@@ -140,21 +142,24 @@ export function InstaInsightsLayout({
           </Label>
           <InstaInsightsTools handleOpenEditMenu={() => console.log('todo')} />
         </div>
-        <div className="flex gap-4 items-center">
-          <RangeSelector selected={range} />
-          <IntervalSelector currentValue={interval} className="w-32" />
-          {data.dbTime && (
-            <div className="flex gap-2 text-xs">
-              <Server size={14} />
-              <p>{data.dbTime.toFixed(2)}</p>
-            </div>
-          )}
-          <Button variant={'outline'} size={'icon'} onClick={() => refetch()}>
-            {isFetching ? <LoadingIndicator /> : <RefreshCcw />}
-          </Button>
-        </div>
+        {/* *** This condition is weird */}
+        {!pathname.includes('config') && (
+          <div className="flex gap-4 items-center">
+            <RangeSelector selected={range} />
+            <IntervalSelector currentValue={interval} className="w-32" />
+            {data.dbTime && (
+              <div className="flex gap-2 text-xs">
+                <Server size={14} />
+                <p>{data.dbTime.toFixed(2)}</p>
+              </div>
+            )}
+            <Button variant={'outline'} size={'icon'} onClick={() => refetch()}>
+              {isFetching ? <LoadingIndicator /> : <RefreshCcw />}
+            </Button>
+          </div>
+        )}
       </div>
-      <div>
+      <div className="h-full">
         <Outlet context={{ account: selectedAccount, data: accountsDataWithPic }} />
       </div>
     </div>
@@ -175,9 +180,7 @@ function InstaInsightsTools({ handleOpenEditMenu }: { handleOpenEditMenu: () => 
 
   return (
     <>
-      <Button variant={'ghost'} size={'icon'} onClick={handleOpenEditMenu}>
-        <Edit2 size={18} />
-      </Button>
+      <ProjectMenuDropdown />
 
       <TooltipInfo content="Add Account" children={<AddAccountDialog />} />
       <TooltipInfo

@@ -1,15 +1,26 @@
-import { Bot, CircleDollarSign, Cog, Cone, Eye, FolderGit, Pizza, Shield } from 'lucide-react'
+import {
+  Bot,
+  CircleDollarSign,
+  Server,
+  Cog,
+  Cone,
+  Eye,
+  Box,
+  Home,
+  Shield,
+  Settings
+} from 'lucide-react'
 
 export const menus = [
   {
     title: 'Home',
-    icon: Pizza,
+    icon: Home,
     route: '/',
     subMenus: []
   },
   {
     title: 'Projects',
-    icon: FolderGit,
+    icon: Box,
     route: 'projects',
     subMenus: [
       { title: 'overview', slug: 'projects', icon: Cone, url: '/projects' },
@@ -36,6 +47,12 @@ export const menus = [
     ]
   },
   {
+    title: 'Servers',
+    icon: Server,
+    route: 'servers',
+    subMenus: [{ title: 'overview', icon: Eye, slug: 'servers', url: '/servers' }]
+  },
+  {
     title: 'GenGen',
     icon: Bot,
     route: 'gengen',
@@ -48,5 +65,11 @@ export const menus = [
         url: '/gengen/gengen-settings'
       }
     ]
+  },
+  {
+    title: 'Settings',
+    icon: Settings,
+    route: 'settings',
+    subMenus: []
   }
 ]
