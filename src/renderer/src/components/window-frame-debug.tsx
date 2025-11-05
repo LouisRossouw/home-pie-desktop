@@ -79,7 +79,7 @@ export function WindowFrameDebug() {
             </Button>
           )}
 
-          <p className="text-xs">{pathname}</p>
+          {appSettings?.debug && <p className="text-xs">{pathname}</p>}
         </div>
         <div className="flex col-span-3 justify-center items-center gap-4">
           <TempHumStats />
@@ -87,9 +87,9 @@ export function WindowFrameDebug() {
 
         <div className="flex col-span-1 justify-end items-center gap-4">
           <MrPingPingIndicator
-            resTime={status?.res_time}
-            lastPingedRaw={status?.last_pinged}
-            isLoading={status?.last_pinged ? false : true}
+            resTime={status?.resTime}
+            lastPingedRaw={status?.lastPinged}
+            isLoading={status?.lastPinged ? false : true}
           />
           {appSettings?.debug && (
             <>
