@@ -67,6 +67,7 @@ export enum appIpcKey {
   authCode = 'auth:code'
 }
 
+// TODO; Update to include the method, ie; api-post-etc
 export enum externalIpcKey {
   apiMrPingPingStatus = 'api-mr-ping-ping-status',
   apiMrPingPingAppConfig = 'api-mr-ping-ping-app-config',
