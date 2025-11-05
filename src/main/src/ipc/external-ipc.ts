@@ -20,75 +20,76 @@ import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
 import { apiCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
 import { apiGetProjectConfig, apiPutProjectConfig } from '../api/projects/api-project-config'
+import { externalIpcKey } from '@shared/constants'
 
 export function externalIpcHandlers() {
-  ipcMain.handle('api-projects-list', async (_event) => {
+  ipcMain.handle(externalIpcKey.apiProjectList, async (_event) => {
     return await apiProjectList()
   })
 
   // * Mr PingPing
-  ipcMain.handle('api-mr-ping-ping-status', async (_event) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingStatus, async (_event) => {
     return await apiMrPingPingStatus()
   })
-  ipcMain.handle('api-mr-ping-ping-app-config', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingAppConfig, async (_event, data) => {
     return await apiMrPingPingAppConfig(data)
   })
-  ipcMain.handle('api-mr-ping-ping-apps-config', async (_event) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingAppsConfig, async (_event) => {
     return await apiMrPingPingAppsConfig()
   })
-  ipcMain.handle('api-mr-ping-ping-apps-status', async (_event) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingAppsStatus, async (_event) => {
     return await apiMrPingPingAppsStatus()
   })
-  ipcMain.handle('api-mr-ping-ping-app-status', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingAppStatus, async (_event, data) => {
     return await apiMrPingPingAppStatus(data)
   })
-  ipcMain.handle('api-mr-ping-ping-apps-data', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiMrPingPingAppData, async (_event, data) => {
     return await apiMrPingPingAppsData(data)
   })
 
   // GenGen
-  ipcMain.handle('api-gengen-start', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiGenGenStart, async (_event, data) => {
     return await apiGenGenStart(data)
   })
-  ipcMain.handle('api-gengen-check-progress', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiGenGenCheckProgress, async (_event, data) => {
     return await apiGenGenCheckProgress(data)
   })
 
   // Projects
-  ipcMain.handle('api-get-project-config', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiGetProjectConfig, async (_event, data) => {
     return await apiGetProjectConfig(data)
   })
-  ipcMain.handle('api-put-project-config', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiPutProjectConfig, async (_event, data) => {
     return await apiPutProjectConfig(data)
   })
 
   // * Projects; TIme In Progress related API
-  ipcMain.handle('api-timeinprogress-overview', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiTimeInProgressOverview, async (_event, data) => {
     return await apiTimeInProgressOverview(data)
   })
-  ipcMain.handle('api-timeinprogress-insert-historical-data', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiTimeInProgressInsertHistoricalData, async (_event, data) => {
     return await apiTimeInProgressInsertHistoricalData(data)
   })
 
   // * Projects; Insta insights related API
-  ipcMain.handle('api-insta-insights-get-all-accounts', async (_event) => {
+  ipcMain.handle(externalIpcKey.apiInstaInsightsGetAllAccounts, async (_event) => {
     return await apiInstaInsightsGetAllAccounts()
   })
-  ipcMain.handle('api-insta-insights-get-accounts-overview', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiInstaInsightsGetAccountsOverview, async (_event, data) => {
     return await apiInstaInsightsGetAccountsOverview(data)
   })
-  ipcMain.handle('api-insta-insights-add-account', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiInstaInsightsAddAccount, async (_event, data) => {
     return await apiInstaInsightsAddAccount(data)
   })
-  ipcMain.handle('api-insta-insights-update-account-status', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiInstaInsightsUpdateAccountStatus, async (_event, data) => {
     return await apiInstaInsightsUpdateAccountStatus(data)
   })
-  ipcMain.handle('api-insta-insights-remove-account', async (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiInstaInsightsRemoveAccount, async (_event, data) => {
     return await apiInstaInsightsRemoveAccount(data)
   })
 
   // * Auth
-  ipcMain.handle('api-complete-auth-app', (_event, data) => {
+  ipcMain.handle(externalIpcKey.apiCompleteAuthentication, (_event, data) => {
     return apiCompleteAuthentication(data)
   })
 }

@@ -85,7 +85,8 @@ export enum externalIpcKey {
   apiInstaInsightsGetAccountsOverview = 'api-insta-insights-get-accounts-overview',
   apiInstaInsightsAddAccount = 'api-insta-insights-add-account',
   apiInstaInsightsUpdateAccountStatus = 'api-insta-insights-update-account-status',
-  apiInstaInsightsRemoveAccount = 'api-insta-insights-remove-account'
+  apiInstaInsightsRemoveAccount = 'api-insta-insights-remove-account',
+  apiCompleteAuthentication = 'api-complete-auth-app'
 }
 
 export enum navIpcKey {
