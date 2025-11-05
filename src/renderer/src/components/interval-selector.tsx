@@ -15,7 +15,7 @@ export function IntervalSelector({
 
   const [pendingInterval, setPendingInterval] = useState<string | number>(currentValue)
 
-  const debouncedRange = useDebounce(pendingInterval, 2000)
+  const debouncedRange = useDebounce(pendingInterval, 1000)
 
   useEffect(() => {
     const sp = new URLSearchParams(searchParams)
