@@ -70,7 +70,7 @@ export function TimeInProgressLayout() {
     )
   }
 
-  const dbTime = data?.db_elapsed_time
+  const dbTime = data?.dbElapsedTime
 
   return (
     <div className="flex w-full h-[calc(100vh-160px)] items-center justify-center animate-in fade-in duration-800 ease-in-out">
@@ -117,7 +117,7 @@ function SystemStatus({ systemData }: { systemData: any[] }) {
       {systemData?.map((data) => {
         const critical = data?.success ? false : true
 
-        const lastPingedMin = differenceInMinutes(new Date(), addHours(data?.date_time, 2))
+        const lastPingedMin = differenceInMinutes(new Date(), addHours(data?.dateTime, 2))
         const serverIconColor = critical
           ? 'red'
           : lastPingedMin <= 45

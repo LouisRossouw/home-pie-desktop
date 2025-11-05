@@ -7,13 +7,13 @@ export function formatDHT11SensorStatusData({ data }: { data: AppRecordedData })
   if (!data) return undefined
 
   const item = data[0]
-  const tempEndpoint = item.endpoints_res.find((e: any) => e.endpoint === 'temperature')
-  const humidityEndpoint = item.endpoints_res.find((e: any) => e.endpoint === 'humidity')
+  const tempEndpoint = item.endpointsRes.find((e: any) => e.endpoint === 'temperature')
+  const humidityEndpoint = item.endpointsRes.find((e: any) => e.endpoint === 'humidity')
 
   return {
     temperature: tempEndpoint?.response?.data?.temperature,
     humidity: humidityEndpoint?.response?.data?.humidity,
-    date_time: item.date_time
+    datetime: item.dateTime
   }
 }
 
@@ -24,9 +24,9 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
   const item = data[0]
 
   // Filter valid temperature readings
-  const validTemps = item.app_status
+  const validTemps = item.appStatus
     .map((s: any) => {
-      const tempEndpoint = s.endpoints_res.find((e: any) => e.endpoint === 'temperature')
+      const tempEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'temperature')
       return tempEndpoint?.response?.code === 200
         ? { temperature: tempEndpoint.response.data.temperature, date: s.date }
         : null
@@ -35,9 +35,9 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
     .slice(-3) // take last 6 valid readings
 
   // Filter valid humidity readings
-  const validHumidity = item.app_status
+  const validHumidity = item.appStatus
     .map((s: any) => {
-      const humidityEndpoint = s.endpoints_res.find((e: any) => e.endpoint === 'humidity')
+      const humidityEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'humidity')
       return humidityEndpoint?.response?.code === 200
         ? { humidity: humidityEndpoint.response.data.humidity, date: s.date }
         : null
@@ -74,6 +74,6 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
     humidityTrend: humTrend,
     temperatureHistory: validTemps,
     humidityHistory: validHumidity,
-    date_time: latestTemp.date // or latestHum.date, depending on what you want to display
+    dateTime: latestTemp.date // or latestHum.date, depending on what you want to display
   }
 }

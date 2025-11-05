@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { QueryClient } from '@tanstack/react-query'
 
 import {
   Schemas,
@@ -13,7 +14,6 @@ import { defaultUserSettings } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 import { useAppSession } from '~/libs/context/session'
-import { QueryClient } from '@tanstack/react-query'
 
 type Value = string | boolean | number | undefined
 type AvailableAccounts = { userId: number; email: string; active: boolean }[] | undefined
@@ -121,11 +121,11 @@ export function useAccounts() {
   async function loginAccount(data: AuthResponse) {
     try {
       const issuedAt = Date.now()
-      const expiresAt = issuedAt + data.expires_in * 1000
+      const expiresAt = issuedAt + data.expiresIn * 1000
 
       const accessSession = {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
         application: data.application,
         expiresIn: expiresAt,
         expires: data.expires,

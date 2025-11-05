@@ -165,7 +165,7 @@ function AccountRow({
       </div>
       <div onClick={handleNavigate} className={`flex w-64 hover:cursor-pointer`}>
         <Avatar>
-          <AvatarImage src={account.profile_picture_url} alt="NA" />
+          <AvatarImage src={account.profilePictureUrl} alt="NA" />
           <AvatarFallback>NA</AvatarFallback>
         </Avatar>
         <div className="text-white w-full flex items-center justify-start ml-4">
@@ -173,42 +173,42 @@ function AccountRow({
         </div>
       </div>
       <div className="flex items-center">
-        <SocialIndicator value={account.followers_difference} />
+        <SocialIndicator value={account.followersDifference} />
       </div>
       <div className="grid grid-cols-7 gap-2 w-full">
         <div className="w-full col-span-2">
           <LineChartCompact
             data={account.historical}
-            followers_difference={account?.followers_difference}
+            followersDifference={account?.followersDifference}
           />
         </div>
         <SocialStatsCard
           title="Followers"
-          value={account.latest_followers}
+          value={account.latestFollowers}
           disableIndicator
           className="border-none"
         />
         <SocialStatsCard
           title="Difference"
-          value={account.followers_difference}
+          value={account.followersDifference}
           className="border-none"
           disableIndicator
         />
         <SocialStatsCard
           title="Avarage per 1 hour"
-          value={account.average_per_1_hour}
+          value={account.averagePer1Hour}
           className="border-none"
           disableIndicator
         />
         <SocialStatsCard
           title="Avarage per 1 day"
-          value={account.average_per_1_day}
+          value={account.averagePer1Day}
           className="border-none"
           disableIndicator
         />
         <SocialStatsCard
           title="Avarage per 1 month"
-          value={account.average_per_1_month}
+          value={account.averagePer1Month}
           className="border-none"
           disableIndicator
         />

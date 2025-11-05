@@ -77,9 +77,9 @@ async function checkRefreshToken({
   if (refreshToken) {
     const response = await refreshTokenFunction({ userId, refreshToken })
 
-    if (response?.access_token) {
+    if (response?.accessToken) {
       updateTokens({ userId, response })
-      return response.access_token
+      return response.accessToken
     }
   }
 
@@ -151,18 +151,17 @@ export async function refreshTokenFunction({
   userId: number
   refreshToken: string
 }) {
-  const auth_type = await getSession({ userId, key: 'auth_type' })
+  const authType = await getSession({ userId, key: 'authType' })
 
-  const clientId =
-    auth_type === '' ? oAuthClients!.MANUAL_CLIENT_ID : oAuthClients!.GOOGLE_CLIENT_ID
+  const clientId = authType === '' ? oAuthClients!.MANUAL_CLIENT_ID : oAuthClients!.GOOGLE_CLIENT_ID
 
   const response = await fetch(`${getApiBaseURL}/auth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      refresh_token: refreshToken,
-      grant_type: 'refresh_token',
-      client_id: clientId
+      refreshToken: refreshToken,
+      grantType: 'refresh_token', // Expects snake case
+      clientId: clientId
     })
   })
 
@@ -186,19 +185,19 @@ async function updateTokens({
 }: {
   userId: number
   response: {
-    access_token: string
-    expires_in: number
-    token_type: string
+    accessToken: string
+    expiresIn: number
+    tokenType: string
     scope: string
-    refresh_token: string
+    refreshToken: string
   }
 }) {
-  const expiresAt = Date.now() + response.expires_in * 1000
+  const expiresAt = Date.now() + response.expiresIn * 1000
   try {
     await setSession({ userId, key: 'active', value: true })
     await setSession({ userId, key: 'expiresIn', value: expiresAt.toString() })
-    await setSession({ userId, key: 'accessToken', value: response.access_token })
-    await setSession({ userId, key: 'refreshToken', value: response.refresh_token })
+    await setSession({ userId, key: 'accessToken', value: response.accessToken })
+    await setSession({ userId, key: 'refreshToken', value: response.refreshToken })
 
     return true
   } catch (err) {
