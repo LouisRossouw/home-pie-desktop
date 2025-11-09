@@ -10,34 +10,6 @@ Home pie is basically a side project, built to monitor/support - my side project
 - This repo will always be in an unfinished state / mess, as there is no clear end goal, it is super low priority.
 - It runs on my local machines & network.
 
-v1.0.2 (Alpha)
+v1.0.4 (Alpha)
 
-![app](https://github.com/user-attachments/assets/542c042f-f889-479e-a96c-b9c5dad6fc74)
-
-
-## Project Setup
-
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+![home-pie-example](https://github.com/user-attachments/assets/cb005db8-a087-4d7e-9c51-9f2965b0a98a)
