@@ -22,7 +22,7 @@ export const defaultDotSquadColour = 'rgb(20, 20, 20)'
 
 const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
-const appEnvironment = import.meta.env.MODE // development || production
+export const appEnvironment = import.meta.env.MODE // development || production
 
 export enum dbIpcKey {
   // ** Core Settings
