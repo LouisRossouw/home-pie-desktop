@@ -59,7 +59,7 @@ export function WindowFrame() {
               <DotSquad />
             </div>
           ) : (
-            <div>HomePie</div>
+            <div>{getAppName}</div>
           )}
         </div>
 
