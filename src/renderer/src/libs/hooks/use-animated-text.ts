@@ -10,7 +10,7 @@ function delay(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
 
-async function devtest(el: HTMLElement) {
+async function animateHighlightGlow(el: HTMLElement) {
   let tg = 0
   let r = 250
   let g = 250
@@ -145,7 +145,7 @@ export function useAnimatedText(
             span.dataset.revealed = 'true'
 
             if (span.dataset.highlight === 'true') {
-              setTimeout(() => devtest(span), 0)
+              setTimeout(() => animateHighlightGlow(span), 0)
             }
           }
         }
