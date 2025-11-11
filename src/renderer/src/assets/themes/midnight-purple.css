@@ -1,0 +1,34 @@
+.midnight-purple {
+  --background: oklch(0.18 0.025 270);
+  --foreground: oklch(0.95 0.01 270);
+  --card: oklch(0.2 0.04 275);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.6 0.18 285);
+  --primary-foreground: oklch(0.15 0.01 270);
+  --secondary: oklch(0.25 0.02 270);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.25 0.03 270);
+  --muted-foreground: oklch(0.7 0.02 270);
+  --accent: oklch(0.28 0.04 275);
+  --accent-foreground: var(--primary);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --destructive: oklch(0.55 0.25 25);
+  --destructive-foreground: oklch(0.95 0.01 270);
+  --border: oklch(0.3 0.03 270);
+  --input: oklch(0.2 0.04 270);
+  --ring: oklch(0.6 0.18 285);
+  --sidebar: oklch(0.15 0.01 270);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.7 0.15 45);
+  --sidebar-primary-foreground: oklch(0.1 0.01 270);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: oklch(0.25 0.02 270);
+  --sidebar-ring: var(--ring);
+}

@@ -43,6 +43,11 @@ export const themesList = [
     active: true,
     label: 'Solar Twilight',
     slug: 'solar-twilight'
+  },
+  {
+    active: true,
+    label: 'Midnight Purple',
+    slug: 'midnight-purple'
   }
 ] as const
 
