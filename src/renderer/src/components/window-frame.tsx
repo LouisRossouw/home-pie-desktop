@@ -11,6 +11,7 @@ import { DotSquad } from './dot-squad'
 import { WindowUIModeSelector } from './window-ui-mode-selector'
 import { capitalize } from '~/libs/utils/utils'
 import { appEnvironment, getAppName } from '@shared/constants'
+import { Logo } from './logo'
 
 const isDev = import.meta.env.DEV
 const mode = import.meta.env.MODE
@@ -47,7 +48,7 @@ export function WindowFrame() {
             <div></div>
           ) : (
             <div className="flex gap-1 items-center text-sm">
-              <p className="hue-rotate-animation">{getAppName}</p>
+              <Logo />
               {isDev && <p className="opacity-50">/ {capitalize(appEnvironment)}</p>}
             </div>
           )}
@@ -59,7 +60,9 @@ export function WindowFrame() {
               <DotSquad />
             </div>
           ) : (
-            <div>{getAppName}</div>
+            <div>
+              <Logo />
+            </div>
           )}
         </div>
 

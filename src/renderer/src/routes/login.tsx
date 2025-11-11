@@ -11,6 +11,7 @@ import { usePoll } from '~/libs/hooks/use-poll-counter'
 import { windowModes } from '~/libs/hooks/use-app-window'
 
 import { Button } from '~/components/ui/button'
+import { Logo } from '~/components/logo'
 
 export default function Login() {
   const { appSettings, userSettings, resizeApp, windowControl } = useApp()
@@ -93,9 +94,12 @@ export default function Login() {
           className="grid h-full w-full items-center justify-center p-4 gap-4"
           onClick={() => setReadyToSignIn(true)}
         >
-          <div className="text-center">
-            <h1 className="font-bold text-6xl">{format(now, 'HH:mm:ss')}</h1>
-            <h2 className="font-medium text-3xl">{format(now, 'yyyy-MM-dd')}</h2>
+          <div className="text-center space-y-4">
+            <h1 className="font-light text-4xl opacity-70">{format(now, 'HH:mm:ss')}</h1>
+            <div className="border-y py-4">
+              <Logo className="text-6xl" />
+            </div>
+            <h2 className="font-light text-3xl opacity-70">{format(now, 'yyyy-MM-dd')}</h2>
           </div>
         </div>
       ) : (
