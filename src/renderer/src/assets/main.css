@@ -47,25 +47,6 @@
   --breakpoint-3xl: 1920px;
 }
 
-/* @layer base {
-  * {
-    @apply border-border outline-ring/50;
-    @apply antialiased;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  html,
-  body {
-    user-select: none;
-    scroll-behavior: smooth;
-    -webkit-app-region: no-drag;
-    -webkit-font-smoothing: antialiased;
-  }
-} */
-
 .splash_window{
   background-color: none;
   color: black;
@@ -160,5 +141,24 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+.hue-rotate-animation {
+  animation: hue-rotation 4s infinite;
+  filter: sepia(100%) saturate(10000%) brightness(100%) hue-rotate(90deg);
+}
+
+/* Keyframes for the hue rotation */
+@keyframes hue-rotation {
+  0% {
+    filter: sepia(30%) saturate(100%) brightness(100%) hue-rotate(20deg);
+  }
+  50% {
+    filter: sepia(30%) saturate(800%) brightness(100%) hue-rotate(60deg);
+  }
+  100% {
+    filter: sepia(30%) saturate(100%) brightness(100%) hue-rotate(100deg);
   }
 }
