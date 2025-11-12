@@ -5,6 +5,7 @@ import { mainWindow } from '@main/.'
 import { getAllSessions, getSession, setSession } from './db/session'
 import { appIpcKey, generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
 import { getCoreSetting } from './db/core-settings'
+import { getOauthClientForUserAuthType } from '@shared/auth'
 
 export async function requireSession(requireAuth: boolean = true) {
   const { default: createClient } = await import('openapi-fetch')
@@ -144,6 +145,9 @@ export async function isTokenExpired({ userId }: { userId: number }) {
   }
 }
 
+let isRefreshing = false
+let refreshPromise: Promise<any> | undefined = undefined
+
 export async function refreshTokenFunction({
   userId,
   refreshToken
@@ -151,27 +155,57 @@ export async function refreshTokenFunction({
   userId: number
   refreshToken: string
 }) {
-  const authType = await getSession({ userId, key: 'authType' })
-
-  const clientId = authType === '' ? oAuthClients!.MANUAL_CLIENT_ID : oAuthClients!.GOOGLE_CLIENT_ID
-
-  const response = await fetch(`${getApiBaseURL}/auth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      refreshToken: refreshToken,
-      grantType: 'refresh_token', // Expects snake case
-      clientId: clientId
-    })
-  })
-
-  if (!response.ok) {
-    // TODO; Dont force logout if other active accounts exists, instead switch to them?
-
-    return mainWindow?.webContents.send(appIpcKey.navigateTo, { url: '/login?forceLogout=true' })
-  } else {
-    return await response.json()
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise // Return same in-progress promise
   }
+
+  isRefreshing = true
+  refreshPromise = (async () => {
+    console.log('Refreshing accessToken...')
+
+    try {
+      const authType = await getSession({ userId, key: 'authType' })
+
+      const clientId = getOauthClientForUserAuthType({ authType })
+
+      const response = await fetch(`${getApiBaseURL}/auth/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+          grantType: 'refresh_token', // Expects snake case
+          clientId
+        })
+      })
+
+      if (!response.ok) {
+        if ([400, 401].includes(response.status)) {
+          console.error('Invalid or expired refresh token')
+          // TODO; Dont force logout if other active accounts exists, instead switch to them?
+          return mainWindow?.webContents.send(appIpcKey.navigateTo, {
+            url: '/login?forceLogout=true'
+          })
+        } else {
+          throw new Error(`Server error: ${response.status}`)
+        }
+      }
+      const data = await response.json()
+      return data
+    } catch (err: any) {
+      console.error('Token refresh failed', err.message || err)
+
+      if (err.message.includes('invalid') || err.message.includes('expired')) {
+        return mainWindow?.webContents.send(appIpcKey.navigateTo, {
+          url: '/login?forceLogout=true'
+        })
+      }
+    } finally {
+      isRefreshing = false
+      refreshPromise = undefined
+    }
+  })()
+
+  return refreshPromise
 }
 
 export function getMinutesUntilExpiration(expiresAt: number) {

@@ -1,3 +1,5 @@
+import { oAuthClients } from './constants'
+
 const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
 
@@ -16,4 +18,8 @@ export function getOAuthClients() {
   }
 
   return undefined
+}
+
+export function getOauthClientForUserAuthType({ authType }: { authType?: string }) {
+  return authType === '' ? oAuthClients!.MANUAL_CLIENT_ID : oAuthClients!.GOOGLE_CLIENT_ID
 }
