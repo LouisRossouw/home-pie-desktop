@@ -133,8 +133,8 @@ function SystemStatus({ systemData }: { systemData: any[] }) {
               bgColor={serverIconColor === 'lime' ? 'bg-green-400' : 'bg-red-500'}
               children={<CircleCheck size={14} color={serverIconColor} />}
             />
-            {data.appName === 'timeinprogress_client' && <p className="text-xs">CLI</p>}
-            {data.appName === 'timeinprogress_api' && <p className="text-xs">API</p>}
+            {data?.appName === 'timeinprogress_client' && <p className="text-xs">CLI</p>}
+            {data?.appName === 'timeinprogress_api' && <p className="text-xs">API</p>}
           </div>
         )
       })}

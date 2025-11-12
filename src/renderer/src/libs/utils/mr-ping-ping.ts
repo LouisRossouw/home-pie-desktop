@@ -24,7 +24,7 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
   const item = data[0]
 
   // Filter valid temperature readings
-  const validTemps = item.appStatus
+  const validTemps = item?.appStatus
     .map((s: any) => {
       const tempEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'temperature')
       return tempEndpoint?.response?.code === 200
@@ -35,7 +35,7 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
     .slice(-3) // take last 6 valid readings
 
   // Filter valid humidity readings
-  const validHumidity = item.appStatus
+  const validHumidity = item?.appStatus
     .map((s: any) => {
       const humidityEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'humidity')
       return humidityEndpoint?.response?.code === 200
@@ -45,15 +45,15 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
     .filter(Boolean)
     .slice(-3)
 
-  if (!validTemps.length && !validHumidity.length) return undefined
+  if (!validTemps?.length && !validHumidity?.length) return undefined
 
   // Temperature trend
   const latestTemp = validTemps.at(-1)
   const firstTemp = validTemps[0]
   const tempTrend =
-    latestTemp.temperature > firstTemp.temperature
+    latestTemp?.temperature > firstTemp?.temperature
       ? 'up'
-      : latestTemp.temperature < firstTemp.temperature
+      : latestTemp?.temperature < firstTemp?.temperature
         ? 'down'
         : 'stable'
 
@@ -61,19 +61,19 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
   const latestHum = validHumidity.at(-1)
   const firstHum = validHumidity[0]
   const humTrend =
-    latestHum.humidity > firstHum.humidity
+    latestHum?.humidity > firstHum?.humidity
       ? 'up'
-      : latestHum.humidity < firstHum.humidity
+      : latestHum?.humidity < firstHum?.humidity
         ? 'down'
         : 'stable'
 
   return {
-    temperature: latestTemp.temperature,
-    humidity: latestHum.humidity,
+    temperature: latestTemp?.temperature,
+    humidity: latestHum?.humidity,
     temperatureTrend: tempTrend,
     humidityTrend: humTrend,
     temperatureHistory: validTemps,
     humidityHistory: validHumidity,
-    dateTime: latestTemp.date // or latestHum.date, depending on what you want to display
+    dateTime: latestTemp?.date // or latestHum.date, depending on what you want to display
   }
 }
