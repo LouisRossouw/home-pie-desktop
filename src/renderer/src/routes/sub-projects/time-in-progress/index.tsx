@@ -1,5 +1,5 @@
-import { TimeInProgressLayout } from '~/components/projects/time-in-progress'
+import { TimeInProgress } from '~/components/projects/time-in-progress'
 
 export default function TimeInProgressRoute() {
-  return <TimeInProgressLayout />
+  return <TimeInProgress />
 }
