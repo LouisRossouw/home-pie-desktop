@@ -35,6 +35,8 @@ import AuthorizationRoute from './routes/authorize'
 import InstaInsightsConfigRoute from './routes/sub-projects/insta-insights/config'
 import ServersRoute from './routes/servers'
 import ServersOverviewRoute from './routes/servers/overview'
+import TimeInProgressConfigRoute from './routes/sub-projects/time-in-progress/config'
+import { TimeInProgressOverview } from './components/projects/time-in-progress/overview'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -62,7 +64,17 @@ const projectRoutes = [
       { index: true, element: <ProjectsOverviewRoute /> },
       { path: 'project-settings', element: <ProjectSettingsRoute /> },
 
-      { path: 'time-in-progress', element: <TimeInProgressRoute /> },
+      {
+        path: 'time-in-progress',
+        element: <TimeInProgressRoute />,
+        children: [
+          { index: true, element: <TimeInProgressOverview /> },
+          {
+            path: 'config',
+            element: <TimeInProgressConfigRoute />
+          }
+        ]
+      },
       {
         path: 'insta-insights',
         element: <InstaInsightsRoute />,
