@@ -13,6 +13,7 @@ const panelOutletAttr = {
 type Props = {
   // ref: RefObject<ImperativePanelHandle>
   children: React.ReactNode
+  className?: string
 }
 
 // export function OutletPanel({ ref, children }: Props) {
@@ -25,10 +26,12 @@ type Props = {
 
 // * SideNote: forwardRef is deprecated in React v19 - https://react.dev/reference/react/forwardRef
 // TODO; Upgrade to v19
-export const OutletPanel = forwardRef<ImperativePanelHandle, Props>(({ children }, ref) => {
-  return (
-    <ResizablePanel ref={ref} {...panelOutletAttr}>
-      {children}
-    </ResizablePanel>
-  )
-})
+export const OutletPanel = forwardRef<ImperativePanelHandle, Props>(
+  ({ children, className }, ref) => {
+    return (
+      <ResizablePanel className={className} ref={ref} {...panelOutletAttr}>
+        {children}
+      </ResizablePanel>
+    )
+  }
+)

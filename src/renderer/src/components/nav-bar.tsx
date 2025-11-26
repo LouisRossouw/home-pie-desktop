@@ -36,7 +36,7 @@ export function NavBar({
     )
 
   return (
-    <nav className="flex h-12 w-full items-center justify-between p-2 border-b">
+    <nav className="flex h-10 w-full items-center justify-between p-2">
       <div className="flex gap-4">
         <Button variant={'ghost'} size={'sm'} onClick={() => navigation(-1)}>
           <ArrowLeft size={18} />

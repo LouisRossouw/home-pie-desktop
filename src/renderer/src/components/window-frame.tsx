@@ -39,7 +39,7 @@ export function WindowFrame() {
 
   return (
     <div
-      className="h-8 rounded-t-lg px-2 bg-background border-b items-center justify-center"
+      className="h-8 rounded-t-lg px-2 bg-background items-center justify-center"
       style={webKit.drag}
     >
       <div className="grid grid-cols-3 w-full">
