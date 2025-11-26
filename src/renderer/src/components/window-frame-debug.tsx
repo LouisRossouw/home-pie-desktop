@@ -1,24 +1,24 @@
 import { useMemo, useRef } from 'react'
 import { useLocation } from 'react-router'
 
-import { Bug, Diff, House, Infinity, Star } from 'lucide-react'
+import { Bug, House, Star } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 
 import { settingKeys } from '@shared/default-app-settings'
 
 import { cn } from '~/libs/utils/cn'
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
+import { meterReadStatusData } from '~/libs/utils/meter-reader'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
+import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
+import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
 
 import { Button } from './ui/button'
 import { AppVersion } from './app-version'
-import { useMrPingPing } from '~/libs/context/mr-ping-ping'
-
 import { MrPingPingIndicator } from './mr-ping-ping'
 import { TemperatureHumidity } from './temperature-humidity'
-import { useQuery } from '@tanstack/react-query'
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
-import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
 
 const tenMin = 1000 * 60 * 10
 
@@ -83,6 +83,7 @@ export function WindowFrameDebug() {
         </div>
         <div className="flex col-span-3 justify-center items-center gap-4">
           <TempHumStats />
+          <PowerStats />
         </div>
 
         <div className="flex col-span-1 justify-end items-center gap-4">
@@ -104,6 +105,38 @@ export function WindowFrameDebug() {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function PowerStats() {
+  const { getAppStatus } = useMrPingPingService()
+
+  const { data: meterReadRaw, isPending } = useQuery({
+    queryKey: ['meter-read-stat'],
+    queryFn: async () => {
+      return await getAppStatus({
+        appNames: ['meter_reader_api']
+      })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
+  })
+
+  const electricityData = useMemo(() => {
+    return meterReadStatusData({ data: meterReadRaw })
+  }, [meterReadRaw])
+
+  return (
+    <div className="flex items-center justify-center w-full gap-2">
+      <>
+        {electricityData && (
+          <div className="flex items-center gap-1">
+            <p className="text-xs">⚡kWh:</p>
+            <p className="text-xs">{electricityData.kwh}</p>
+          </div>
+        )}
+      </>
     </div>
   )
 }
