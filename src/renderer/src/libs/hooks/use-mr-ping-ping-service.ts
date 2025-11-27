@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ApiMrPingPingStatus } from '@shared/types'
+import { ApiMrPingPingStatus, Range } from '@shared/types'
 
 export function useMrPingPingService() {
   const [status, setStatus] = useState<ApiMrPingPingStatus | undefined>(undefined)
@@ -14,7 +14,7 @@ export function useMrPingPingService() {
       appNames.map((appName) => window.api.external.apiMrPingPingAppStatus({ appName }))
     )
 
-    return res.flatMap((item) => item.data)
+    return res.flatMap((item) => item)
   }
 
   async function getAppRecordedData({
@@ -23,7 +23,7 @@ export function useMrPingPingService() {
     interval
   }: {
     appNames: string[]
-    range: string
+    range: Range
     interval: number
   }) {
     const res = await Promise.all(
@@ -32,7 +32,7 @@ export function useMrPingPingService() {
       )
     )
 
-    return res.flatMap((item) => item.data)
+    return res.flatMap((item) => item)
   }
 
   return {

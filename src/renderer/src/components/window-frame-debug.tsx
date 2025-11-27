@@ -56,8 +56,8 @@ export function WindowFrameDebug() {
 
   return (
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
-      <div className="grid grid-cols-5 w-full">
-        <div className="flex col-span-1 gap-4 justify-start items-center">
+      <div className="flex w-full justify-between">
+        <div className="flex col-span-1 gap-4 justify-start items-center w-full">
           <Button
             variant={'ghost'}
             className="w-6 h-6"
@@ -79,12 +79,13 @@ export function WindowFrameDebug() {
             </Button>
           )}
 
-          {appSettings?.debug && <p className="text-xs">{pathname}</p>}
+          {appSettings?.debug && <p className="text-xs opacity-50">{pathname}</p>}
         </div>
-        <div className="flex col-span-3 justify-center items-center gap-4">
+        <div className="flex w-full justify-end items-center gap-4 px-4">
           <TempHumStats />
           <PowerStats />
         </div>
+        {/* <div className="flex col-span-1 justify-center items-center gap-4"></div> */}
 
         <div className="flex col-span-1 justify-end items-center gap-4">
           <MrPingPingIndicator
@@ -100,7 +101,7 @@ export function WindowFrameDebug() {
               </Button>
             </>
           )}
-          <div onClick={handleDebugRedirect}>
+          <div className="text-right w-18" onClick={handleDebugRedirect}>
             <AppVersion />
           </div>
         </div>
@@ -128,7 +129,7 @@ function PowerStats() {
   }, [meterReadRaw])
 
   return (
-    <div className="flex items-center justify-center w-full gap-2">
+    <div className="flex items-center justify-center gap-2">
       <>
         {electricityData && (
           <div className="flex items-center gap-1">
@@ -189,7 +190,7 @@ function TempHumStats() {
     .replace('-', '')
 
   return (
-    <div className="flex items-center justify-center w-full gap-2">
+    <div className="flex items-center justify-center gap-2">
       <>
         {tempDataDownstairs && (
           <TemperatureHumidity
