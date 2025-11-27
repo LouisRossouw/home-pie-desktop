@@ -60,7 +60,7 @@ export default function ProjectsLayout() {
         />
         {/* <ResizableHandle className="w-[1px]" /> */}
         <OutletPanel
-          className="p-2 h-full flex pr-10"
+          className=" h-full flex pr-10"
           ref={outletPanelRef}
           children={
             <div className="w-full border rounded-lg">

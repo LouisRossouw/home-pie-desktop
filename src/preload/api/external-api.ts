@@ -50,7 +50,7 @@ export const externalAPI = {
   apiMrPingPingAppConfig: async (v: T.ApiMrPingPingAppConfig) => IPCR.invoke(externalIpcKey.apiMrPingPingAppConfig, v),
   apiMrPingPingAppsConfig: async () => IPCR.invoke(externalIpcKey.apiMrPingPingAppsConfig),
   apiMrPingPingAppsStatus: async () => IPCR.invoke(externalIpcKey.apiMrPingPingAppsStatus),
-  apiMrPingPingAppStatus: async (v: T.ApiMrPingPingAppStatus) => IPCR.invoke(externalIpcKey.apiMrPingPingAppStatus, v),
+  apiMrPingPingAppStatus: async (v: T.ApiMrPingPingAppStatusParams) => IPCR.invoke(externalIpcKey.apiMrPingPingAppStatus, v),
   apiMrPingPingAppData: async (v: T.ApiMrPingPingAppData) => IPCR.invoke(externalIpcKey.apiMrPingPingAppData, v),
 
   // GenGen

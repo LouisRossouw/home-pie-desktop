@@ -13,7 +13,7 @@ export function formatDHT11SensorStatusData({ data }: { data: AppRecordedData })
   return {
     temperature: tempEndpoint?.response?.data?.temperature,
     humidity: humidityEndpoint?.response?.data?.humidity,
-    datetime: item.dateTime
+    dateTime: item.dateTime
   }
 }
 

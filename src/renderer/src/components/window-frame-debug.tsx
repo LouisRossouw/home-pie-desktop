@@ -1,24 +1,24 @@
 import { useMemo, useRef } from 'react'
 import { useLocation } from 'react-router'
 
-import { Bug, Diff, House, Infinity, Star } from 'lucide-react'
+import { Bug, House, Star } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 
 import { settingKeys } from '@shared/default-app-settings'
 
 import { cn } from '~/libs/utils/cn'
 import { useApp } from '~/libs/context/app'
 import { useNav } from '~/libs/hooks/use-navigation'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
+import { meterReadStatusData } from '~/libs/utils/meter-reader'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
+import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
+import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
 
 import { Button } from './ui/button'
 import { AppVersion } from './app-version'
-import { useMrPingPing } from '~/libs/context/mr-ping-ping'
-
 import { MrPingPingIndicator } from './mr-ping-ping'
 import { TemperatureHumidity } from './temperature-humidity'
-import { useQuery } from '@tanstack/react-query'
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
-import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
 
 const tenMin = 1000 * 60 * 10
 
@@ -55,9 +55,9 @@ export function WindowFrameDebug() {
   const startRoute = userSettings?.startRoute as string | undefined
 
   return (
-    <div className="flex items-center justify-between h-8 rounded-b-lg bg-background px-4">
-      <div className="grid grid-cols-5 w-full">
-        <div className="flex col-span-1 gap-2 justify-start items-center">
+    <div className="flex items-center justify-between h-8 px-4 rounded-b-lg bg-background">
+      <div className="flex w-full justify-between">
+        <div className="flex col-span-1 gap-4 justify-start items-center w-full">
           <Button
             variant={'ghost'}
             className="w-6 h-6"
@@ -79,11 +79,13 @@ export function WindowFrameDebug() {
             </Button>
           )}
 
-          {appSettings?.debug && <p className="text-xs">{pathname}</p>}
+          {appSettings?.debug && <p className="text-xs opacity-50">{pathname}</p>}
         </div>
-        <div className="flex col-span-3 justify-center items-center gap-4">
+        <div className="flex w-full justify-end items-center gap-4 px-4">
           <TempHumStats />
+          <PowerStats />
         </div>
+        {/* <div className="flex col-span-1 justify-center items-center gap-4"></div> */}
 
         <div className="flex col-span-1 justify-end items-center gap-4">
           <MrPingPingIndicator
@@ -99,11 +101,43 @@ export function WindowFrameDebug() {
               </Button>
             </>
           )}
-          <div onClick={handleDebugRedirect}>
+          <div className="text-right w-18" onClick={handleDebugRedirect}>
             <AppVersion />
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function PowerStats() {
+  const { getAppStatus } = useMrPingPingService()
+
+  const { data: meterReadRaw, isPending } = useQuery({
+    queryKey: ['meter-read-stat'],
+    queryFn: async () => {
+      return await getAppStatus({
+        appNames: ['meter_reader_api']
+      })
+    },
+    refetchInterval: tenMin,
+    staleTime: tenMin
+  })
+
+  const electricityData = useMemo(() => {
+    return meterReadStatusData({ data: meterReadRaw })
+  }, [meterReadRaw])
+
+  return (
+    <div className="flex items-center justify-center gap-2">
+      <>
+        {electricityData && (
+          <div className="flex items-center gap-1">
+            <p className="text-xs">⚡kWh:</p>
+            <p className="text-xs">{electricityData.kwh}</p>
+          </div>
+        )}
+      </>
     </div>
   )
 }
@@ -156,7 +190,7 @@ function TempHumStats() {
     .replace('-', '')
 
   return (
-    <div className="flex items-center justify-center w-full gap-2">
+    <div className="flex items-center justify-center gap-2">
       <>
         {tempDataDownstairs && (
           <TemperatureHumidity
