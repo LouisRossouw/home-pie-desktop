@@ -55,7 +55,7 @@ export function WindowFrameDebug() {
   const startRoute = userSettings?.startRoute as string | undefined
 
   return (
-    <div className="flex items-center justify-between h-8 px-4 rounded-b-lg border-t bg-background">
+    <div className="flex items-center justify-between h-8 px-4 rounded-b-lg bg-background">
       <div className="flex w-full justify-between">
         <div className="flex col-span-1 gap-4 justify-start items-center w-full">
           <Button
@@ -67,7 +67,7 @@ export function WindowFrameDebug() {
               updateUserSettings([{ setting: settingKeys.startRoute, value: pathname }])
             }}
           >
-            <Star size={18} className={cn(isStartRoute && 'text-accent')} />
+            <Star size={18} className={cn(isStartRoute && 'text-accent-foreground')} />
           </Button>
           {startRoute && (
             <Button

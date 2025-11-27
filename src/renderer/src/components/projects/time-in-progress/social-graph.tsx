@@ -75,7 +75,7 @@ export function SocialGraph({
     <>
       <div
         className={cn(
-          'relative items-center justify-center border  rounded-lg min-h-60 w-full'
+          'relative items-center justify-center   rounded-lg min-h-60 w-full'
           // critical && 'border-accent-foreground/40'
         )}
         onMouseLeave={() => handleEditVisibility(false)}
