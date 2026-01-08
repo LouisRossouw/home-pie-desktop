@@ -37,6 +37,7 @@ import ServersRoute from './routes/servers'
 import ServersOverviewRoute from './routes/servers/overview'
 import TimeInProgressConfigRoute from './routes/sub-projects/time-in-progress/config'
 import { TimeInProgressOverview } from './components/projects/time-in-progress/overview'
+import EnergyRoute from './routes/smart-home/energy'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -117,7 +118,10 @@ const smartHomeRoutes = [
   {
     path: 'smart-home',
     element: <SmartHomeRoute />,
-    children: [{ index: true, element: <SmartHomeOverviewRoute /> }]
+    children: [
+      { index: true, element: <SmartHomeOverviewRoute /> },
+      { path: 'energy', element: <EnergyRoute /> }
+    ]
   }
 ]
 
