@@ -48,11 +48,10 @@ export function SocialGraph({
   const dataStaleTime = differenceInMinutes(currentDate, toDate)
 
   // ** Re write this better
-
   const isActive = ignoreActive ? true : timeDifference <= 60 ? true : false
   const strokeColor = followersDiff > 0 ? 'lime' : followersDiff === 0 ? 'gray' : 'red'
   const serverIconColor =
-    dataStaleTime >= 10 && dataStaleTime <= 12 ? 'lime' : dataStaleTime > 12 ? 'red' : 'grey'
+    dataStaleTime >= 10 && dataStaleTime <= 25 ? 'lime' : dataStaleTime > 55 ? 'red' : 'orange'
 
   const critical = ignoreActive ? false : dataStaleTime > 30
 

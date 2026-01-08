@@ -20,7 +20,7 @@ export function TimeInProgress() {
   const SP = getAllSearchParams(searchParams)
 
   const range = SP.range ?? 'hour'
-  const interval = SP.interval ?? 1 // 1 Hour
+  const interval = SP.interval ?? 12 // 1 Hour
 
   const { data, isPending, isFetching, refetch } = useQuery({
     queryKey: ['time-in-progress-overview'],
