@@ -53,7 +53,7 @@ export function SocialGraph({
   const serverIconColor =
     dataStaleTime >= 10 && dataStaleTime <= 25 ? 'lime' : dataStaleTime > 55 ? 'red' : 'orange'
 
-  const critical = ignoreActive ? false : dataStaleTime > 30
+  const critical = ignoreActive ? false : dataStaleTime > 70
 
   // **
 
