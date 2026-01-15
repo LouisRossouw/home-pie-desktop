@@ -1,18 +1,24 @@
 import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
 import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
 
 import { TemperatureHumidity } from './temperature-humidity'
+import { AppRecordedData } from '@shared/types'
 
 const tenMin = 1000 * 60 * 10
 
 export function TempHumStats() {
+  const queryClient = useQueryClient()
   const { getAppRecordedData } = useMrPingPingService()
 
   const interval = 3
   const range = 'hour'
+
+  const cachedTempDataUpstairsRaw = queryClient.getQueryData([
+    'temperature-humidity-detail'
+  ]) as AppRecordedData[]
 
   const { data: tempDataUpstairsRaw, isPending } = useQuery({
     queryKey: ['temperature-humidity'],
@@ -24,8 +30,14 @@ export function TempHumStats() {
       })
     },
     refetchInterval: tenMin,
-    staleTime: tenMin
+    staleTime: tenMin,
+    initialData: cachedTempDataUpstairsRaw,
+    enabled: !cachedTempDataUpstairsRaw
   })
+
+  const cachedTempDataDownStairsRaw = queryClient.getQueryData([
+    'temperature-humidity-down-stairs'
+  ]) as AppRecordedData[]
 
   const { data: tempDataDownStairsRaw, isPending: isTempDownStairsPending } = useQuery({
     queryKey: ['temperature-humidity-down-stairs'],
@@ -37,7 +49,9 @@ export function TempHumStats() {
       })
     },
     refetchInterval: tenMin,
-    staleTime: tenMin
+    staleTime: tenMin,
+    initialData: cachedTempDataDownStairsRaw,
+    enabled: !cachedTempDataDownStairsRaw
   })
 
   const { tempDataUpstairs, tempDataDownstairs } = useMemo(() => {

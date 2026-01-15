@@ -29,7 +29,7 @@ export function TemperatureHumidity({
           size={'sm'}
           className="h-6 gap-0"
           variant={'ghost'}
-          onClick={() => navigateTo('/smart-home')}
+          onClick={() => navigateTo('/smart-home/temperature')}
         >
           <p className="text-xs">{label}</p>
           <PingSVG

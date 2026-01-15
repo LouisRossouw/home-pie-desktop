@@ -1,15 +1,19 @@
 import { Outlet } from 'react-router'
 
+import { AppRecordedData } from '@shared/types'
+
 // TODO; Layout
 
 export function SmartHomeLayout({
-  data,
+  temperatureData,
+  meterReadRaw,
   isLoading,
   refetch
 }: {
-  data: any
+  temperatureData: AppRecordedData[]
+  meterReadRaw: AppRecordedData[]
   isLoading: boolean
   refetch: () => void
 }) {
-  return <Outlet context={{ data, isLoading, refetch }} />
+  return <Outlet context={{ temperatureData, meterReadRaw, isLoading, refetch }} />
 }

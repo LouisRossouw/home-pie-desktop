@@ -225,10 +225,9 @@ export type ApiGetConfigsParams = paths['/api/mr-ping-ping/apps/configs']['get']
 export type ApiMrPingPingAppStatusParams = paths['/api/mr-ping-ping/apps/status/{appName}']['get']['parameters']['path'] // prettier-ignore
 export type ApiMrPingPingAppDataParams = paths['/api/mr-ping-ping/apps/data/{appName}']['get']['parameters'] // prettier-ignore
 
-type AppRecordedData = Schemas['AppRecordedData']
+export type AppRecordedData = Schemas['AppRecordedData']
 type AppStatus = Schemas['AppStatus']
 // type Config = Schemas['ConfigRequest']
-
 // *
 // **
 // ***

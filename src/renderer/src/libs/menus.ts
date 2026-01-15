@@ -8,7 +8,8 @@ import {
   Box,
   Home,
   Shield,
-  Settings
+  Settings,
+  HousePlug
 } from 'lucide-react'
 
 export const menus = [
@@ -16,6 +17,12 @@ export const menus = [
     title: 'Home',
     icon: Home,
     route: '/',
+    subMenus: []
+  },
+  {
+    title: 'Smart Home',
+    icon: HousePlug,
+    route: '/smart-home',
     subMenus: []
   },
   {

@@ -1,49 +1,39 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ReactNode, useMemo } from 'react'
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+import { useOutletContext } from 'react-router'
+import { ArrowDown, ArrowUp, Zap, Clock, AlertTriangle, Battery } from 'lucide-react'
+
+import { AppRecordedData } from '@shared/types'
+
 import {
   formatDMeterReadHistoricData,
   calcKwhAnalytics,
-  CalcKwhAnalyticsType,
   HourlyUsage
 } from '~/libs/utils/meter-reader'
-
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Badge } from '~/components/ui/badge'
-
-import { ArrowDown, ArrowUp, Zap, Clock, AlertTriangle, Battery } from 'lucide-react'
 import { cn } from '~/libs/utils/cn'
+
 import {
   EnergyBurnKwhChart,
   EnerygyRemainingKwhChart
 } from '~/components/charts/test-line-chart-compact'
+import { Badge } from '~/components/ui/badge'
 import { LoadingIndicator } from '~/components/loading-indicator'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 
 const tenMin = 1000 * 60 * 10
 const range = 'hour'
 const interval = 24
 
 export function Energy() {
-  const queryClient = useQueryClient()
-  const { getAppRecordedData } = useMrPingPingService()
+  const { meterReadRaw, isLoading } = useOutletContext<{
+    meterReadRaw: AppRecordedData[]
+    isLoading: Boolean
+  }>()
 
-  const cachedMeterReadRaw = queryClient.getQueryData(['meter_reader_api']) as any
+  // const queryClient = useQueryClient()
+  // const { getAppRecordedData } = useMrPingPingService()
 
-  const { data: meterReadRaw, isPending } = useQuery({
-    queryKey: ['meter-read-stat', { interval, range }],
-    queryFn: async () =>
-      await getAppRecordedData({
-        appNames: ['meter_reader_api'],
-        interval,
-        range
-      }),
-    staleTime: tenMin,
-    refetchInterval: tenMin,
-    initialData: cachedMeterReadRaw,
-    enabled: !cachedMeterReadRaw
-  })
-
+  // TODO; Might have to move this up to index.
   const calculatedElectricityData = useMemo(() => {
     const electricityData = formatDMeterReadHistoricData({ data: meterReadRaw, interval })
     const calc = calcKwhAnalytics({
@@ -63,7 +53,7 @@ export function Energy() {
     [calculatedElectricityData.hourlyUsage]
   )
 
-  if (isPending || !calculatedElectricityData)
+  if (isLoading || !calculatedElectricityData)
     return (
       <div className="flex w-full h-full items-center justify-center">
         <LoadingIndicator />
