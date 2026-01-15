@@ -13,7 +13,7 @@ export function formatDHT11SensorStatusData({ data }: { data: AppRecordedData })
   return {
     temperature: tempEndpoint?.response?.data?.temperature,
     humidity: humidityEndpoint?.response?.data?.humidity,
-    datetime: item.dateTime
+    dateTime: item.dateTime
   }
 }
 
@@ -25,7 +25,7 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
 
   // Filter valid temperature readings
   const validTemps = item?.appStatus
-    .map((s: any) => {
+    ?.map((s: any) => {
       const tempEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'temperature')
       return tempEndpoint?.response?.code === 200
         ? { temperature: tempEndpoint.response.data.temperature, date: s.date }
@@ -36,7 +36,7 @@ export function formatDHT11SensorHistoricData({ data }: { data: any }) {
 
   // Filter valid humidity readings
   const validHumidity = item?.appStatus
-    .map((s: any) => {
+    ?.map((s: any) => {
       const humidityEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'humidity')
       return humidityEndpoint?.response?.code === 200
         ? { humidity: humidityEndpoint.response.data.humidity, date: s.date }

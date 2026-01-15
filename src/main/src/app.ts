@@ -158,7 +158,7 @@ export async function updateOnLoaderProgress({
 
 // Updates the dot squad to play an animation pattern as a "notification".
 export async function updateDotSquadActivity({ activity }: { activity: DotSquadAnims }) {
-  console.log('Sending dot squad notification activity -', activity)
+  // console.log('Sending dot squad notification activity -', activity)
   mainWindow?.webContents.send(appIpcKey.dotSquad, { activity })
 }
 

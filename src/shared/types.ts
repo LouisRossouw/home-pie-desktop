@@ -222,6 +222,12 @@ export type OnAuthCodeHandler = (event: IpcRendererEvent, v: AuthCode) => void
 // TODO: Get the params from the paths below and use to define the ipc types
 // But it needs to be defined / extended in djangos decorators
 export type ApiGetConfigsParams = paths['/api/mr-ping-ping/apps/configs']['get']['parameters']['path'] // prettier-ignore
+export type ApiMrPingPingAppStatusParams = paths['/api/mr-ping-ping/apps/status/{appName}']['get']['parameters']['path'] // prettier-ignore
+export type ApiMrPingPingAppDataParams = paths['/api/mr-ping-ping/apps/data/{appName}']['get']['parameters'] // prettier-ignore
+
+type AppRecordedData = Schemas['AppRecordedData']
+type AppStatus = Schemas['AppStatus']
+// type Config = Schemas['ConfigRequest']
 
 // *
 // **
@@ -264,8 +270,7 @@ export type FindNextActiveAccessTokenFunc = () => ResFindNextActiveAccessToken
 
 // - External API
 export type ApiMrPingPingAppConfig = { appName: string }
-export type ApiMrPingPingAppStatus = { appName: string }
-export type ApiMrPingPingAppData = { appName: string; range: string; interval: number }
+export type ApiMrPingPingAppData = ApiMrPingPingAppDataParams['path'] & ApiMrPingPingAppDataParams['query'] // prettier-ignore
 export type ApiGenGenStart = { project: string }
 export type ApiGenGenCheckProgress = { project: string }
 export type ApiGetProjectConfig = { project: string }
@@ -275,15 +280,9 @@ export type ApiPutProjectConfig = { project: string; config: Schemas['Config'] }
 export type ApiMrPingPingStatusFunc = () => Promise<ApiMrPingPingStatus>
 export type ApiMrPingPingAppConfigFunc = (v: ApiMrPingPingAppConfig) => Promise<any>
 export type ApiMrPingPingAppsConfigFunc = () => Promise<any>
-export type ApiMrPingPingAppsStatusFunc = () => Promise<any>
-export type ApiMrPingPingAppStatusFunc = (
-  v: ApiMrPingPingAppStatus
-) => Promise<{ ok: boolean; data: unknown }>
-export type ApiMrPingPingAppDataFunc = (v: {
-  appName: string
-  range: string
-  interval: number
-}) => Promise<{ ok: boolean; data: unknown }>
+export type ApiMrPingPingAppsStatusFunc = () => Promise<AppStatus>
+export type ApiMrPingPingAppStatusFunc = (v: ApiMrPingPingAppStatusParams) => Promise<AppRecordedData> // prettier-ignore
+export type ApiMrPingPingAppDataFunc = (v: ApiMrPingPingAppData) => Promise<AppRecordedData> // prettier-ignore
 
 export type ApiGenGenCheckProgressFunc = (v: ApiGenGenCheckProgress) => Promise<any>
 export type ApiGenGenStartFunc = (v: ApiGenGenStart) => Promise<any>

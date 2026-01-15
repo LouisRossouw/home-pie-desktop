@@ -43,7 +43,7 @@ export default function ProjectsLayout() {
   const selectedProject = currentSubRoutes[2]
 
   return (
-    <div className="flex h-[calc(100vh-111px)] items-center justify-center">
+    <div className="flex h-[calc(100vh-110px)] items-center justify-center">
       <PanelGroup direction="horizontal" ref={panelGroupRef}>
         <ProjectsPanel
           ref={projectsPanelRef}
@@ -58,8 +58,16 @@ export default function ProjectsLayout() {
             />
           }
         />
-        <ResizableHandle className="w-[1px]" />
-        <OutletPanel ref={outletPanelRef} children={<Outlet />} />
+        {/* <ResizableHandle className="w-[1px]" /> */}
+        <OutletPanel
+          className=" h-full flex pr-10"
+          ref={outletPanelRef}
+          children={
+            <div className="w-full border rounded-lg">
+              <Outlet />
+            </div>
+          }
+        />
       </PanelGroup>
     </div>
   )

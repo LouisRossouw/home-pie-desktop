@@ -53,7 +53,7 @@ export function SocialGraph({
   const serverIconColor =
     dataStaleTime >= 10 && dataStaleTime <= 25 ? 'lime' : dataStaleTime > 55 ? 'red' : 'orange'
 
-  const critical = ignoreActive ? false : dataStaleTime > 30
+  const critical = ignoreActive ? false : dataStaleTime > 70
 
   // **
 
@@ -74,7 +74,7 @@ export function SocialGraph({
     <>
       <div
         className={cn(
-          'relative items-center justify-center border  rounded-lg min-h-60 w-full'
+          'relative items-center justify-center   rounded-lg min-h-60 w-full'
           // critical && 'border-accent-foreground/40'
         )}
         onMouseLeave={() => handleEditVisibility(false)}
