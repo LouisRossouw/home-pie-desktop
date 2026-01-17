@@ -34,7 +34,6 @@ export function InstaInsights() {
     if (!accountsRaw) return []
 
     const filteredAccounts = accountsRaw.filter((acc) => acc.active).map((acc) => acc.account)
-    filteredAccounts.push('time.in.progress')
 
     return filteredAccounts
   }, [accountsRaw])

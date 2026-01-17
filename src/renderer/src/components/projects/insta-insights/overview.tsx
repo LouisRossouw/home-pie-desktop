@@ -4,7 +4,11 @@ import { useNavigate, useOutletContext, useSearchParams } from 'react-router'
 
 import { ActivitySquare, DeleteIcon, Pencil } from 'lucide-react'
 
-import type { AccountsDataWithPic, ApiInstaInsightsAccount } from '@shared/types'
+import type {
+  AccountsDataWithPic,
+  ApiInstaInsightsAccount,
+  ApiInstaUpdateInsightsAccount
+} from '@shared/types'
 
 import { cn } from '~/libs/utils/cn'
 
@@ -41,8 +45,6 @@ type InstaInsightsContext = {
   isPending: boolean
 }
 
-type UpdateAccountState = { account: string; active: boolean }
-
 export function InstaInsightsOverview() {
   const { data } = useOutletContext<InstaInsightsContext>()
   const [searchParams] = useSearchParams()
@@ -54,7 +56,7 @@ export function InstaInsightsOverview() {
 
   const { mutate: updateAccountStatus } = useMutation({
     mutationKey: ['update-account-status'],
-    mutationFn: async (data: UpdateAccountState) => {
+    mutationFn: async (data: ApiInstaUpdateInsightsAccount) => {
       return await window.api.external.apiInstaInsightsUpdateAccountStatus(data)
     },
     onSettled: async (res) => {
@@ -115,7 +117,7 @@ function AccountRow({
   account: AccountsDataWithPic
   navigate: (v: string) => void
   setAccountToRemove: (v: string) => void
-  updateAccountStatus: (v: UpdateAccountState) => void
+  updateAccountStatus: (v: ApiInstaUpdateInsightsAccount) => void
 }) {
   const accountName = account.account
 
@@ -152,7 +154,11 @@ function AccountRow({
                 <DropdownMenuItem
                   className="flex justify-between"
                   onClick={() =>
-                    updateAccountStatus({ account: accountName, active: !account.active })
+                    updateAccountStatus({
+                      account: accountName,
+                      key: 'active',
+                      value: !account.active
+                    })
                   }
                 >
                   {account.active ? 'Deactivate' : 'Activate'}
@@ -189,12 +195,12 @@ function AccountRow({
           className="border-none"
         />
         <SocialStatsCard
-          title="Difference"
+          title="Diff"
           value={account.followersDifference}
           className="border-none"
           disableIndicator
         />
-        <SocialStatsCard
+        {/* <SocialStatsCard
           title="Avarage per 1 hour"
           value={account.averagePer1Hour}
           className="border-none"
@@ -205,9 +211,9 @@ function AccountRow({
           value={account.averagePer1Day}
           className="border-none"
           disableIndicator
-        />
+        /> */}
         <SocialStatsCard
-          title="Avarage per 1 month"
+          title="Avg diff month"
           value={account.averagePer1Month}
           className="border-none"
           disableIndicator
