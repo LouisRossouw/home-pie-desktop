@@ -1,7 +1,7 @@
 import { updateDotSquadActivity } from '@main/src/app'
 import { requireSession } from '@main/src/session'
 
-export async function apiInstaInsightsUpdateAccountStatus({
+export async function apiYTInsightsUpdateAccountStatus({
   account,
   key,
   value
@@ -13,7 +13,7 @@ export async function apiInstaInsightsUpdateAccountStatus({
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.PATCH('/api/insta-insights/accounts/{accountName}', {
+    const { response, data } = await apiClient.PATCH('/api/yt-insights/accounts/{accountName}', {
       params: {
         path: { accountName: account },
         query: {

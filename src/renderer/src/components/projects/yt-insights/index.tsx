@@ -6,12 +6,12 @@ import { Range } from '@shared/types'
 
 import { getAllSearchParams } from '~/libs/utils/search-params'
 
-import { InstaInsightsLayout } from './layout'
+import { YTInsightsLayout } from './layout'
 
 const fiveMin = 1000 * 60 * 5
-const platform = 'instagram'
+const platform = 'youtube'
 
-export function InstaInsights() {
+export function YouTubeInsights() {
   const [searchParams] = useSearchParams()
   const { account: maybeSelectedAccount } = useParams()
 
@@ -25,7 +25,7 @@ export function InstaInsights() {
     isPending: isAccountsPending,
     isFetching: isAccountsFetching
   } = useQuery({
-    queryKey: ['insta-insights-all-accounts'],
+    queryKey: ['yt-insights-all-accounts'],
     queryFn: getAllAccounts,
     staleTime: fiveMin
   })
@@ -44,7 +44,7 @@ export function InstaInsights() {
     isPending: isDataPending,
     isFetching: isDataFetching
   } = useQuery({
-    queryKey: ['insta-insights-accounts-data', { accounts: accounts.length, range, interval }],
+    queryKey: ['yt-insights-accounts-data', { accounts: accounts.length, range, interval }],
     queryFn: () => apiGetAccountsOverview({ platform, accounts, interval, range }),
     enabled: accounts?.length > 0,
     refetchInterval: fiveMin,
@@ -52,7 +52,7 @@ export function InstaInsights() {
   })
 
   return (
-    <InstaInsightsLayout
+    <YTInsightsLayout
       selectedAccount={maybeSelectedAccount}
       accountsRaw={accountsRaw}
       isFetching={isDataFetching || isAccountsFetching}
@@ -67,7 +67,7 @@ export function InstaInsights() {
 }
 
 async function getAllAccounts() {
-  const { data } = await window.api.external.apiInstaInsightsGetAllAccounts()
+  const { data } = await window.api.external.apiYTInsightsGetAllAccounts()
 
   return data ?? []
 }
@@ -83,7 +83,7 @@ async function apiGetAccountsOverview({
   interval: number
   platform: string
 }) {
-  const res = await window.api.external.apiInstaInsightsGetAccountsOverview({
+  const res = await window.api.external.apiYTInsightsGetAccountsOverview({
     accounts,
     range,
     interval,

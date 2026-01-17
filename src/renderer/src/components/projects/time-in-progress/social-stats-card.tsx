@@ -2,6 +2,9 @@ import { ArrowDown, ArrowRightLeft, ArrowUp } from 'lucide-react'
 
 import { Label } from '~/components/ui/label'
 import { cn } from '~/libs/utils/cn'
+import { formatCount } from '../yt-insights/format-count'
+
+// TODO; Move this to /components
 
 export function SocialStatsCard({
   title,
@@ -26,7 +29,7 @@ export function SocialStatsCard({
           <Label className="text-xs">{title}</Label>
         </div>
         <div className="flex w-full justify-center items-center">
-          <Label className="text-xs sm:text-lg">{value ?? '-'}</Label>
+          <Label className="text-xs sm:text-lg">{value ? formatCount(value) : '-'}</Label>
           {!disableIndicator && (
             <SocialIndicator value={value} className="absolute left-0 top-0 mr-0" />
           )}

@@ -11,7 +11,7 @@ type Config = Schemas['Config']
 export async function apiGetProjectConfig({
   project
 }: {
-  project: 'time-in-progress' | 'insta-insights'
+  project: 'time-in-progress' | 'insta-insights' | 'yt-insights'
 }) {
   const apiClient = await requireSession()
 
@@ -35,13 +35,13 @@ export async function apiPutProjectConfig({
   project,
   config
 }: {
-  project: 'time-in-progress' | 'insta-insights'
+  project: 'insta-insights' | 'yt-insights'
   config: Config
 }) {
   const apiClient = await requireSession()
 
   try {
-    const { response } = await apiClient.PUT(`/api/insta-insights/config`, {
+    const { response } = await apiClient.PUT(`/api/${project}/config`, {
       body: config
     })
 

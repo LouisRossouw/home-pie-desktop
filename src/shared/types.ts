@@ -58,6 +58,7 @@ export type SocialData = {
   pastPostValue: number
   pastFollowersValue: number
   postDifference: number
+  views: number | null
   followersDifference: number
   averagePer10Min: number
   averagePer1Hour: number
@@ -91,10 +92,35 @@ export type ApiInstaInsightsAccountsOverview = {
   interval: number
   platform: string
 }
+export type ApiYTInsightsAccountsOverview = {
+  accounts: string[]
+  range: Range
+  interval: number
+  platform: string
+}
 
 export type ApiInstaInsightsAccount = { account: string; active: boolean }
+export type ApiInstaUpdateInsightsAccount = {
+  account: string
+  key: string
+  value: string | boolean | number
+}
+
+export type ApiYTInsightsAccount = { account: string; accountId: string; active: boolean }
+export type ApiYTUpdateInsightsAccount = {
+  account: string
+  key: string
+  value: string | boolean | number
+}
 
 export type ApiInstaInsightsAccountsOverviewResponse = {
+  ok: true
+  datetime: string
+  dbElapsedTime: string
+  data: SocialData
+  historical: SocialData[]
+}
+export type ApiYTInsightsAccountsOverviewResponse = {
   ok: true
   datetime: string
   dbElapsedTime: string
@@ -290,11 +316,18 @@ export type ApiGetProjectConfigFunc = (v: ApiGetProjectConfig) => Promise<any>
 export type ApiPutProjectConfigFunc = (v: ApiPutProjectConfig) => Promise<boolean>
 export type ApiTimeInProgressOverviewFunc = (v: ApiTimeInProgressOverview) => Promise<ApiTimeInProgressOverviewResponse> // prettier-ignore
 export type ApiTimeInProgressInsertHistoricalDataFunc = (v: ApiTimeInProgressInsertHistoricalData) => Promise<{ ok: boolean }> // prettier-ignore
+
 export type ApiInstaInsightsGetAllAccountsFunc = () => Promise<{ok: boolean, data: ApiInstaInsightsAccount[]}> // prettier-ignore
 export type ApiInstaInsightsGetAccountsOverviewFunc = (data: ApiInstaInsightsAccountsOverview) => Promise<ApiInstaInsightsAccountsOverviewResponse> // prettier-ignore
 export type ApiInstaInsightsAddAccountFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
-export type ApiInstaInsightsUpdateAccountStatusFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiInstaInsightsUpdateAccountStatusFunc = (v: ApiInstaUpdateInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
 export type ApiInstaInsightsRemoveAccountFunc = (v: ApiInstaInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+
+export type ApiYTInsightsGetAllAccountsFunc = () => Promise<{ok: boolean, data: ApiYTInsightsAccount[]}> // prettier-ignore
+export type ApiYTInsightsGetAccountsOverviewFunc = (data: ApiYTInsightsAccountsOverview) => Promise<ApiYTInsightsAccountsOverviewResponse> // prettier-ignore
+export type ApiYTInsightsAddAccountFunc = (v: ApiYTInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiYTInsightsUpdateAccountStatusFunc = (v: ApiYTUpdateInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+export type ApiYTInsightsRemoveAccountFunc = (v: ApiYTInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
 // ***
 // **
 // *

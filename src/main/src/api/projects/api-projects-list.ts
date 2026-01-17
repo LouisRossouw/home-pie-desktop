@@ -12,6 +12,11 @@ const projects = [
     title: 'InstaInsights',
     slug: 'insta-insights',
     img: undefined
+  },
+  {
+    title: 'YTInsights',
+    slug: 'yt-insights',
+    img: undefined
   }
 ]
 

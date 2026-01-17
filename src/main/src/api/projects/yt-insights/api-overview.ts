@@ -1,27 +1,32 @@
 import { updateDotSquadActivity } from '@main/src/app'
 import { requireSession } from '@main/src/session'
+import { Range } from '@shared/types'
 
-export async function apiInstaInsightsUpdateAccountStatus({
-  account,
-  key,
-  value
+export async function apiYTInsightsGetAccountsOverview({
+  accounts,
+  range,
+  interval,
+  platform
 }: {
-  account: string
-  key: string
-  value: string | boolean | number
+  accounts: string[]
+  range: Range
+  interval: number
+  platform: string
 }) {
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.PATCH('/api/insta-insights/accounts/{accountName}', {
+    const { response, data } = await apiClient.GET('/api/yt-insights/overview', {
       params: {
-        path: { accountName: account },
         query: {
-          key,
-          value
+          accounts,
+          platform,
+          range,
+          interval
         }
       }
     })
+
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'selectProject' })
       return data

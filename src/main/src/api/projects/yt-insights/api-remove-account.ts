@@ -1,27 +1,18 @@
 import { updateDotSquadActivity } from '@main/src/app'
 import { requireSession } from '@main/src/session'
 
-export async function apiInstaInsightsUpdateAccountStatus({
-  account,
-  key,
-  value
-}: {
-  account: string
-  key: string
-  value: string | boolean | number
-}) {
+export async function apiYTInsightsRemoveAccount({ account }: { account: string }) {
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.PATCH('/api/insta-insights/accounts/{accountName}', {
+    const { response, data } = await apiClient.DELETE('/api/yt-insights/accounts/{accountName}', {
       params: {
-        path: { accountName: account },
-        query: {
-          key,
-          value
+        path: {
+          accountName: account
         }
       }
     })
+
     if (response.status === 200) {
       updateDotSquadActivity({ activity: 'selectProject' })
       return data

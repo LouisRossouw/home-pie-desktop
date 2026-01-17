@@ -6,8 +6,8 @@ import { ActivitySquare, DeleteIcon, Pencil } from 'lucide-react'
 
 import type {
   AccountsDataWithPic,
-  ApiInstaInsightsAccount,
-  ApiInstaUpdateInsightsAccount
+  ApiYTInsightsAccount,
+  ApiYTUpdateInsightsAccount
 } from '@shared/types'
 
 import { cn } from '~/libs/utils/cn'
@@ -39,14 +39,15 @@ import LineChartCompact from '~/components/line-chart-compact'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 import { SocialIndicator, SocialStatsCard } from '../time-in-progress/social-stats-card'
+import { formatCount } from './format-count'
 
-type InstaInsightsContext = {
+type YTInsightsContext = {
   data: AccountsDataWithPic[]
   isPending: boolean
 }
 
-export function InstaInsightsOverview() {
-  const { data } = useOutletContext<InstaInsightsContext>()
+export function InsightsOverview() {
+  const { data } = useOutletContext<YTInsightsContext>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
@@ -56,24 +57,24 @@ export function InstaInsightsOverview() {
 
   const { mutate: updateAccountStatus } = useMutation({
     mutationKey: ['update-account-status'],
-    mutationFn: async (data: ApiInstaUpdateInsightsAccount) => {
-      return await window.api.external.apiInstaInsightsUpdateAccountStatus(data)
+    mutationFn: async (data: ApiYTUpdateInsightsAccount) => {
+      return await window.api.external.apiYTInsightsUpdateAccountStatus(data)
     },
     onSettled: async (res) => {
       if (res?.ok) {
-        await queryClient.invalidateQueries({ queryKey: ['insta-insights-all-accounts'] })
+        await queryClient.invalidateQueries({ queryKey: ['yt-insights-all-accounts'] })
       }
     }
   })
 
   const { mutate: removeAccount } = useMutation({
     mutationKey: ['remove-account'],
-    mutationFn: async (data: { account: string; active: boolean }) => {
-      return await window.api.external.apiInstaInsightsRemoveAccount(data)
+    mutationFn: async (data: { account: string; accountId: string; active: boolean }) => {
+      return await window.api.external.apiYTInsightsRemoveAccount(data)
     },
     onSettled: async (res) => {
       if (res?.ok) {
-        await queryClient.invalidateQueries({ queryKey: ['insta-insights-all-accounts'] })
+        await queryClient.invalidateQueries({ queryKey: ['yt-insights-all-accounts'] })
       }
     }
   })
@@ -117,13 +118,15 @@ function AccountRow({
   account: AccountsDataWithPic
   navigate: (v: string) => void
   setAccountToRemove: (v: string) => void
-  updateAccountStatus: (v: ApiInstaUpdateInsightsAccount) => void
+  updateAccountStatus: (v: ApiYTUpdateInsightsAccount) => void
 }) {
   const accountName = account.account
 
   function handleNavigate() {
-    navigate(`/projects/insta-insights/${accountName}/insights`)
+    navigate(`/projects/yt-insights/${accountName}/insights`)
   }
+
+  console.log(account)
 
   return (
     <div
@@ -189,7 +192,13 @@ function AccountRow({
           />
         </div>
         <SocialStatsCard
-          title="Followers"
+          title="Views"
+          value={account?.views ?? 0}
+          disableIndicator
+          className="border-none"
+        />
+        <SocialStatsCard
+          title="Subscribers"
           value={account.latestFollowers}
           disableIndicator
           className="border-none"
@@ -200,18 +209,7 @@ function AccountRow({
           className="border-none"
           disableIndicator
         />
-        {/* <SocialStatsCard
-          title="Avarage per 1 hour"
-          value={account.averagePer1Hour}
-          className="border-none"
-          disableIndicator
-        />
-        <SocialStatsCard
-          title="Avarage per 1 day"
-          value={account.averagePer1Day}
-          className="border-none"
-          disableIndicator
-        /> */}
+
         <SocialStatsCard
           title="Avg diff month"
           value={account.averagePer1Month}
@@ -230,7 +228,7 @@ export function ConfirmRemoveAccountDialog({
 }: {
   accountToRemove: string
   setAccountToRemove: (v: string) => void
-  removeAccount: (v: ApiInstaInsightsAccount) => void
+  removeAccount: (v: ApiYTInsightsAccount) => void
 }) {
   return (
     <AlertDialog open={!!accountToRemove} onOpenChange={() => setAccountToRemove('')}>
@@ -238,14 +236,16 @@ export function ConfirmRemoveAccountDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Remove {accountToRemove} ? </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete {accountToRemove} from the
-            insta insights config.
+            This action cannot be undone. This will permanently delete {accountToRemove} from the YT
+            insights config.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => removeAccount({ account: accountToRemove, active: false })}
+            onClick={() =>
+              removeAccount({ account: accountToRemove, accountId: '', active: false })
+            }
           >
             Continue
           </AlertDialogAction>

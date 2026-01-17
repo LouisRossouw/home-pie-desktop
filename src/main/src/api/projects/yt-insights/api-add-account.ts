@@ -1,28 +1,25 @@
 import { updateDotSquadActivity } from '@main/src/app'
 import { requireSession } from '@main/src/session'
 
-export async function apiInstaInsightsUpdateAccountStatus({
+export async function apiYTInsightsAddAccount({
   account,
-  key,
-  value
+  accountId,
+  active
 }: {
   account: string
-  key: string
-  value: string | boolean | number
+  accountId: string
+  active: boolean
 }) {
   const apiClient = await requireSession()
 
   try {
-    const { response, data } = await apiClient.PATCH('/api/insta-insights/accounts/{accountName}', {
+    const { response, data } = await apiClient.POST('/api/yt-insights/accounts', {
       params: {
-        path: { accountName: account },
-        query: {
-          key,
-          value
-        }
+        query: { account, accountId, active }
       }
     })
-    if (response.status === 200) {
+
+    if (response.status === 201) {
       updateDotSquadActivity({ activity: 'selectProject' })
       return data
     }
