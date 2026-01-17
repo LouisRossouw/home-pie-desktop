@@ -21,6 +21,11 @@ import { apiCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
 import { apiGetProjectConfig, apiPutProjectConfig } from '../api/projects/api-project-config'
 import { externalIpcKey } from '@shared/constants'
+import { apiYTInsightsAddAccount } from '../api/projects/yt-insights/api-add-account'
+import { apiYTInsightsGetAllAccounts } from '../api/projects/yt-insights/api-get-all-accounts'
+import { apiYTInsightsUpdateAccountStatus } from '../api/projects/yt-insights/api-update-account-status'
+import { apiYTInsightsRemoveAccount } from '../api/projects/yt-insights/api-remove-account'
+import { apiYTInsightsGetAccountsOverview } from '../api/projects/yt-insights/api-overview'
 
 export function externalIpcHandlers() {
   ipcMain.handle(externalIpcKey.apiProjectList, async (_event) => {
@@ -86,6 +91,22 @@ export function externalIpcHandlers() {
   })
   ipcMain.handle(externalIpcKey.apiInstaInsightsRemoveAccount, async (_event, data) => {
     return await apiInstaInsightsRemoveAccount(data)
+  })
+  // * Projects; YT insights related API
+  ipcMain.handle(externalIpcKey.apiYTInsightsGetAllAccounts, async (_event) => {
+    return await apiYTInsightsGetAllAccounts()
+  })
+  ipcMain.handle(externalIpcKey.apiYTInsightsGetAccountsOverview, async (_event, data) => {
+    return await apiYTInsightsGetAccountsOverview(data)
+  })
+  ipcMain.handle(externalIpcKey.apiYTInsightsAddAccount, async (_event, data) => {
+    return await apiYTInsightsAddAccount(data)
+  })
+  ipcMain.handle(externalIpcKey.apiYTInsightsUpdateAccountStatus, async (_event, data) => {
+    return await apiYTInsightsUpdateAccountStatus(data)
+  })
+  ipcMain.handle(externalIpcKey.apiYTInsightsRemoveAccount, async (_event, data) => {
+    return await apiYTInsightsRemoveAccount(data)
   })
 
   // * Auth
