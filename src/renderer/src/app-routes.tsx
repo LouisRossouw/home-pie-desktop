@@ -39,6 +39,10 @@ import TimeInProgressConfigRoute from './routes/sub-projects/time-in-progress/co
 import { TimeInProgressOverview } from './components/projects/time-in-progress/overview'
 import EnergyRoute from './routes/smart-home/energy'
 import TemperatureRoute from './routes/smart-home/temperature'
+import YouTubeConfigRoute from './routes/sub-projects/yt-insights/config'
+import YouTubeInsightsRoute from './routes/sub-projects/yt-insights'
+import YTInsightsRoute from './routes/sub-projects/yt-insights/insights'
+import YTInsightsOverviewRoute from './routes/sub-projects/yt-insights/overview'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -89,6 +93,21 @@ const projectRoutes = [
           {
             path: 'config',
             element: <InstaInsightsConfigRoute />
+          }
+        ]
+      },
+      {
+        path: 'yt-insights',
+        element: <YouTubeInsightsRoute />,
+        children: [
+          { index: true, element: <YTInsightsOverviewRoute /> },
+          {
+            path: ':account',
+            children: [{ path: 'insights', element: <YTInsightsRoute /> }]
+          },
+          {
+            path: 'config',
+            element: <YouTubeConfigRoute />
           }
         ]
       }

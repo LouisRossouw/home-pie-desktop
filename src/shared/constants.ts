@@ -87,6 +87,13 @@ export enum externalIpcKey {
   apiInstaInsightsAddAccount = 'api-insta-insights-add-account',
   apiInstaInsightsUpdateAccountStatus = 'api-insta-insights-update-account-status',
   apiInstaInsightsRemoveAccount = 'api-insta-insights-remove-account',
+
+  apiYTInsightsGetAllAccounts = 'api-yt-insights-get-all-accounts',
+  apiYTInsightsGetAccountsOverview = 'api-yt-insights-get-accounts-overview',
+  apiYTInsightsAddAccount = 'api-yt-insights-add-account',
+  apiYTInsightsUpdateAccountStatus = 'api-yt-insights-update-account-status',
+  apiYTInsightsRemoveAccount = 'api-yt-insights-remove-account',
+
   apiCompleteAuthentication = 'api-complete-auth-app'
 }
 

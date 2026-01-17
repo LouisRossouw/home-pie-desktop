@@ -353,6 +353,79 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/yt-insights/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiYtInsightsAccountsRetrieve"];
+        put?: never;
+        post: operations["apiYtInsightsAccountsCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/yt-insights/accounts/{accountName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiYtInsightsAccountsRetrieve2"];
+        put?: never;
+        post?: never;
+        delete: operations["apiYtInsightsAccountsDestroy"];
+        options?: never;
+        head?: never;
+        patch: operations["apiYtInsightsAccountsPartialUpdate"];
+        trace?: never;
+    };
+    "/api/yt-insights/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get project config
+         * @description Returns the app's recorded configuration.
+         */
+        get: operations["apiYtInsightsConfigRetrieve"];
+        /**
+         * Update project config
+         * @description Updates the configuration. Returns no content on success.
+         */
+        put: operations["apiYtInsightsConfigUpdate"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/yt-insights/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns current data & historical data for a tracked account. */
+        get: operations["apiYtInsightsOverviewRetrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/convert-token/": {
         parameters: {
             query?: never;
@@ -1107,6 +1180,164 @@ export interface operations {
         };
     };
     apiTimeInProgressOverviewRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsAccountsRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsAccountsCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsAccountsRetrieve2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountName: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsAccountsDestroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountName: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsAccountsPartialUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountName: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsConfigRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current configuration */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Config"];
+                };
+            };
+        };
+    };
+    apiYtInsightsConfigUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfigRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ConfigRequest"];
+                "multipart/form-data": components["schemas"]["ConfigRequest"];
+            };
+        };
+        responses: {
+            /** @description Config updated successfully (no content) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiYtInsightsOverviewRetrieve: {
         parameters: {
             query?: never;
             header?: never;
