@@ -3,10 +3,12 @@ import { requireSession } from '@main/src/session'
 
 export async function apiInstaInsightsUpdateAccountStatus({
   account,
-  active
+  key,
+  value
 }: {
   account: string
-  active: boolean
+  key: string
+  value: string | boolean | number
 }) {
   const apiClient = await requireSession()
 
@@ -15,7 +17,8 @@ export async function apiInstaInsightsUpdateAccountStatus({
       params: {
         path: { accountName: account },
         query: {
-          active
+          key,
+          value
         }
       }
     })
