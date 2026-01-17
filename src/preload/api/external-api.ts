@@ -41,6 +41,13 @@ export type ExternalAPI = {
   apiInstaInsightsAddAccount: T.ApiInstaInsightsAddAccountFunc
   apiInstaInsightsUpdateAccountStatus: T.ApiInstaInsightsUpdateAccountStatusFunc
   apiInstaInsightsRemoveAccount: T.ApiInstaInsightsRemoveAccountFunc
+
+  // Projects; YT Insights
+  apiYTInsightsGetAllAccounts: T.ApiYTInsightsGetAllAccountsFunc
+  apiYTInsightsGetAccountsOverview: T.ApiYTInsightsGetAccountsOverviewFunc
+  apiYTInsightsAddAccount: T.ApiYTInsightsAddAccountFunc
+  apiYTInsightsUpdateAccountStatus: T.ApiYTInsightsUpdateAccountStatusFunc
+  apiYTInsightsRemoveAccount: T.ApiYTInsightsRemoveAccountFunc
 }
 // prettier-ignore
 export const externalAPI = {
@@ -63,13 +70,20 @@ export const externalAPI = {
   apiPutProjectConfig: async (v: T.ApiPutProjectConfig) => IPCR.invoke(externalIpcKey.apiPutProjectConfig, v),
 
   // Projects; Time In Progress
-  apiTimeInProgressOverview: async (v: ApiTimeInProgressOverview) => IPCR.invoke(externalIpcKey.apiTimeInProgressOverview, v),
-  apiTimeInProgressInsertHistoricalData: async (v: ApiTimeInProgressInsertHistoricalData) => IPCR.invoke(externalIpcKey.apiTimeInProgressInsertHistoricalData, v),
+  apiTimeInProgressOverview: async (v: T.ApiTimeInProgressOverview) => IPCR.invoke(externalIpcKey.apiTimeInProgressOverview, v),
+  apiTimeInProgressInsertHistoricalData: async (v: T.ApiTimeInProgressInsertHistoricalData) => IPCR.invoke(externalIpcKey.apiTimeInProgressInsertHistoricalData, v),
 
   // Projects; Insta Insights
   apiInstaInsightsGetAllAccounts: async () => IPCR.invoke(externalIpcKey.apiInstaInsightsGetAllAccounts),
-  apiInstaInsightsGetAccountsOverview: async (v: ApiInstaInsightsAccountsOverview) => IPCR.invoke(externalIpcKey.apiInstaInsightsGetAccountsOverview, v),
-  apiInstaInsightsAddAccount: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsAddAccount, v),
-  apiInstaInsightsUpdateAccountStatus: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsUpdateAccountStatus, v),
-  apiInstaInsightsRemoveAccount: async (v: ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsRemoveAccount, v)
+  apiInstaInsightsGetAccountsOverview: async (v: T.ApiInstaInsightsAccountsOverview) => IPCR.invoke(externalIpcKey.apiInstaInsightsGetAccountsOverview, v),
+  apiInstaInsightsAddAccount: async (v: T.ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsAddAccount, v),
+  apiInstaInsightsUpdateAccountStatus: async (v: T.ApiInstaUpdateInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsUpdateAccountStatus, v),
+  apiInstaInsightsRemoveAccount: async (v: T.ApiInstaInsightsAccount) => IPCR.invoke(externalIpcKey.apiInstaInsightsRemoveAccount, v),
+
+  // Projects; YT Insights
+  apiYTInsightsGetAllAccounts: async () => IPCR.invoke(externalIpcKey.apiYTInsightsGetAllAccounts),
+  apiYTInsightsGetAccountsOverview: async (v: T.ApiYTInsightsAccountsOverview) => IPCR.invoke(externalIpcKey.apiYTInsightsGetAccountsOverview, v),
+  apiYTInsightsAddAccount: async (v: T.ApiYTInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsAddAccount, v),
+  apiYTInsightsUpdateAccountStatus: async (v: T.ApiYTUpdateInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsUpdateAccountStatus, v),
+  apiYTInsightsRemoveAccount: async (v: T.ApiYTInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsRemoveAccount, v)
 }
