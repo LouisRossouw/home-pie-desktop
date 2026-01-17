@@ -52,7 +52,7 @@ export function WindowFrameDebug() {
   return (
     <div className="flex items-center justify-between h-8 px-4 rounded-b-lg bg-background">
       <div className="flex w-full justify-between">
-        <div className="flex col-span-1 gap-4 justify-start items-center w-full">
+        <div className="flex col-span-1 gap-4 justify-start items-center">
           <Button
             variant={'ghost'}
             className="w-6 h-6"
