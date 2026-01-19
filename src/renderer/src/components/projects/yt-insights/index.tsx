@@ -29,7 +29,6 @@ export function YouTubeInsights() {
     queryFn: getAllAccounts,
     staleTime: fiveMin
   })
-
   const accounts = useMemo(() => {
     if (!accountsRaw) return []
 
@@ -50,7 +49,9 @@ export function YouTubeInsights() {
     refetchInterval: fiveMin,
     staleTime: fiveMin
   })
-
+  console.log('????????')
+  console.log(accountsRaw)
+  console.log('????????')
   return (
     <YTInsightsLayout
       selectedAccount={maybeSelectedAccount}

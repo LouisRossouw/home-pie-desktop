@@ -3,11 +3,11 @@ import { requireSession } from '@main/src/session'
 
 export async function apiYTInsightsAddAccount({
   account,
-  accountId,
+  id,
   active
 }: {
   account: string
-  accountId: string
+  id: string
   active: boolean
 }) {
   const apiClient = await requireSession()
@@ -15,7 +15,7 @@ export async function apiYTInsightsAddAccount({
   try {
     const { response, data } = await apiClient.POST('/api/yt-insights/accounts', {
       params: {
-        query: { account, accountId, active }
+        query: { account, accountId: id, active }
       }
     })
 

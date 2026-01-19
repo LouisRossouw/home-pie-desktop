@@ -85,7 +85,9 @@ export function YTInsightsLayout({
 
       return {
         ...acc,
-        active: match ? match.active : acc.account === 'time.in.progress' // Time in progress needs to always be true
+        active: match ? match.active : acc.account === 'time.in.progress', // Time in progress needs to always be true
+        id: match ? match.id : acc.account === 'time.in.progress', // Time in progress needs to always be true
+        channelTag: match ? match.channelTag : acc.account === 'time.in.progress' // Time in progress needs to always be true
       }
     })
 

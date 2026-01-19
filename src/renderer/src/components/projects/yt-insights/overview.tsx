@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useOutletContext, useSearchParams } from 'react-router'
 
-import { ActivitySquare, DeleteIcon, Pencil } from 'lucide-react'
+import { ActivitySquare, DeleteIcon, Link, Pencil } from 'lucide-react'
 
+import { socialUrl } from '@shared/constants'
 import type {
   AccountsDataWithPic,
   ApiYTInsightsAccount,
@@ -39,7 +40,6 @@ import LineChartCompact from '~/components/line-chart-compact'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 import { SocialIndicator, SocialStatsCard } from '../time-in-progress/social-stats-card'
-import { formatCount } from './format-count'
 
 type YTInsightsContext = {
   data: AccountsDataWithPic[]
@@ -69,7 +69,7 @@ export function InsightsOverview() {
 
   const { mutate: removeAccount } = useMutation({
     mutationKey: ['remove-account'],
-    mutationFn: async (data: { account: string; accountId: string; active: boolean }) => {
+    mutationFn: async (data: ApiYTInsightsAccount) => {
       return await window.api.external.apiYTInsightsRemoveAccount(data)
     },
     onSettled: async (res) => {
@@ -126,8 +126,6 @@ function AccountRow({
     navigate(`/projects/yt-insights/${accountName}/insights`)
   }
 
-  console.log(account)
-
   return (
     <div
       className={cn(
@@ -136,41 +134,50 @@ function AccountRow({
       )}
     >
       <div className="w-8 ">
-        {accountName !== 'time.in.progress' && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size={'sm'}>
-                <Pencil size={18} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuLabel>Edit {accountName}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  className="flex justify-between"
-                  onClick={() => setAccountToRemove(accountName)}
-                >
-                  Delete
-                  <DeleteIcon size={18} />
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex justify-between"
-                  onClick={() =>
-                    updateAccountStatus({
-                      account: accountName,
-                      key: 'active',
-                      value: !account.active
-                    })
-                  }
-                >
-                  {account.active ? 'Deactivate' : 'Activate'}
-                  <ActivitySquare size={18} />
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size={'sm'}>
+              <Pencil size={18} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuLabel>Edit {accountName}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() =>
+                  window.api.app.openBrowserToUrl({
+                    url: `${socialUrl.youtube}@${account.channelTag}`
+                  })
+                }
+              >
+                Open YouTube Channel
+                <Link size={18} />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() => setAccountToRemove(accountName)}
+              >
+                Delete
+                <DeleteIcon size={18} />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() =>
+                  updateAccountStatus({
+                    account: accountName,
+                    key: 'active',
+                    value: !account.active
+                  })
+                }
+              >
+                {account.active ? 'Deactivate' : 'Activate'}
+                <ActivitySquare size={18} />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div onClick={handleNavigate} className={`flex w-64 hover:cursor-pointer`}>
         <Avatar>
@@ -244,7 +251,7 @@ export function ConfirmRemoveAccountDialog({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() =>
-              removeAccount({ account: accountToRemove, accountId: '', active: false })
+              removeAccount({ account: accountToRemove, id: '', channelTag: '', active: false })
             }
           >
             Continue

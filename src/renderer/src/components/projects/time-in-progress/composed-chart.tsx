@@ -12,8 +12,6 @@ export default function LineChartComponent({ dataKey, data, strokeColor, fill })
 
   const dotsVisible = true
 
-  // TODO: Format date key
-
   return (
     // <div className="flex w-full h-full justify-center items-center">
     <ResponsiveContainer width="100%" height="100%">
@@ -32,7 +30,7 @@ export default function LineChartComponent({ dataKey, data, strokeColor, fill })
           dataKey={dataKey}
           stroke={strokeColor}
           activeDot={{ r: 5, stroke: 'white', fill: 'red' }}
-          dot={dotsVisible ? { r: 2 } : false}
+          dot={dotsVisible ? { r: 1 } : false}
         />
         <Scatter dataKey="postedAt" fill="aqua" />
       </ComposedChart>
@@ -45,9 +43,8 @@ const CustomTooltip = ({ active, payload, label, data }: TooltipProps<ValueType,
   if (active) {
     return (
       <div className="custom-tooltip">
-        {/* <p className="desc">{`Posts: ${data[label]?.post ?? 'N/A'}`}</p> */}
         <p className="label">{`Followers ${payload?.[0]?.value ?? 'N/A'}`}</p>
-        {/* <p className="desc">{format(data[label]?.date ?? '2025-01-01', 'dd-MM-yyyy HH:mm')}</p> */}
+        {label && <p className="desc">{format(label, 'dd-MM-yyyy HH:mm')}</p>}
       </div>
     )
   }

@@ -104,6 +104,11 @@ export enum navIpcKey {
 export enum SessionKey {
   accessToken = 'accessToken'
 }
+
+export enum socialUrl {
+  youtube = 'https://www.youtube.com/'
+}
+
 export const getAppVersion = () => version
 export const getAppPlatform = () => process.platform
 export const isMac = () => getAppPlatform() === 'darwin'

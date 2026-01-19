@@ -113,5 +113,10 @@ async function addAccount({
   accountId: string
   active: boolean
 }) {
-  return await window.api.external.apiYTInsightsAddAccount({ account, accountId, active })
+  return await window.api.external.apiYTInsightsAddAccount({
+    account,
+    id: accountId,
+    channelTag: '',
+    active
+  })
 }

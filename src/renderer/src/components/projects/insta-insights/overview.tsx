@@ -133,41 +133,39 @@ function AccountRow({
       )}
     >
       <div className="w-8 ">
-        {accountName !== 'time.in.progress' && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size={'sm'}>
-                <Pencil size={18} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuLabel>Edit {accountName}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  className="flex justify-between"
-                  onClick={() => setAccountToRemove(accountName)}
-                >
-                  Delete
-                  <DeleteIcon size={18} />
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex justify-between"
-                  onClick={() =>
-                    updateAccountStatus({
-                      account: accountName,
-                      key: 'active',
-                      value: !account.active
-                    })
-                  }
-                >
-                  {account.active ? 'Deactivate' : 'Activate'}
-                  <ActivitySquare size={18} />
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size={'sm'}>
+              <Pencil size={18} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuLabel>Edit {accountName}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() => setAccountToRemove(accountName)}
+              >
+                Delete
+                <DeleteIcon size={18} />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex justify-between"
+                onClick={() =>
+                  updateAccountStatus({
+                    account: accountName,
+                    key: 'active',
+                    value: !account.active
+                  })
+                }
+              >
+                {account.active ? 'Deactivate' : 'Activate'}
+                <ActivitySquare size={18} />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div onClick={handleNavigate} className={`flex w-64 hover:cursor-pointer`}>
         <Avatar>

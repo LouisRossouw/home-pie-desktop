@@ -30,7 +30,7 @@ export default function LineChartCompact({ data, followersDifference }) {
               stroke={strokeColor}
               fill={fill}
               activeDot={{ r: 5, stroke: 'red', fill: 'red' }}
-              dot={dotsVisible ? { r: 2 } : false}
+              dot={dotsVisible ? { r: 1 } : false}
             />
             <Scatter dataKey="postedAt" fill="aqua" />
           </ComposedChart>

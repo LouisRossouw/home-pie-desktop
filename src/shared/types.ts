@@ -106,7 +106,12 @@ export type ApiInstaUpdateInsightsAccount = {
   value: string | boolean | number
 }
 
-export type ApiYTInsightsAccount = { account: string; accountId: string; active: boolean }
+export type ApiYTInsightsAccount = {
+  account: string
+  id: string
+  channelTag: string
+  active: boolean
+}
 export type ApiYTUpdateInsightsAccount = {
   account: string
   key: string
@@ -132,6 +137,8 @@ export type AccountsDataWithPic = SocialData & {
   profilePictureUrl: string
   historical: any[]
   active: boolean
+  id?: number
+  channelTag?: number
 }
 
 export type ApiTimeInProgressInsertHistoricalData = {
