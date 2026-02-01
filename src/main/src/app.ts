@@ -51,13 +51,13 @@ export async function loadApp({ fastLoad }: LoadApp) {
   await updateOnLoaderProgress({ msg: 'Loading app.. 😀', ms })
 
   let isFirstLoad = false
+  initDatabase()
 
   if (!dbExists) {
     isFirstLoad = true
 
-    initDatabase()
-
     defaultCoreSettings.forEach(async ({ key, value }) => {
+
       setCoreSetting({ key, value })
       await updateOnLoaderProgress({
         msg: `Adding default core setting:', ${key} - ${value}`,

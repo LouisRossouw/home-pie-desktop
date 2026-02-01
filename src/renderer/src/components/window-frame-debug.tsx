@@ -76,7 +76,7 @@ export function WindowFrameDebug() {
 
           {appSettings?.debug && <p className="text-xs opacity-50">{pathname}</p>}
         </div>
-        <div className="flex w-full justify-end items-center gap-4 px-4">
+        <div className="flex w-full justify-end items-center gap-4 px-4 opacity-50 hover:opacity-100 transition-all">
           <TempHumStats />
           <PowerStats />
         </div>

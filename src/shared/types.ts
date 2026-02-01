@@ -338,3 +338,13 @@ export type ApiYTInsightsRemoveAccountFunc = (v: ApiYTInsightsAccount) => Promis
 // ***
 // **
 // *
+export type FinanceSetting = { key: string; value: any }
+
+// Returned types
+export type ResGetFinanceSetting = Promise<any>
+export type ResGetAllFinanceSettings = Promise<Record<string, any>>
+
+// - DatabaseAppSettingsAPI - func types
+export type SetFinanceSettingFunc = (v: { key: string; value: any }) => void
+export type GetFinanceSettingFunc = (v: string) => ResGetFinanceSetting
+export type GetAllFinanceSettingsFunc = () => ResGetAllFinanceSettings

@@ -48,8 +48,18 @@ export enum dbIpcKey {
   findNextActiveAccessToken = 'find-next-active-access-token',
 
   // ** Auth
-  apiSignIn = 'api-sign-in'
+  apiSignIn = 'api-sign-in',
+
+  // ** Finances
+  getFinanceSetting = 'get-finance-setting',
+  setFinanceSetting = 'set-finance-setting',
+  getAllFinanceSettings = 'get-all-finance-settings',
+  getFinanceRecord = 'get-finance-record',
+  setFinanceRecord = 'set-finance-record',
+  getAllFinanceRecords = 'get-all-finance-records'
 }
+
+
 
 export enum appIpcKey {
   loadApp = 'load-app',
