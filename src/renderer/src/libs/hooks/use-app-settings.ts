@@ -23,9 +23,11 @@ export function useAppSettings() {
 
   async function getAppSetting(setting: CoreSetting) {
     if (appSettings) return appSettings[setting]
+    const maybeAppSetting = await window.api.db.getCoreSetting({ key: setting })
 
-    return JSON.parse(await window.api.db.getCoreSetting({ key: setting }))
+    return JSON.parse(maybeAppSetting!)
   }
+
 
   async function updateAppSettings(settings: { setting: CoreSetting; value: Value }[]) {
     setAppSettings((prevSettings) => {

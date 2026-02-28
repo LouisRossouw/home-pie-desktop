@@ -5,12 +5,37 @@ if (!safeStorage.isEncryptionAvailable()) {
 }
 
 export function encryptValue(value: string) {
-  const encrypted = safeStorage.encryptString(value)
-  return encrypted
+  try {
+    if (safeStorage.isEncryptionAvailable()) {
+      const encrypted = safeStorage.encryptString(value)
+      return `enc:${encrypted.toString('base64')}`
+    }
+  } catch (err) {
+    console.error('safeStorage encryption failed:', err)
+  }
+  return `raw:${Buffer.from(value).toString('base64')}`
 }
 
 export function decryptValue(value: string) {
-  const buf = Buffer.from(value, 'base64')
-  const decrypted = safeStorage.decryptString(buf)
-  return decrypted
+  if (value.startsWith('enc:')) {
+    try {
+      const buf = Buffer.from(value.substring(4), 'base64')
+      return safeStorage.decryptString(buf)
+    } catch (err) {
+      console.error('safeStorage decryption failed:', err)
+    }
+  } else if (value.startsWith('raw:')) {
+    return Buffer.from(value.substring(4), 'base64').toString()
+  }
+
+  // Fallback for legacy data (though table was empty)
+  try {
+    const buf = Buffer.from(value, 'base64')
+    if (safeStorage.isEncryptionAvailable()) {
+      return safeStorage.decryptString(buf)
+    }
+  } catch (err) {
+    // ignore
+  }
+  return value
 }

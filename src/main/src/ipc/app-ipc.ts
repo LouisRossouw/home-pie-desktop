@@ -8,6 +8,7 @@ import {
   resizeApp,
   windowControl
 } from '../app'
+import { apiGetCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { appIpcKey, dbIpcKey } from '@shared/constants'
 
 export function appIpcHandlers() {
@@ -38,5 +39,9 @@ export function appIpcHandlers() {
   // ** Auth
   ipcMain.handle(dbIpcKey.apiSignIn, async (_event, data) => {
     return await authorizeUserInDefaultBrowser(data)
+  })
+
+  ipcMain.handle(appIpcKey.completeAuthApp, async (_event, data) => {
+    return await apiGetCompleteAuthentication(data)
   })
 }

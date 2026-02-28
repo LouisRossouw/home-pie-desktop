@@ -4,6 +4,7 @@ import { UserSetting } from '@shared/types'
 import { arrayToObject } from '~/libs/utils/utils'
 
 import { updateThemeUi } from '../utils/update-theme-ui'
+import { parseOtherSettings } from '@shared/utils'
 
 type Value = string | boolean | number | undefined
 export type UserSettings = Record<UserSetting, Value> | undefined
@@ -11,10 +12,11 @@ export type UserSettings = Record<UserSetting, Value> | undefined
 // prettier-ignore
 export type UseUserSettings = {
   userSettings: UserSettings | undefined
-  getUserSetting: (v: UserSetting) => Promise<Value>
+  getUserSetting: (v: UserSetting, userId?: number) => Promise<Value>
   getAllUserSettings: (userIdTest?: number) => Promise<UserSettings>
   setUserSettings: React.Dispatch<React.SetStateAction<UserSettings>>
   updateUserSettings: (v: { newUserId?: number; setting: UserSetting; value: Value }[]) => Promise<boolean>
+  updateUserOtherSettings: (v: { key: string, value: string }) => Promise<boolean>
   applyUserSettingsToApp: (v: UserSettings) => Promise<boolean>
   deleteUserSettings: (v: { userId: number }) => Promise<boolean>
 }
@@ -60,6 +62,16 @@ export function useUserSettings({ userId }: { userId?: string | Value }) {
     return true
   }
 
+  async function updateUserOtherSettings({ key, value }: { key: string; value: string }) {
+    const parsedOther = parseOtherSettings(userSettings)
+
+    parsedOther[key] = value
+
+    await updateUserSettings([{ setting: 'other', value: JSON.stringify(parsedOther) }])
+
+    return true
+  }
+
   async function getAllUserSettings() {
     if (id === currentUserId.current && userSettings) return userSettings
 
@@ -70,10 +82,20 @@ export function useUserSettings({ userId }: { userId?: string | Value }) {
     return settingsObj
   }
 
-  async function getUserSetting(setting: UserSetting) {
-    if (userSettings) return userSettings[setting]
+  // RemoveThis / TODO?
+  async function deleteUserSettings() {
+    return false
+  }
 
-    return JSON.parse(await window.api.db.getUserSetting({ userId: id, key: setting }))
+  async function getUserSetting(setting: UserSetting, userId?: number) {
+    if (userSettings && !userId) return userSettings[setting]
+
+    const maybeUserSettings = await window.api.db.getUserSetting({
+      userId: userId ? userId : id, // Get a specific user id, OR, if undefined return the current userId in session.
+      key: setting
+    })
+
+    return maybeUserSettings ? JSON.parse(maybeUserSettings) : undefined
   }
 
   async function applyUserSettingsToApp(userSetting: UserSettings) {
@@ -83,17 +105,14 @@ export function useUserSettings({ userId }: { userId?: string | Value }) {
     return true
   }
 
-  async function deleteUserSettings({ userId }: { userId: number }) {
-    return await window.api.db.deleteUserSettings({ userId })
-  }
-
   return {
     userSettings,
     getUserSetting,
     setUserSettings,
     getAllUserSettings,
     updateUserSettings,
-    deleteUserSettings,
-    applyUserSettingsToApp
+    updateUserOtherSettings,
+    applyUserSettingsToApp,
+    deleteUserSettings
   }
 }
