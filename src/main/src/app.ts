@@ -201,7 +201,7 @@ export async function authorizeUserInDefaultBrowser({ addAccount }: { addAccount
 
   if (maybeLoginKey) {
     setCoreSetting({ key: 'loginKey', value: maybeLoginKey })
-    const authUrl = `${getAppBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}}&origin=${appOriginName}${addAccount ? '&addAccount=true' : ''}`
+    const authUrl = `${getApiBaseURL}/auth/auth-app?loginKey=${maybeLoginKey}&origin=${appOriginName}${addAccount ? '&addAccount=true' : ''}`
     return await shell.openExternal(authUrl)
   }
 

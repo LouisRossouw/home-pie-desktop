@@ -24,7 +24,8 @@ export const defaultUserSettings = [
   { label: 'Theme', slug: 'theme', key: 'theme', value: 'light' },
   { label: 'Decimals', slug: 'decimals', key: 'decimals', value: 3 },
   { label: 'Notifications', slug: 'notifications', key: 'notifications', value: true },
-  { label: 'Date format', slug: 'date-format', key: 'dateFormat', value: 'yyyy-MM-dd' }
+  { label: 'Date format', slug: 'date-format', key: 'dateFormat', value: 'yyyy-MM-dd' },
+  { label: 'Other', slug: 'other', key: 'other', value: '{}' }
 ] as const
 
 export const coreSettingKeys = Object.fromEntries(

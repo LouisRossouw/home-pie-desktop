@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { QueryClient } from '@tanstack/react-query'
 
 import {
   Schemas,
@@ -14,6 +13,7 @@ import { defaultUserSettings } from '@shared/default-app-settings'
 
 import { useApp } from '~/libs/context/app'
 import { useAppSession } from '~/libs/context/session'
+import { QueryClient } from '@tanstack/react-query'
 
 type Value = string | boolean | number | undefined
 type AvailableAccounts = { userId: number; email: string; active: boolean }[] | undefined
@@ -23,7 +23,6 @@ type UserSession = Schemas['CustomUser']
 export function useAccounts() {
   const navigate = useNavigate()
   const queryClient = new QueryClient()
-
   const APP = useApp()
   const SSN = useAppSession()
 
@@ -52,7 +51,14 @@ export function useAccounts() {
           ])
 
           queryClient.clear()
-          navigate('/')
+
+          // const userStartRoute = APP?.userSettings?.startRoute as string | undefined
+
+          const userStartRoute = (await APP.getUserSetting('startRoute', userId)) as
+            | string
+            | undefined
+
+          navigate(userStartRoute ?? '/')
           return hasUpdateSession && hasUpdatedSettings
         }
 
@@ -68,7 +74,12 @@ export function useAccounts() {
           ])
 
           queryClient.clear()
-          navigate('/')
+
+          const userStartRoute = (await APP.getUserSetting('startRoute', userId)) as
+            | string
+            | undefined
+
+          navigate(userStartRoute ?? '/')
           return hasUpdateSession && hasUpdatedSettings
         }
 
