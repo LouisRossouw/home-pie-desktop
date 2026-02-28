@@ -13,7 +13,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/com
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
-import { useFinances, FinanceData, AssetItem, SavingGoal } from '~/libs/hooks/use-finances'
+import { useFinances } from '~/libs/hooks/use-finances'
+import { FinanceData, AssetItem, SavingGoal } from '@shared/types'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
 
 

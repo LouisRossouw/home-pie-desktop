@@ -335,10 +335,50 @@ export type ApiYTInsightsGetAccountsOverviewFunc = (data: ApiYTInsightsAccountsO
 export type ApiYTInsightsAddAccountFunc = (v: ApiYTInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
 export type ApiYTInsightsUpdateAccountStatusFunc = (v: ApiYTUpdateInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
 export type ApiYTInsightsRemoveAccountFunc = (v: ApiYTInsightsAccount) => Promise<{ ok: boolean }> // prettier-ignore
+
+export type ApiGetFinanceSettingFunc = (key: string) => Promise<any>
+export type ApiSetFinanceSettingFunc = (v: { key: string; value: any }) => Promise<boolean>
+export type ApiGetAllFinanceSettingsFunc = () => Promise<Record<string, any>>
+export type ApiGetFinanceRecordsFunc = () => Promise<ApiFinanceRecord[]>
+export type ApiGetFinanceRecordFunc = (v: { month: number; year: number }) => Promise<any>
+export type ApiSetFinanceRecordFunc = (v: { month: number; year: number; value: any }) => Promise<boolean>
 // ***
 // **
 // *
-export type FinanceSetting = { key: string; value: any }
+export type ExpenseItem = {
+  id: string
+  label: string
+  amount: number
+}
+
+export type AssetItem = {
+  id: string
+  label: string
+  value: number
+  growth: number // annual %
+  allocation: number // monthly contribution
+}
+
+export type SavingGoal = {
+  id: string
+  label: string
+  targetAmount: number
+  currentAmount: number
+  monthlyAllocation: number
+}
+
+export type FinanceData = {
+  income: number
+  taxRate: number // annual/monthly %
+  expenses: ExpenseItem[]
+  assets: AssetItem[]
+  savingGoals: SavingGoal[]
+  debt: number
+  growthRate: number // annual % (for any leftover savings pool)
+}
+
+export type ApiFinanceRecord = Schemas['FinanceRecord']
+export type ApiFinanceSetting = Schemas['FinanceSetting']
 
 // Returned types
 export type ResGetFinanceSetting = Promise<any>

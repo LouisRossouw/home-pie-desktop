@@ -1,12 +1,6 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import { externalIpcKey } from '@shared/constants'
 
-import type {
-  ApiInstaInsightsAccount,
-  ApiTimeInProgressOverview,
-  ApiInstaInsightsAccountsOverview,
-  ApiTimeInProgressInsertHistoricalData
-} from '@shared/types'
 import type * as T from '@shared/types'
 
 const IPCR = electronAPI.ipcRenderer
@@ -48,6 +42,14 @@ export type ExternalAPI = {
   apiYTInsightsAddAccount: T.ApiYTInsightsAddAccountFunc
   apiYTInsightsUpdateAccountStatus: T.ApiYTInsightsUpdateAccountStatusFunc
   apiYTInsightsRemoveAccount: T.ApiYTInsightsRemoveAccountFunc
+
+  // Finances
+  apiGetFinanceSetting: T.ApiGetFinanceSettingFunc
+  apiSetFinanceSetting: T.ApiSetFinanceSettingFunc
+  apiGetAllFinanceSettings: T.ApiGetAllFinanceSettingsFunc
+  apiGetFinanceRecords: T.ApiGetFinanceRecordsFunc
+  apiGetFinanceRecord: T.ApiGetFinanceRecordFunc
+  apiSetFinanceRecord: T.ApiSetFinanceRecordFunc
 }
 // prettier-ignore
 export const externalAPI = {
@@ -85,5 +87,13 @@ export const externalAPI = {
   apiYTInsightsGetAccountsOverview: async (v: T.ApiYTInsightsAccountsOverview) => IPCR.invoke(externalIpcKey.apiYTInsightsGetAccountsOverview, v),
   apiYTInsightsAddAccount: async (v: T.ApiYTInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsAddAccount, v),
   apiYTInsightsUpdateAccountStatus: async (v: T.ApiYTUpdateInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsUpdateAccountStatus, v),
-  apiYTInsightsRemoveAccount: async (v: T.ApiYTInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsRemoveAccount, v)
+  apiYTInsightsRemoveAccount: async (v: T.ApiYTInsightsAccount) => IPCR.invoke(externalIpcKey.apiYTInsightsRemoveAccount, v),
+
+  // Finances
+  apiGetFinanceSetting: async (key: string) => IPCR.invoke(externalIpcKey.apiGetFinanceSetting, key),
+  apiSetFinanceSetting: async (v: { key: string; value: any }) => IPCR.invoke(externalIpcKey.apiSetFinanceSetting, v),
+  apiGetAllFinanceSettings: async () => IPCR.invoke(externalIpcKey.apiGetAllFinanceSettings),
+  apiGetFinanceRecords: async () => IPCR.invoke(externalIpcKey.apiGetFinanceRecords),
+  apiGetFinanceRecord: async (v: { month: number; year: number }) => IPCR.invoke(externalIpcKey.apiGetFinanceRecord, v),
+  apiSetFinanceRecord: async (v: { month: number; year: number; value: any }) => IPCR.invoke(externalIpcKey.apiSetFinanceRecord, v)
 }

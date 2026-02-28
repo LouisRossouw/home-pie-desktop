@@ -21,7 +21,6 @@ export const defaultDotSquadColour = 'rgb(20, 20, 20)'
 // const env = process[ENV]
 
 const isDev = import.meta.env.DEV
-const isProd = import.meta.env.PROD
 export const appEnvironment = import.meta.env.MODE // development || production
 
 export enum dbIpcKey {
@@ -104,7 +103,15 @@ export enum externalIpcKey {
   apiYTInsightsUpdateAccountStatus = 'api-yt-insights-update-account-status',
   apiYTInsightsRemoveAccount = 'api-yt-insights-remove-account',
 
-  apiCompleteAuthentication = 'api-complete-auth-app'
+  apiCompleteAuthentication = 'api-complete-auth-app',
+
+  // * Finances
+  apiGetFinanceSetting = 'api-get-finance-setting',
+  apiSetFinanceSetting = 'api-set-finance-setting',
+  apiGetAllFinanceSettings = 'api-get-all-finance-settings',
+  apiGetFinanceRecords = 'api-get-finance-records',
+  apiGetFinanceRecord = 'api-get-finance-record',
+  apiSetFinanceRecord = 'api-set-finance-record'
 }
 
 export enum navIpcKey {

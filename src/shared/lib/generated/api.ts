@@ -4,6 +4,86 @@
  */
 
 export interface paths {
+    "/api/finances/records/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiFinancesRecordsList"];
+        put?: never;
+        post: operations["apiFinancesRecordsCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/finances/records/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiFinancesRecordsRetrieve"];
+        put: operations["apiFinancesRecordsUpdate"];
+        post?: never;
+        delete: operations["apiFinancesRecordsDestroy"];
+        options?: never;
+        head?: never;
+        patch: operations["apiFinancesRecordsPartialUpdate"];
+        trace?: never;
+    };
+    "/api/finances/records/get_record/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiFinancesRecordsGetRecordRetrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/finances/settings/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiFinancesSettingsList"];
+        put?: never;
+        post: operations["apiFinancesSettingsCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/finances/settings/{key}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["apiFinancesSettingsRetrieve"];
+        put: operations["apiFinancesSettingsUpdate"];
+        post?: never;
+        delete: operations["apiFinancesSettingsDestroy"];
+        options?: never;
+        head?: never;
+        patch: operations["apiFinancesSettingsPartialUpdate"];
+        trace?: never;
+    };
     "/api/gengen/check-progress": {
         parameters: {
             query?: never;
@@ -708,6 +788,45 @@ export interface components {
             resTime: number;
             response: components["schemas"]["ResponseData"];
         };
+        FinanceRecord: {
+            readonly id: number;
+            /** Format: int64 */
+            month: number;
+            /** Format: int64 */
+            year: number;
+            value: unknown;
+            /** Format: date-time */
+            readonly createdAt: string;
+        };
+        FinanceRecordRequest: {
+            /** Format: int64 */
+            month: number;
+            /** Format: int64 */
+            year: number;
+            value: unknown;
+        };
+        FinanceSetting: {
+            readonly id: number;
+            key: string;
+            value: unknown;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        FinanceSettingRequest: {
+            key: string;
+            value: unknown;
+        };
+        PatchedFinanceRecordRequest: {
+            /** Format: int64 */
+            month?: number;
+            /** Format: int64 */
+            year?: number;
+            value?: unknown;
+        };
+        PatchedFinanceSettingRequest: {
+            key?: string;
+            value?: unknown;
+        };
         PollLoginKeyToken: {
             accessToken: string;
             refreshToken: string;
@@ -736,6 +855,307 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    apiFinancesRecordsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"][];
+                };
+            };
+        };
+    };
+    apiFinancesRecordsCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinanceRecordRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinanceRecordRequest"];
+                "multipart/form-data": components["schemas"]["FinanceRecordRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"];
+                };
+            };
+        };
+    };
+    apiFinancesRecordsRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this finance record. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"];
+                };
+            };
+        };
+    };
+    apiFinancesRecordsUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this finance record. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinanceRecordRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinanceRecordRequest"];
+                "multipart/form-data": components["schemas"]["FinanceRecordRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"];
+                };
+            };
+        };
+    };
+    apiFinancesRecordsDestroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this finance record. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiFinancesRecordsPartialUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this finance record. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFinanceRecordRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFinanceRecordRequest"];
+                "multipart/form-data": components["schemas"]["PatchedFinanceRecordRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"];
+                };
+            };
+        };
+    };
+    apiFinancesRecordsGetRecordRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceRecord"];
+                };
+            };
+        };
+    };
+    apiFinancesSettingsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceSetting"][];
+                };
+            };
+        };
+    };
+    apiFinancesSettingsCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinanceSettingRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinanceSettingRequest"];
+                "multipart/form-data": components["schemas"]["FinanceSettingRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceSetting"];
+                };
+            };
+        };
+    };
+    apiFinancesSettingsRetrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceSetting"];
+                };
+            };
+        };
+    };
+    apiFinancesSettingsUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinanceSettingRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinanceSettingRequest"];
+                "multipart/form-data": components["schemas"]["FinanceSettingRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceSetting"];
+                };
+            };
+        };
+    };
+    apiFinancesSettingsDestroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    apiFinancesSettingsPartialUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFinanceSettingRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFinanceSettingRequest"];
+                "multipart/form-data": components["schemas"]["PatchedFinanceSettingRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceSetting"];
+                };
+            };
+        };
+    };
     apiGengenCheckProgressRetrieve: {
         parameters: {
             query?: never;

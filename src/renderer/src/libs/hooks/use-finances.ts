@@ -1,36 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-export type ExpenseItem = {
-  id: string
-  label: string
-  amount: number
-}
-
-export type AssetItem = {
-  id: string
-  label: string
-  value: number
-  growth: number // annual %
-  allocation: number // monthly contribution
-}
-
-export type SavingGoal = {
-  id: string
-  label: string
-  targetAmount: number
-  currentAmount: number
-  monthlyAllocation: number
-}
-
-export type FinanceData = {
-  income: number
-  taxRate: number // annual/monthly %
-  expenses: ExpenseItem[]
-  assets: AssetItem[]
-  savingGoals: SavingGoal[]
-  debt: number
-  growthRate: number // annual % (for any leftover savings pool)
-}
+import { FinanceData, ApiFinanceRecord } from '@shared/types'
 
 
 const defaultFinanceData: FinanceData = {
@@ -112,10 +81,10 @@ export function useFinances(month?: number, year?: number) {
   const { data: records = [], isLoading: isLoadingRecords } = useQuery({
     queryKey: ['finance-records'],
     queryFn: async () => {
-      const data = await window.api.db.getAllFinanceRecords()
-      return (data || []).map((r: any) => ({
+      const data = await window.api.external.apiGetFinanceRecords()
+      return (data || []).map((r: ApiFinanceRecord) => ({
         ...r,
-        data: sanitizeFinanceData(r.data)
+        data: sanitizeFinanceData(r.value)
       })) as FinanceRecord[]
     }
   })
@@ -125,10 +94,10 @@ export function useFinances(month?: number, year?: number) {
     queryKey: ['finances', month, year],
     queryFn: async () => {
       if (month !== undefined && year !== undefined) {
-        const record = await window.api.db.getFinanceRecord(month, year)
+        const record = await window.api.external.apiGetFinanceRecord({ month, year })
         if (record) return sanitizeFinanceData(record)
       }
-      const data = await window.api.db.getFinanceSetting('main')
+      const data = await window.api.external.apiGetFinanceSetting('main')
       return sanitizeFinanceData(data)
     }
   })
@@ -136,10 +105,10 @@ export function useFinances(month?: number, year?: number) {
   const saveFinances = useMutation({
     mutationFn: async (newData: FinanceData) => {
       if (month !== undefined && year !== undefined) {
-        await window.api.db.setFinanceRecord(month, year, newData)
+        await window.api.external.apiSetFinanceRecord({ month, year, value: newData })
       }
       // Always update "latest" as current default
-      await window.api.db.setFinanceSetting({ key: 'main', value: newData })
+      await window.api.external.apiSetFinanceSetting({ key: 'main', value: newData })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['finances'] })
