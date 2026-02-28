@@ -26,13 +26,10 @@ import { apiYTInsightsUpdateAccountStatus } from '../api/projects/yt-insights/ap
 import { apiYTInsightsRemoveAccount } from '../api/projects/yt-insights/api-remove-account'
 import { apiYTInsightsGetAccountsOverview } from '../api/projects/yt-insights/api-overview'
 
+// TODOL Update all api files to use barrel imports. i.e index.ts
+
 import {
-  apiGetFinanceSetting,
-  apiSetFinanceSetting,
-  apiGetAllFinanceSettings,
-  apiGetFinanceRecords,
-  apiGetFinanceRecord,
-  apiSetFinanceRecord
+  API_FN
 } from '../api/finances'
 
 export function externalIpcHandlers() {
@@ -42,22 +39,22 @@ export function externalIpcHandlers() {
 
   // * Finances
   ipcMain.handle(externalIpcKey.apiGetFinanceSetting, async (_event, key) => {
-    return await apiGetFinanceSetting(key)
+    return await API_FN.apiGetFinanceSetting(key)
   })
   ipcMain.handle(externalIpcKey.apiSetFinanceSetting, async (_event, { key, value }) => {
-    return await apiSetFinanceSetting(key, value)
+    return await API_FN.apiSetFinanceSetting(key, value)
   })
   ipcMain.handle(externalIpcKey.apiGetAllFinanceSettings, async (_event) => {
-    return await apiGetAllFinanceSettings()
+    return await API_FN.apiGetAllFinanceSettings()
   })
   ipcMain.handle(externalIpcKey.apiGetFinanceRecords, async (_event) => {
-    return await apiGetFinanceRecords()
+    return await API_FN.apiGetFinanceRecords()
   })
   ipcMain.handle(externalIpcKey.apiGetFinanceRecord, async (_event, { month, year }) => {
-    return await apiGetFinanceRecord(month, year)
+    return await API_FN.apiGetFinanceRecord(month, year)
   })
   ipcMain.handle(externalIpcKey.apiSetFinanceRecord, async (_event, { month, year, value }) => {
-    return await apiSetFinanceRecord(month, year, value)
+    return await API_FN.apiSetFinanceRecord(month, year, value)
   })
 
   // * Mr PingPing
