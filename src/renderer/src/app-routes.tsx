@@ -1,11 +1,11 @@
-import { Outlet, Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router'
 
 import { NoMatch } from './routes/no-match'
 import NoConnectionRoute from './routes/no-connection'
 
 import { AppLayout } from './routes/app-layout'
 
-import Login from './routes/login'
+
 import DebugRoute from './routes/debug'
 
 import Home from './routes/home'
@@ -31,7 +31,6 @@ import PingPingOverviewRoute from './routes/ping-ping/overview'
 import PingPingRoute from './routes/ping-ping'
 import SmartHomeRoute from './routes/smart-home'
 import SmartHomeOverviewRoute from './routes/smart-home/overview'
-import AuthorizationRoute from './routes/authorize'
 import InstaInsightsConfigRoute from './routes/sub-projects/insta-insights/config'
 import ServersRoute from './routes/servers'
 import ServersOverviewRoute from './routes/servers/overview'
@@ -43,6 +42,8 @@ import YouTubeConfigRoute from './routes/sub-projects/yt-insights/config'
 import YouTubeInsightsRoute from './routes/sub-projects/yt-insights'
 import YTInsightsRoute from './routes/sub-projects/yt-insights/insights'
 import YTInsightsOverviewRoute from './routes/sub-projects/yt-insights/overview'
+import CompleteAuthorizationRoute from './routes/authorize'
+import LoginRoute from './routes/login'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -57,9 +58,9 @@ function renderRoutes(routes) {
 }
 
 const authRoutes = [
-  { path: 'login', element: <Login /> },
-  { path: 'authorize', element: <AuthorizationRoute /> },
-  { path: 'no-connection', element: <NoConnectionRoute /> }
+  { path: 'login', element: <LoginRoute /> },
+  { path: 'no-connection', element: <NoConnectionRoute /> },
+  { path: 'complete-auth-app', element: <CompleteAuthorizationRoute /> }
 ]
 
 const projectRoutes = [

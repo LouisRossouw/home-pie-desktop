@@ -13,7 +13,7 @@ export function AppLayout() {
       <SidebarProvider
         style={{
           // @ts-ignore
-          '--sidebar-width': '10rem'
+          '--sidebar-width': '16rem'
         }}
         open={sideBarOpen}
       >

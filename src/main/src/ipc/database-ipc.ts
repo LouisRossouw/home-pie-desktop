@@ -5,7 +5,17 @@ import { dbIpcKey } from '@shared/constants'
 import { getAllUserSettings, getUserSetting, setUserSetting } from '@main/src/db/user-settings'
 import { getAllCoreSettings, getCoreSetting, setCoreSetting } from '@main/src/db/core-settings'
 import {
+  getAllFinanceSettings,
+  getFinanceSetting,
+  setFinanceSetting,
+  getAllFinanceRecords,
+  getFinanceRecord,
+  setFinanceRecord
+} from '@main/src/db/finances'
+
+import {
   getAllUserSessions,
+
   getAllSessions,
   getSession,
   setSession,
@@ -64,4 +74,28 @@ export function databaseIpcHandlers() {
   ipcMain.handle(dbIpcKey.getSessionByUserEmail, async (_event, data) => {
     return await getSessionByUserEmail(data)
   })
+
+  // ** Finances
+  ipcMain.handle(dbIpcKey.getFinanceSetting, async (_event, key) => {
+    return await getFinanceSetting(key)
+  })
+  ipcMain.handle(dbIpcKey.setFinanceSetting, async (_event, { key, value }) => {
+    return await setFinanceSetting(key, value)
+  })
+  ipcMain.handle(dbIpcKey.getAllFinanceSettings, async (_event) => {
+    return await getAllFinanceSettings()
+  })
+
+  // ** Records (Historical)
+  ipcMain.handle(dbIpcKey.getFinanceRecord, async (_event, { month, year }) => {
+    return await getFinanceRecord(month, year)
+  })
+  ipcMain.handle(dbIpcKey.setFinanceRecord, async (_event, { month, year, value }) => {
+    return await setFinanceRecord(month, year, value)
+  })
+  ipcMain.handle(dbIpcKey.getAllFinanceRecords, async (_event) => {
+    return await getAllFinanceRecords()
+  })
 }
+
+

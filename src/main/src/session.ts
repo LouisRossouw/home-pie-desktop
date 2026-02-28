@@ -5,6 +5,7 @@ import { mainWindow } from '@main/.'
 import { getAllSessions, getSession, setSession } from './db/session'
 import { appIpcKey, generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
 import { getCoreSetting } from './db/core-settings'
+import { ResCheckAccessToken, ResFindNextActiveAccessToken } from '@shared/types'
 import { getOauthClientForUserAuthType } from '@shared/auth'
 
 export async function requireSession(requireAuth: boolean = true) {
@@ -18,7 +19,7 @@ export async function requireSession(requireAuth: boolean = true) {
   )
   const accessToken = await getSession({ userId, key: 'accessToken' })
 
-  console.log('***** - Requiring the session yo ! userId', userId)
+  console.log('requireSession; userId', userId, "accessToken:", accessToken ? 'True' : 'False')
 
   let validToken: string | undefined
 
@@ -28,6 +29,7 @@ export async function requireSession(requireAuth: boolean = true) {
       accessToken
     })
     if (!validToken) {
+      mainWindow?.webContents.send(appIpcKey.navigateTo, { url: '/login?forceLogout=true' })
       throw new Error('No valid token available')
     }
   }
@@ -49,7 +51,7 @@ export async function checkAccessToken({
 }: {
   userId: number
   accessToken?: string
-}): Promise<string | undefined> {
+}): ResCheckAccessToken {
   if (accessToken && !(await isTokenExpired({ userId }))) {
     return accessToken
   }
@@ -87,9 +89,7 @@ async function checkRefreshToken({
   return undefined
 }
 
-export async function findNextActiveAccessToken(): Promise<
-  { userId: number; accessToken: string } | undefined
-> {
+export async function findNextActiveAccessToken(): ResFindNextActiveAccessToken {
   // Find the next available account, try switch to that account.
   const { ids } = await getAllExistingSessionIds()
   if (ids.length === 0) return undefined
@@ -145,6 +145,8 @@ export async function isTokenExpired({ userId }: { userId: number }) {
   }
 }
 
+// idempotent. (Idempotent safe; meaning the desired action can run multiple times can still cause the intended action)
+// Without this, react strict mode will run twice, meaning we refresh the access token twice and that causes the second api call to break, because the first call to refresh the token revokes the old one.
 let isRefreshing = false
 let refreshPromise: Promise<any> | undefined = undefined
 
@@ -178,27 +180,12 @@ export async function refreshTokenFunction({
         })
       })
 
-      if (!response.ok) {
-        if ([400, 401].includes(response.status)) {
-          console.error('Invalid or expired refresh token')
-          // TODO; Dont force logout if other active accounts exists, instead switch to them?
-          return mainWindow?.webContents.send(appIpcKey.navigateTo, {
-            url: '/login?forceLogout=true'
-          })
-        } else {
-          throw new Error(`Server error: ${response.status}`)
-        }
-      }
+      if (!response.ok) throw new Error('Failed to refresh token')
       const data = await response.json()
       return data
-    } catch (err: any) {
-      console.error('Token refresh failed', err.message || err)
-
-      if (err.message.includes('invalid') || err.message.includes('expired')) {
-        return mainWindow?.webContents.send(appIpcKey.navigateTo, {
-          url: '/login?forceLogout=true'
-        })
-      }
+    } catch (err) {
+      console.error('Token refresh failed', err)
+      return undefined
     } finally {
       isRefreshing = false
       refreshPromise = undefined

@@ -17,6 +17,7 @@ import { useAppOverlay } from './libs/context/overlay'
 import { WindowFrame } from './components/window-frame'
 import { WindowFrameDebug } from './components/window-frame-debug'
 import { LoadingIndicator } from './components/loading-indicator'
+import { SessionContextProvider } from './libs/context/session'
 
 const queryClient = new QueryClient()
 
@@ -63,21 +64,23 @@ export default function App(): JSX.Element {
     <div className="border rounded-lg">
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
-          {booted && !loaded ? (
-            <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
-          ) : (
-            <>
-              <DotSquadContextProvider>
-                <WindowFrame />
-                {booted && loaded && <DotSquadListener />}
-              </DotSquadContextProvider>
-              <AppRoutes />
-              <MrPingPingContextProvider>
-                <WindowFrameDebug />
-                {booted && loaded && <Middlewear />}
-              </MrPingPingContextProvider>
-            </>
-          )}
+          <SessionContextProvider>
+            {booted && !loaded ? (
+              <LoaderRoute setLoaded={setLoaded} fastLoad={fastLoad?.skipLoader ?? false} />
+            ) : (
+              <>
+                <DotSquadContextProvider>
+                  <WindowFrame />
+                  {booted && loaded && <DotSquadListener />}
+                </DotSquadContextProvider>
+                <AppRoutes />
+                <MrPingPingContextProvider>
+                  <WindowFrameDebug />
+                  {booted && loaded && <Middlewear />}
+                </MrPingPingContextProvider>
+              </>
+            )}
+          </SessionContextProvider>
         </AppContextProvider>
       </QueryClientProvider>
     </div>

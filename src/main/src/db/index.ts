@@ -28,10 +28,13 @@ function initDatabase() {
 }
 
 function initTables() {
-  db.prepare(SQL.initCoreSettingsDatabaseSQL).run()
-  db.prepare(SQL.initUserSettingsDatabaseSQL).run()
-  db.prepare(SQL.initSessionDatabaseSQL).run()
+  db.exec(SQL.initCoreSettingsDatabaseSQL)
+  db.exec(SQL.initUserSettingsDatabaseSQL)
+  db.exec(SQL.initSessionDatabaseSQL)
+  db.exec(SQL.initFinanceDatabaseSQL)
 }
+
+
 
 function logActivity(value: any) {
   isDev ? console.log('DB -', value) : null

@@ -28,7 +28,17 @@ export type DatabaseAppSettingsAPI = {
   getAllUserSessions: T.GetAllUserSessionsFunc
   checkAccessToken: T.CheckAccessTokenFunc
   findNextActiveAccessToken: T.FindNextActiveAccessTokenFunc
+
+  // ** Finances
+  getFinanceSetting: T.GetFinanceSettingFunc
+  setFinanceSetting: T.SetFinanceSettingFunc
+  getAllFinanceSettings: T.GetAllFinanceSettingsFunc
+  getFinanceRecord: (month: number, year: number) => Promise<any>
+  setFinanceRecord: (month: number, year: number, value: any) => Promise<any>
+  getAllFinanceRecords: () => Promise<any[]>
 }
+
+
 
 // prettier-ignore
 export const databaseAppSettingsAPI = {
@@ -53,4 +63,12 @@ export const databaseAppSettingsAPI = {
   deleteUserSessions:async (v: T.DeleteUserSessions) => IPCR.invoke(dbIpcKey.deleteUserSessions, v),
   checkAccessToken:async (v: T.CheckAccessToken) => IPCR.invoke(dbIpcKey.checkAccessToken, v),
   findNextActiveAccessToken:async () => IPCR.invoke(dbIpcKey.findNextActiveAccessToken),
+
+  // ** Finances
+  getFinanceSetting: async (key: string) => IPCR.invoke(dbIpcKey.getFinanceSetting, key),
+  setFinanceSetting: async (v: { key: string; value: any }) => IPCR.invoke(dbIpcKey.setFinanceSetting, v),
+  getAllFinanceSettings: async () => IPCR.invoke(dbIpcKey.getAllFinanceSettings),
+  getFinanceRecord: async (month: number, year: number) => IPCR.invoke(dbIpcKey.getFinanceRecord, { month, year }),
+  setFinanceRecord: async (month: number, year: number, value: any) => IPCR.invoke(dbIpcKey.setFinanceRecord, { month, year, value }),
+  getAllFinanceRecords: async () => IPCR.invoke(dbIpcKey.getAllFinanceRecords)
 }

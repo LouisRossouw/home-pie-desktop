@@ -6,7 +6,15 @@ import { db, logActivity } from '.'
 
 async function getCoreSetting(v: T.GetCoreSetting): T.ResGetCoreSetting {
   logActivity(`getCoreSetting ${v.key}`)
-  return db.prepare(SQL.getCoreSettingSQL).get(v.key)?.value ?? undefined
+  const value = db.prepare(SQL.getCoreSettingSQL).get(v.key)?.value
+  if (value) {
+    try {
+      return JSON.parse(value)
+    } catch (e) {
+      return value
+    }
+  }
+  return undefined
 }
 
 async function setCoreSetting(v: T.SetCoreSetting) {

@@ -17,7 +17,6 @@ import { apiMrPingPingAppsStatus } from '../api/mr-ping-ping/api-apps-status'
 import { apiMrPingPingAppStatus } from '../api/mr-ping-ping/api-app-status'
 import { apiGenGenStart } from '../api/gengen/api-gengen-start'
 import { apiGenGenCheckProgress } from '../api/gengen/api-gengen-check-progress'
-import { apiCompleteAuthentication } from '../api/auth/api-auth-complete'
 import { apiMrPingPingAppsData } from '../api/mr-ping-ping/api-apps-data'
 import { apiGetProjectConfig, apiPutProjectConfig } from '../api/projects/api-project-config'
 import { externalIpcKey } from '@shared/constants'
@@ -27,9 +26,38 @@ import { apiYTInsightsUpdateAccountStatus } from '../api/projects/yt-insights/ap
 import { apiYTInsightsRemoveAccount } from '../api/projects/yt-insights/api-remove-account'
 import { apiYTInsightsGetAccountsOverview } from '../api/projects/yt-insights/api-overview'
 
+import {
+  apiGetFinanceSetting,
+  apiSetFinanceSetting,
+  apiGetAllFinanceSettings,
+  apiGetFinanceRecords,
+  apiGetFinanceRecord,
+  apiSetFinanceRecord
+} from '../api/finances'
+
 export function externalIpcHandlers() {
   ipcMain.handle(externalIpcKey.apiProjectList, async (_event) => {
     return await apiProjectList()
+  })
+
+  // * Finances
+  ipcMain.handle(externalIpcKey.apiGetFinanceSetting, async (_event, key) => {
+    return await apiGetFinanceSetting(key)
+  })
+  ipcMain.handle(externalIpcKey.apiSetFinanceSetting, async (_event, { key, value }) => {
+    return await apiSetFinanceSetting(key, value)
+  })
+  ipcMain.handle(externalIpcKey.apiGetAllFinanceSettings, async (_event) => {
+    return await apiGetAllFinanceSettings()
+  })
+  ipcMain.handle(externalIpcKey.apiGetFinanceRecords, async (_event) => {
+    return await apiGetFinanceRecords()
+  })
+  ipcMain.handle(externalIpcKey.apiGetFinanceRecord, async (_event, { month, year }) => {
+    return await apiGetFinanceRecord(month, year)
+  })
+  ipcMain.handle(externalIpcKey.apiSetFinanceRecord, async (_event, { month, year, value }) => {
+    return await apiSetFinanceRecord(month, year, value)
   })
 
   // * Mr PingPing
@@ -110,7 +138,4 @@ export function externalIpcHandlers() {
   })
 
   // * Auth
-  ipcMain.handle(externalIpcKey.apiCompleteAuthentication, (_event, data) => {
-    return apiCompleteAuthentication(data)
-  })
 }
