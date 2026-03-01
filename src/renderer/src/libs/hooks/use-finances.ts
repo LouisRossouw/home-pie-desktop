@@ -3,7 +3,10 @@ import { FinanceData, ApiFinanceRecord } from '@shared/types'
 
 
 const defaultFinanceData: FinanceData = {
-  income: 0,
+  income: 0, // legacy
+  incomeSources: [
+    { id: '1', label: 'Primary Income', amount: 0 }
+  ],
   taxRate: 25,
   expenses: [
     { id: '1', label: 'Food', amount: 0 },
@@ -67,6 +70,13 @@ const sanitizeFinanceData = (data: any): FinanceData => {
     ]
   }
   
+  // Migration: incomeSources from legacy income number
+  if (!sanitized.incomeSources || !Array.isArray(sanitized.incomeSources) || sanitized.incomeSources.length === 0) {
+    sanitized.incomeSources = [
+      { id: 'legacy-income', label: 'Primary Income', amount: sanitized.income ?? 0 }
+    ]
+  }
+
   sanitized.taxRate = sanitized.taxRate ?? defaultFinanceData.taxRate
   sanitized.growthRate = sanitized.growthRate ?? defaultFinanceData.growthRate
   

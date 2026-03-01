@@ -351,6 +351,13 @@ export type ExpenseItem = {
   amount: number
 }
 
+export type IncomeItem = {
+  id: string
+  label: string
+  amount: number
+  taxRate?: number // overrides global tax rate when set
+}
+
 export type AssetItem = {
   id: string
   label: string
@@ -367,8 +374,19 @@ export type SavingGoal = {
   monthlyAllocation: number
 }
 
+export type DebtItem = {
+  id: string
+  label: string
+  totalAmount: number      // original total debt
+  remainingAmount: number  // what's still owed
+  monthlyAllocation: number // how much paid per month
+  interestRate: number     // annual % interest
+  totalPaid: number        // total paid so far (persisted)
+}
+
 export type FinanceData = {
-  income: number
+  income: number // legacy — kept for migration
+  incomeSources: IncomeItem[]
   taxRate: number // annual/monthly %
   expenses: ExpenseItem[]
   assets: AssetItem[]

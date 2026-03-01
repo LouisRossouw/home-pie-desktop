@@ -8,13 +8,13 @@ import {
   XAxis,
   YAxis
 } from 'recharts'
-import { Landmark, TrendingUp, Wallet, ArrowUpCircle, Percent, Plus, Trash2, Calendar, ReceiptText, ChevronDown } from 'lucide-react'
+import { Landmark, TrendingUp, TrendingDown, Wallet, ArrowUpCircle, Percent, Plus, Trash2, Calendar, ReceiptText, ChevronDown, Eye, EyeOff } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
 import { useFinances } from '~/libs/hooks/use-finances'
-import { FinanceData, AssetItem, SavingGoal } from '@shared/types'
+import { FinanceData, IncomeItem, AssetItem, SavingGoal } from '@shared/types'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
 
 
@@ -25,6 +25,8 @@ export default function MyFinancesOverviewRoute() {
   const [isExpensesOpen, setIsExpensesOpen] = useState(false)
   const [isGoalsOpen, setIsGoalsOpen] = useState(false)
   const [isAssetsOpen, setIsAssetsOpen] = useState(false)
+  const [showProjections, setShowProjections] = useState(true)
+  const [hideValues, setHideValues] = useState(false)
 
   const { finances, records, saveFinances, isSaving } = useFinances(selectedMonth, selectedYear)
   const [formData, setFormData] = useState<FinanceData | null>(null)
@@ -47,6 +49,45 @@ export default function MyFinancesOverviewRoute() {
       return {
         ...prev,
         expenses: prev.expenses.map(e => e.id === id ? { ...e, label, amount: numAmount } : e)
+      }
+    })
+  }
+
+  const handleIncomeSourceChange = (id: string, field: keyof IncomeItem, value: string) => {
+    setFormData((prev) => {
+      if (!prev) return null
+      return {
+        ...prev,
+        incomeSources: prev.incomeSources.map(s => {
+          if (s.id !== id) return s
+          if (field === 'taxRate') {
+            // Allow clearing the field to revert to global rate
+            const parsed = value === '' ? undefined : (parseFloat(value) ?? undefined)
+            return { ...s, taxRate: parsed }
+          }
+          return { ...s, [field]: field === 'amount' ? (parseFloat(value) || 0) : value }
+        })
+      }
+    })
+  }
+
+  const addIncomeSource = () => {
+    setFormData(prev => {
+      if (!prev) return null
+      return {
+        ...prev,
+        incomeSources: [...prev.incomeSources, { id: crypto.randomUUID(), label: 'New Source', amount: 0 }]
+      }
+    })
+  }
+
+  const removeIncomeSource = (id: string) => {
+    setFormData(prev => {
+      if (!prev) return null
+      if (prev.incomeSources.length <= 1) return prev // keep at least one
+      return {
+        ...prev,
+        incomeSources: prev.incomeSources.filter(s => s.id !== id)
       }
     })
   }
@@ -141,10 +182,15 @@ export default function MyFinancesOverviewRoute() {
   }
 
   const totals = useMemo(() => {
-    if (!formData) return { tax: 0, netIncome: 0, totalExpenses: 0, monthlySavings: 0, totalAllocations: 0 }
+    if (!formData) return { tax: 0, netIncome: 0, totalExpenses: 0, monthlySavings: 0, totalAllocations: 0, assetAllocations: 0, goalAllocations: 0, grossIncome: 0 }
 
-    const tax = formData.income * (formData.taxRate / 100)
-    const netIncome = formData.income - tax
+    const grossIncome = (formData.incomeSources || []).reduce((sum, s) => sum + s.amount, 0)
+    // Tax: each source uses its own rate if set, otherwise global taxRate
+    const tax = (formData.incomeSources || []).reduce((sum, s) => {
+      const rate = s.taxRate !== undefined ? s.taxRate : formData.taxRate
+      return sum + s.amount * (rate / 100)
+    }, 0)
+    const netIncome = grossIncome - tax
     const expenseArray = Array.isArray(formData.expenses) ? formData.expenses : []
     const totalExpenses = expenseArray.reduce((sum, e) => sum + e.amount, 0)
     const monthlySavings = netIncome - totalExpenses
@@ -152,8 +198,25 @@ export default function MyFinancesOverviewRoute() {
     const goalAllocations = (formData.savingGoals || []).reduce((sum, g) => sum + g.monthlyAllocation, 0)
     const totalAllocations = assetAllocations + goalAllocations
 
-    return { tax, netIncome, totalExpenses, monthlySavings, totalAllocations }
+    return { tax, netIncome, totalExpenses, monthlySavings, totalAllocations, assetAllocations, goalAllocations, grossIncome }
   }, [formData])
+
+  // Previous month's saved record for MoM comparison
+  const prevMonthSavings = useMemo(() => {
+    const prevMonth = selectedMonth === 0 ? 11 : selectedMonth - 1
+    const prevYear = selectedMonth === 0 ? selectedYear - 1 : selectedYear
+    const rec = records.find(r => r.month === prevMonth && r.year === prevYear)
+    if (!rec) return null
+    const d = rec.data
+    const grossIncome = (d.incomeSources || []).reduce((s, src) => s + src.amount, d.income ?? 0)
+    const tax = (d.incomeSources || [{ id: '', label: '', amount: d.income ?? 0 }]).reduce((sum, s) => {
+      const rate = s.taxRate !== undefined ? s.taxRate : d.taxRate
+      return sum + s.amount * (rate / 100)
+    }, 0)
+    const netIncome = grossIncome - tax
+    const totalExpenses = (Array.isArray(d.expenses) ? d.expenses : []).reduce((s, e) => s + e.amount, 0)
+    return netIncome - totalExpenses
+  }, [records, selectedMonth, selectedYear])
 
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -276,9 +339,18 @@ export default function MyFinancesOverviewRoute() {
             </select>
           </div>
         </div>
-        <Button variant="outline" onClick={handleSave} disabled={isSaving} >
-          {isSaving ? 'Saving Record...' : 'Save Record'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setHideValues(v => !v)}
+            title={hideValues ? 'Show values' : 'Hide values'}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all bg-card/40 border-border/50 text-muted-foreground hover:text-foreground hover:bg-card/80"
+          >
+            {hideValues ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+          </button>
+          <Button variant="outline" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Saving Record...' : 'Save Record'}
+          </Button>
+        </div>
       </div>
 
 
@@ -289,7 +361,7 @@ export default function MyFinancesOverviewRoute() {
             <Wallet className="size-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R {currentNetWorth.toLocaleString()}</div>
+            <div className={`text-2xl font-bold transition-all duration-300 select-none ${hideValues ? 'blur-md' : ''}`}>R {currentNetWorth.toLocaleString()}</div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mt-1">Current Balance</p>
           </CardContent>
         </Card>
@@ -299,10 +371,31 @@ export default function MyFinancesOverviewRoute() {
             <TrendingUp className="size-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${totals.monthlySavings < 0 ? 'text-red-500' : 'text-green-500'}`}>
-              R {totals.monthlySavings.toLocaleString()}
+            <div className="flex items-end gap-3">
+              <div className={`text-2xl font-bold transition-all duration-300 select-none ${hideValues ? 'blur-md' : ''} ${totals.monthlySavings < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                R {totals.monthlySavings.toLocaleString()}
+              </div>
+              {prevMonthSavings !== null && (() => {
+                const diff = totals.monthlySavings - prevMonthSavings
+                const better = diff >= 0
+                return (
+                  <span className={`flex items-center gap-0.5 text-xs font-bold pb-0.5 ${better ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                    {better
+                      ? <TrendingUp className="size-3" />
+                      : <TrendingDown className="size-3" />}
+                    {better ? '+' : ''}R {diff.toLocaleString()}
+                  </span>
+                )
+              })()}
             </div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mt-1">After Tax & Expenses</p>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[10px] text-red-400 font-bold bg-red-400/10 px-1.5 py-0.5 rounded border border-red-400/20">- R {totals.totalExpenses.toLocaleString()}</span>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">After Tax & Expenses</p>
+            </div>
+            {prevMonthSavings !== null && (
+              <p className="text-[9px] text-muted-foreground/60 mt-1">vs. {monthNames[selectedMonth === 0 ? 11 : selectedMonth - 1]}</p>
+            )}
           </CardContent>
         </Card>
         <Card className="bg-card/50 backdrop-blur-md border-blue-500/20 shadow-lg">
@@ -311,7 +404,7 @@ export default function MyFinancesOverviewRoute() {
             <Landmark className="size-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-400">R {(chartData.find(d => d.label === '+5y')?.netWorth || 0).toLocaleString()}</div>
+            <div className={`text-2xl font-bold text-blue-400 transition-all duration-300 select-none ${hideValues ? 'blur-md' : ''}`}>R {(chartData.find(d => d.label === '+5y')?.netWorth || 0).toLocaleString()}</div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mt-1">Estimated Growth</p>
           </CardContent>
         </Card>
@@ -321,7 +414,7 @@ export default function MyFinancesOverviewRoute() {
             <TrendingUp className="size-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-400">R {projectionTarget.toLocaleString()}</div>
+            <div className={`text-2xl font-bold text-purple-400 transition-all duration-300 select-none ${hideValues ? 'blur-md' : ''}`}>R {projectionTarget.toLocaleString()}</div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mt-1">Wealth Trajectory</p>
           </CardContent>
         </Card>
@@ -336,31 +429,65 @@ export default function MyFinancesOverviewRoute() {
                 <CardHeader className="flex flex-row items-center justify-between cursor-pointer hover:bg-primary/5 transition-colors">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      Income & Tax
+                      Income &amp; Tax
                       <ChevronDown className={`size-4 transition-transform ${isIncomeOpen ? 'rotate-180' : ''}`} />
                     </CardTitle>
-                    <CardDescription>Base monthly earnings and tax rate</CardDescription>
+                    <CardDescription>Monthly earnings and tax rate</CardDescription>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Net Monthly</p>
-                    <p className="text-lg font-bold text-green-500">R {totals.netIncome.toLocaleString()}</p>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-xs text-muted-foreground">Net Monthly</p>
+                      <p className={`text-lg font-bold text-green-500 transition-all duration-300 select-none ${hideValues ? 'blur-md' : ''}`}>R {totals.netIncome.toLocaleString()}</p>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addIncomeSource(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
+                      <Plus className="size-3" /> Add Source
+                    </Button>
                   </div>
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 font-semibold"><ArrowUpCircle className="size-3 text-green-500" /> Gross Income</Label>
+                <CardContent className="space-y-3">
+                  {formData.incomeSources.map((src) => (
+                    <div key={src.id} className="flex items-center gap-2 group p-2 rounded-lg hover:bg-primary/5 transition-colors border border-transparent hover:border-primary/10">
+                      <ArrowUpCircle className="size-4 text-green-500 shrink-0" />
+                      <Input
+                        placeholder="Source label"
+                        value={src.label}
+                        onChange={(e) => handleIncomeSourceChange(src.id, 'label', e.target.value)}
+                        className="border-none bg-transparent hover:bg-background/30 focus:bg-background/50 h-8 text-sm px-2"
+                      />
                       <Input
                         type="number"
-                        value={formData.income}
-                        onChange={(e) => handleInputChange('income', e.target.value)}
-                        className="bg-background/30 border-primary/10 h-9"
+                        placeholder="Amount"
+                        value={src.amount}
+                        onChange={(e) => handleIncomeSourceChange(src.id, 'amount', e.target.value)}
+                        className="w-28 border-none bg-transparent hover:bg-background/30 focus:bg-background/50 h-8 text-sm text-right px-2 font-mono"
                       />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <Input
+                          type="number"
+                          placeholder={String(formData.taxRate)}
+                          value={src.taxRate !== undefined ? src.taxRate : ''}
+                          onChange={(e) => handleIncomeSourceChange(src.id, 'taxRate', e.target.value)}
+                          title="Tax rate for this source (leave blank to use global rate)"
+                          className="w-14 border-none bg-yellow-500/10 hover:bg-yellow-500/20 h-8 text-sm text-right px-2 font-mono text-yellow-400 border-yellow-500/20"
+                        />
+                        <Percent className="size-3 text-yellow-500/60 shrink-0" />
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => removeIncomeSource(src.id)}
+                        disabled={formData.incomeSources.length <= 1}
+                        className="size-8 opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-500 hover:bg-red-500/10 transition-all shrink-0 disabled:pointer-events-none"
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
                     </div>
+                  ))}
+                  <div className="grid grid-cols-2 gap-4 border-t border-border/50 pt-3">
                     <div className="space-y-2">
-                      <Label className="flex items-center gap-2 font-semibold"><Percent className="size-3 text-yellow-500" /> Tax Rate (%)</Label>
+                      <Label className="flex items-center gap-2 font-semibold text-xs"><Percent className="size-3 text-yellow-500" /> Tax Rate (%)</Label>
                       <Input
                         type="number"
                         value={formData.taxRate}
@@ -368,6 +495,14 @@ export default function MyFinancesOverviewRoute() {
                         className="bg-background/30 border-primary/10 h-9"
                       />
                     </div>
+                    <div className="space-y-2 text-right">
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Tax Deduction</p>
+                      <p className="text-lg font-bold text-yellow-500 mt-1">- R {totals.tax.toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center border-t border-border/50 pt-3 px-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Gross Income</span>
+                    <span className="text-lg font-mono font-bold text-green-400">R {totals.grossIncome.toLocaleString()}</span>
                   </div>
                 </CardContent>
               </CollapsibleContent>
@@ -385,9 +520,15 @@ export default function MyFinancesOverviewRoute() {
                     </CardTitle>
                     <CardDescription>Fixed and variable costs</CardDescription>
                   </div>
-                  <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addExpense(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
-                    <Plus className="size-3" /> Add Item
-                  </Button>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Total</p>
+                      <p className="text-sm font-bold text-red-500">R {totals.totalExpenses.toLocaleString()}</p>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addExpense(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
+                      <Plus className="size-3" /> Add Item
+                    </Button>
+                  </div>
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -443,9 +584,15 @@ export default function MyFinancesOverviewRoute() {
                     </CardTitle>
                     <CardDescription>Target targets and monthly contributions</CardDescription>
                   </div>
-                  <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addGoal(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
-                    <Plus className="size-3" /> Add Goal
-                  </Button>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Monthly Total</p>
+                      <p className="text-sm font-bold text-blue-400">R {totals.goalAllocations.toLocaleString()}</p>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addGoal(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
+                      <Plus className="size-3" /> Add Goal
+                    </Button>
+                  </div>
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -546,9 +693,15 @@ export default function MyFinancesOverviewRoute() {
                     </CardTitle>
                     <CardDescription>Values, yearly returns, and contributions</CardDescription>
                   </div>
-                  <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addAsset(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
-                    <Plus className="size-3" /> Add Asset
-                  </Button>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Monthly Total</p>
+                      <p className="text-sm font-bold text-blue-400">R {totals.assetAllocations.toLocaleString()}</p>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); addAsset(); }} className="h-8 gap-1 border-primary/20 hover:bg-primary/5">
+                      <Plus className="size-3" /> Add Asset
+                    </Button>
+                  </div>
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -653,13 +806,25 @@ export default function MyFinancesOverviewRoute() {
 
         <div className="space-y-2 h-full">
           <Card className="border-border/50 bg-card/40 backdrop-blur-sm overflow-hidden h-full flex flex-col">
-            <CardHeader>
-              <CardTitle>Net Worth Trajectory</CardTitle>
-              <CardDescription>Wealth estimation over 10 years</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle>Net Worth Trajectory</CardTitle>
+                <CardDescription>{showProjections ? 'History + 10-year projection' : 'Historical records only'}</CardDescription>
+              </div>
+              <button
+                onClick={() => setShowProjections(p => !p)}
+                className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${showProjections
+                  ? 'bg-blue-500/15 border-blue-500/30 text-blue-400 hover:bg-blue-500/25'
+                  : 'bg-muted/40 border-border/40 text-muted-foreground hover:bg-muted/70'
+                  }`}
+              >
+                <TrendingUp className="size-3" />
+                {showProjections ? 'Projections On' : 'History Only'}
+              </button>
             </CardHeader>
             <CardContent className="flex-1  w-full h-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
+                <AreaChart data={showProjections ? chartData : chartData.filter(d => d.isHistory)} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorInvestments" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
