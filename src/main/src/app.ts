@@ -21,7 +21,7 @@ import {
   getAppBaseURL,
   getWebBaseURL
 } from '@shared/constants'
-import { apiGetLoginKey } from './api/auth/api-auth-login-key'
+import { apiPostLoginKey } from './api/auth/api-auth-login-key'
 
 const envMode = import.meta.env.MODE
 
@@ -57,7 +57,6 @@ export async function loadApp({ fastLoad }: LoadApp) {
     isFirstLoad = true
 
     defaultCoreSettings.forEach(async ({ key, value }) => {
-
       setCoreSetting({ key, value })
       await updateOnLoaderProgress({
         msg: `Adding default core setting:', ${key} - ${value}`,
@@ -197,7 +196,7 @@ export async function openDirectory({ path }: OpenDirectory) {
 
 export async function authorizeUserInDefaultBrowser({ addAccount }: { addAccount?: boolean }) {
   // Call auth/login-key, to generate a loginKey
-  const maybeLoginKey = await apiGetLoginKey()
+  const maybeLoginKey = await apiPostLoginKey()
 
   if (maybeLoginKey) {
     setCoreSetting({ key: 'loginKey', value: maybeLoginKey })

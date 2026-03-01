@@ -2,7 +2,7 @@ import { updateDotSquadActivity } from '@main/src/app'
 import { getApiBaseURL } from '@shared/constants'
 import { paths } from '@shared/lib/generated/api'
 
-export async function apiGetLoginKey() {
+export async function apiPostLoginKey() {
   const { default: createClient } = await import('openapi-fetch')
 
   const apiClient = createClient<paths>({
@@ -19,7 +19,7 @@ export async function apiGetLoginKey() {
     return data?.loginKey
   }
 
-  console.error('Something went wrong with get login key')
+  console.error('Something went wrong with apiPostLoginKey')
 
   return undefined
 }

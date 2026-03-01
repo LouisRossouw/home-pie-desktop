@@ -1,6 +1,11 @@
+import { updateDotSquadActivity } from '@main/src/app'
 import { getApiBaseURL } from '@shared/constants'
 import { paths } from '@shared/lib/generated/api'
 import { ApiCompleteAuth } from '@shared/types'
+
+// Completes the auth process; calls the API with the loginKey, and the API
+// Returns the correct loginKey with the accociated user, and returns the
+// accessToken and users profile.
 
 export async function apiGetCompleteAuthentication({ loginKey }: ApiCompleteAuth) {
   const { default: createClient } = await import('openapi-fetch')
@@ -11,16 +16,21 @@ export async function apiGetCompleteAuthentication({ loginKey }: ApiCompleteAuth
       'Content-Type': 'application/json'
     }
   })
+  
+  const cleanKey = loginKey.replace(/^"|"$/g, '')
 
   const { response, data } = await apiClient.GET('/auth/login-key/{key}', {
     params: {
-      path: { key: loginKey }
+      path: { key: cleanKey }
     }
   })
 
   if (response.status === 200) {
+    updateDotSquadActivity({ activity: 'aiResponseA' })
     return data
   }
+
+  console.error('Something went wrong with apiGetCompleteAuthentication')
 
   return undefined
 }
