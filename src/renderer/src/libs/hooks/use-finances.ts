@@ -18,7 +18,8 @@ const defaultFinanceData: FinanceData = {
     { id: 'cash', label: 'Cash', value: 50000, growth: 4, allocation: 2000 }
   ],
   savingGoals: [],
-  debt: 0,
+  debt: 0, // legacy
+  debts: [],
   growthRate: 5
 }
 
@@ -62,6 +63,37 @@ const sanitizeFinanceData = (data: any): FinanceData => {
 
   if (!sanitized.savingGoals || !Array.isArray(sanitized.savingGoals)) {
     sanitized.savingGoals = []
+  }
+
+  // Migration: debts array from legacy debt number
+  if (!sanitized.debts || !Array.isArray(sanitized.debts)) {
+    sanitized.debts = []
+    // If there's a legacy debt value, migrate it
+    if (sanitized.debt && sanitized.debt > 0) {
+      const now = new Date()
+      sanitized.debts = [{
+        id: 'legacy-debt',
+        label: 'Legacy Debt',
+        totalAmount: sanitized.debt,
+        monthlyAllocation: 0,
+        interestRate: 0,
+        startMonth: now.getMonth(),
+        startYear: now.getFullYear()
+      }]
+    }
+  } else {
+    // Migrate old debt items that have remainingAmount/totalPaid to new structure
+    sanitized.debts = sanitized.debts.map((d: any) => {
+      if (d.startMonth === undefined || d.startYear === undefined) {
+        const now = new Date()
+        return {
+          ...d,
+          startMonth: d.startMonth ?? now.getMonth(),
+          startYear: d.startYear ?? now.getFullYear()
+        }
+      }
+      return d
+    })
   }
 
   if (typeof sanitized.expenses === 'number') {

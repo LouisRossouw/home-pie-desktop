@@ -378,10 +378,10 @@ export type DebtItem = {
   id: string
   label: string
   totalAmount: number      // original total debt
-  remainingAmount: number  // what's still owed
   monthlyAllocation: number // how much paid per month
   interestRate: number     // annual % interest
-  totalPaid: number        // total paid so far (persisted)
+  startMonth: number       // month tracking started (0-11)
+  startYear: number        // year tracking started
 }
 
 export type FinanceData = {
@@ -391,7 +391,8 @@ export type FinanceData = {
   expenses: ExpenseItem[]
   assets: AssetItem[]
   savingGoals: SavingGoal[]
-  debt: number
+  debt: number // legacy — kept for migration
+  debts: DebtItem[]
   growthRate: number // annual % (for any leftover savings pool)
 }
 
