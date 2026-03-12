@@ -44,6 +44,8 @@ export function Debug(): JSX.Element {
   const { handleUpdateDotSquad } = useDotSquadTest()
   const { appSettings, updateAppSettings, getAllAppSettings } = useApp()
 
+  const userId = (appSettings?.activeAccountId ?? 0) as number
+
   const { showOverlay } = useAppOverlay()
 
   const [output, setOutput] = useState<unknown>(undefined)
@@ -119,7 +121,9 @@ export function Debug(): JSX.Element {
         <div className="flex flex-col items-center gap-4 text-center max-w-xs">
           <XCircle className="size-12 text-destructive opacity-20" />
           <p className="font-bold text-lg tracking-tight">Access Restricted</p>
-          <p className="text-sm text-muted-foreground">Debug mode is currently inactive or you lack sufficient permissions.</p>
+          <p className="text-sm text-muted-foreground">
+            Debug mode is currently inactive or you lack sufficient permissions.
+          </p>
           <Button
             variant="outline"
             className="mt-4 font-bold"
@@ -176,10 +180,20 @@ export function Debug(): JSX.Element {
           </CardHeader>
           <CardContent className="p-4 flex-1 overflow-y-auto space-y-6 scrollbar-hide">
             <div className="space-y-3">
-              <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">General</Label>
+              <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">
+                General
+              </Label>
               <div className="space-y-1">
-                <InfoBadge label="Auth Status" value={isAuth ? 'Verified' : 'Unauth'} success={isAuth} />
-                <InfoBadge label="Staff Mode" value={isStaff ? 'Active' : 'Guest'} success={isStaff} />
+                <InfoBadge
+                  label="Auth Status"
+                  value={isAuth ? 'Verified' : 'Unauth'}
+                  success={isAuth}
+                />
+                <InfoBadge
+                  label="Staff Mode"
+                  value={isStaff ? 'Active' : 'Guest'}
+                  success={isStaff}
+                />
                 <InfoBadge label="Dev Mode" value={isDev ? 'On' : 'Off'} warning={isDev} />
               </div>
             </div>
@@ -187,7 +201,9 @@ export function Debug(): JSX.Element {
             <Separator className="bg-primary/5" />
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">Environment</Label>
+              <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">
+                Environment
+              </Label>
               <div className="space-y-0">
                 <InfoRow label="API Base" value={getApiBaseURL || 'N/A'} isMono />
                 <InfoRow label="Mode" value={MODE || 'N/A'} />
@@ -202,8 +218,15 @@ export function Debug(): JSX.Element {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">IPC Listeners</Label>
-                <Button variant="ghost" size="icon" className="size-4 opacity-40" onClick={getListenersCount}>
+                <Label className="text-[10px] font-bold uppercase opacity-40 tracking-widest">
+                  IPC Listeners
+                </Label>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-4 opacity-40"
+                  onClick={getListenersCount}
+                >
                   <RefreshCcw className="size-3" />
                 </Button>
               </div>
@@ -211,7 +234,10 @@ export function Debug(): JSX.Element {
                 {Object.entries(listenersCount).map(([label, value]) => (
                   <div key={label} className="flex items-center justify-between text-xs">
                     <span className="font-medium  truncate mr-2">{label}</span>
-                    <Badge variant="secondary" className="h-5 px-1.5 text-[10px] font-bold tabular-nums">
+                    <Badge
+                      variant="secondary"
+                      className="h-5 px-1.5 text-[10px] font-bold tabular-nums"
+                    >
                       {value}
                     </Badge>
                   </div>
@@ -232,46 +258,149 @@ export function Debug(): JSX.Element {
             <div className="h-full overflow-y-auto">
               <div className="p-4 space-y-6 pb-12">
                 <TestSection title="External API" icon={<Search className="size-3" />}>
-                  <Button size="sm" variant="outline" className="w-full justify-start font-bold h-8" onClick={() => sendTestPing()}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start font-bold h-8"
+                    onClick={() => sendTestPing()}
+                  >
                     {isPendingPingTest ? <LoadingIndicator /> : 'Execute Test Ping'}
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start font-medium h-8" onClick={() => mrPingPingMutation({ intent: 'apps-config' })}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start font-medium h-8"
+                    onClick={() => mrPingPingMutation({ intent: 'apps-config' })}
+                  >
                     Mr Ping: Apps Config
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start font-medium h-8 text-[11px]" onClick={() => mrPingPingMutation({ intent: 'app-config' })}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start font-medium h-8 text-[11px]"
+                    onClick={() => mrPingPingMutation({ intent: 'app-config' })}
+                  >
                     Mr Ping: Meta (TIP)
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start font-medium h-8" onClick={() => mrPingPingMutation({ intent: 'apps-status' })}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start font-medium h-8"
+                    onClick={() => mrPingPingMutation({ intent: 'apps-status' })}
+                  >
                     Mr Ping: Apps Status
                   </Button>
                 </TestSection>
 
                 <TestSection title="DotSquad" icon={<Zap className="size-3" />}>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={() => handleUpdateDotSquad('notAuth')}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={() => handleUpdateDotSquad('notAuth')}
+                  >
                     Broadcaster Test
                   </Button>
                 </TestSection>
 
                 <TestSection title="Database & Session" icon={<Database className="size-3" />}>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={() => handleGetSettings(settingKeys.lockScreen)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={() => handleGetSettings(settingKeys.lockScreen)}
+                  >
                     Get &quot;lock-screen&quot; Setting
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={async () => setOutput(await getAllAppSettings())}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={async () => setOutput(await getAllAppSettings())}
+                  >
                     Dump All App Settings
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={async () => setOutput(await window.api.db.getSession({ userId: 1, key: 'accessToken' }))}>
-                    Request Auth Token
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={async () =>
+                      setOutput(await window.api.db.getSession({ userId, key: 'accessToken' }))
+                    }
+                  >
+                    Request Access Token
                   </Button>
-                  <Button size="sm" variant="secondary" className="w-full justify-start h-8 text-destructive border-destructive/10" onClick={async () => setOutput(await window.api.db.setSession({ userId: 1, key: 'accessToken', value: 'pewpew!' }))}>
-                    Set Dummy Token
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={async () =>
+                      setOutput(await window.api.db.getSession({ userId, key: 'refreshToken' }))
+                    }
+                  >
+                    Request Refresh Token
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={async () =>
+                      setOutput(
+                        await window.api.db.setSession({ userId, key: 'expiresIn', value: '0' })
+                      )
+                    }
+                  >
+                    Expire Access Token
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={async () =>
+                      setOutput(await window.api.db.getSession({ userId, key: 'expiresIn' }))
+                    }
+                  >
+                    Get Access Token Expires In
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="w-full justify-start h-8 text-destructive border-destructive/10"
+                    onClick={async () => {
+                      setOutput(
+                        await window.api.db.setSession({
+                          userId,
+                          key: 'accessToken',
+                          value: 'pewpew!'
+                        })
+                      )
+                    }}
+                  >
+                    Poisen Access Token
                   </Button>
                 </TestSection>
 
                 <TestSection title="Navigation & UI" icon={<Layout className="size-3" />}>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={() => navigateTo('/no-connection')}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={() => navigateTo('/no-connection')}
+                  >
                     Route: No-Connection
                   </Button>
-                  <Button size="sm" variant="outline" className="w-full justify-start h-8" onClick={() => showOverlay({ disableClose: false, animationType: 'fade', mode: 'SWITCH-ACCOUNT' })}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start h-8"
+                    onClick={() =>
+                      showOverlay({
+                        disableClose: false,
+                        animationType: 'fade',
+                        mode: 'SWITCH-ACCOUNT'
+                      })
+                    }
+                  >
                     Show Account Overlay
                   </Button>
                 </TestSection>
@@ -309,7 +438,9 @@ export function Debug(): JSX.Element {
                 ) : (
                   <div className="h-full min-h-[300px] flex flex-col items-center justify-center opacity-20 text-center gap-3">
                     <Info className="size-8" />
-                    <p className="uppercase tracking-widest text-[10px] font-bold">Waiting for input</p>
+                    <p className="uppercase tracking-widest text-[10px] font-bold">
+                      Waiting for input
+                    </p>
                   </div>
                 )}
               </div>
@@ -321,7 +452,17 @@ export function Debug(): JSX.Element {
   )
 }
 
-function InfoBadge({ label, value, success, warning }: { label: string; value: string; success?: boolean; warning?: boolean }) {
+function InfoBadge({
+  label,
+  value,
+  success,
+  warning
+}: {
+  label: string
+  value: string
+  success?: boolean
+  warning?: boolean
+}) {
   return (
     <div className="flex items-center justify-between text-xs">
       <span className="font-bold opacity-50">{label}</span>
@@ -339,18 +480,36 @@ function InfoBadge({ label, value, success, warning }: { label: string; value: s
   )
 }
 
-function InfoRow({ label, value, isMono }: { label: string; value: string | number; isMono?: boolean }) {
+function InfoRow({
+  label,
+  value,
+  isMono
+}: {
+  label: string
+  value: string | number
+  isMono?: boolean
+}) {
   return (
     <div className="flex justify-between">
       <Label className="text-[10px] font-bold opacity-40 uppercase tracking-tighter">{label}</Label>
-      <p className={cn('text-xs font-bold leading-none truncate', isMono && 'font-mono opacity-80')}>
+      <p
+        className={cn('text-xs font-bold leading-none truncate', isMono && 'font-mono opacity-80')}
+      >
         {value}
       </p>
     </div>
   )
 }
 
-function TestSection({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+function TestSection({
+  title,
+  icon,
+  children
+}: {
+  title: string
+  icon: React.ReactNode
+  children: React.ReactNode
+}) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 opacity-50">
@@ -359,9 +518,7 @@ function TestSection({ title, icon, children }: { title: string; icon: React.Rea
         </div>
         <Label className="text-[10px] font-bold uppercase tracking-widest">{title}</Label>
       </div>
-      <div className="grid gap-2 pl-7">
-        {children}
-      </div>
+      <div className="grid gap-2 pl-7">{children}</div>
     </div>
   )
 }
