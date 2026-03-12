@@ -1,14 +1,15 @@
 import { TrendingUp } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 import {
   Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer
 } from 'recharts'
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 
 interface ChartSectionProps {
   showProjections: boolean

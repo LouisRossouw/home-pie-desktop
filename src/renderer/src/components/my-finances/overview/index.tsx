@@ -6,15 +6,15 @@ import { FinanceData, IncomeItem, AssetItem, SavingGoal, DebtItem } from '@share
 import { useFinances } from '~/libs/hooks/use-finances'
 
 import { Button } from '~/components/ui/button'
+import { MonthYearPicker } from '~/components/month-year-picker'
 
-import { DebtSection } from './overview/debt-section'
-import { GoalsSection } from './overview/goals-section'
-import { SummaryCards } from './overview/summary-cards'
-import { ChartSection } from './overview/chart-section'
-import { IncomeSection } from './overview/income-section'
-import { AssetsSection } from './overview/assets-section'
-import { ExpensesSection } from './overview/expenses-section'
-import { MonthYearPicker } from '../month-year-picker'
+import { DebtSection } from './debt-section'
+import { GoalsSection } from './goals-section'
+import { SummaryCards } from './summary-cards'
+import { ChartSection } from './chart-section'
+import { IncomeSection } from './income-section'
+import { AssetsSection } from './assets-section'
+import { ExpensesSection } from './expenses-section'
 
 export function MyFinancesOverview() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())

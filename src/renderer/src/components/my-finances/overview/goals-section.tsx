@@ -1,10 +1,11 @@
 import { ChevronDown, Plus, Trash2 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
+import { FinanceData, SavingGoal } from '@shared/types'
+
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
-import { FinanceData, SavingGoal } from '@shared/types'
 
 interface GoalsSectionProps {
   isGoalsOpen: boolean

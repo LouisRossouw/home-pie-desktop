@@ -1,10 +1,11 @@
 import { ChevronDown, Plus, ArrowUpCircle, Trash2, Percent } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
-import { Button } from '~/components/ui/button'
+import { FinanceData, IncomeItem } from '@shared/types'
+
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { Button } from '~/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
-import { FinanceData, IncomeItem } from '@shared/types'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 
 interface IncomeSectionProps {
   isIncomeOpen: boolean

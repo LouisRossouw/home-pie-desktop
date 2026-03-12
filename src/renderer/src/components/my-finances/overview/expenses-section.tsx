@@ -1,9 +1,9 @@
 import { ChevronDown, Plus, ReceiptText, Trash2 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
 import { FinanceData } from '@shared/types'
+import { Input } from '~/components/ui/input'
+import { Button } from '~/components/ui/button'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 
 interface ExpensesSectionProps {
   isExpensesOpen: boolean
