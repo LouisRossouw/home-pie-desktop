@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -19,10 +20,13 @@ export function SmartHome() {
 
   const range = SP.range ?? 'hour'
   const interval = SP.interval ?? 100
+  const room = SP.room ?? 'pc'
 
-  const cachedTemperatureData = queryClient.getQueryData([
-    'temperature-humidity-detail'
-  ]) as AppRecordedData[]
+  const appNames = useMemo(() => {
+    if (room === 'both') return ['temperature_humidity', 'temperature_humidity_02']
+    if (room === 'tv') return ['temperature_humidity_02']
+    return ['temperature_humidity']
+  }, [room])
 
   const {
     data: temperatureData,
@@ -30,18 +34,14 @@ export function SmartHome() {
     refetch,
     isFetching
   } = useQuery({
-    queryKey: ['temperature-humidity-detail'],
+    queryKey: ['temperature-humidity-detail', { room, range, interval }],
     queryFn: async () => {
       return await getAppRecordedData({
-        appNames: ['temperature_humidity'],
+        appNames,
         range,
         interval
       })
-    },
-    refetchInterval: tenMin,
-    staleTime: tenMin,
-    initialData: cachedTemperatureData,
-    enabled: !cachedTemperatureData
+    }
   })
 
   const cachedMeterReadRaw = queryClient.getQueryData(['meter_reader_api']) as AppRecordedData[]

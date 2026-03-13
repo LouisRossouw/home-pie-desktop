@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
+import { AppRecordedData } from '@shared/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
 import { formatDHT11SensorHistoricData } from '~/libs/utils/mr-ping-ping'
 
 import { TemperatureHumidity } from './temperature-humidity'
-import { AppRecordedData } from '@shared/types'
 
 const tenMin = 1000 * 60 * 10
 
@@ -77,11 +77,12 @@ export function TempHumStats() {
             label="TV:"
             data={tempDataDownstairs}
             isLoading={isTempDownStairsPending}
+            room="tv"
           />
         )}
 
         {tempDataUpstairs && (
-          <TemperatureHumidity label="PC:" data={tempDataUpstairs} isLoading={isPending} />
+          <TemperatureHumidity label="PC:" data={tempDataUpstairs} isLoading={isPending} room="pc" />
         )}
 
         {tempDataDownstairs && tempDataUpstairs && (
