@@ -1,18 +1,22 @@
 import { useNavigate } from 'react-router'
-import { format } from 'date-fns'
-import { ArrowDown, ArrowRightLeft, ArrowUp, Droplet, Thermometer } from 'lucide-react'
-import { TooltipInfo } from './tooltip-info'
 import { PingSVG, SpinSVG } from './svg-icons'
+import { format } from 'date-fns'
+
+import { ArrowDown, ArrowRightLeft, ArrowUp, Droplet, Thermometer } from 'lucide-react'
+
+import { TooltipInfo } from './tooltip-info'
 import { Button } from './ui/button'
 
 export function TemperatureHumidity({
   label,
   data,
-  isLoading
+  isLoading,
+  room
 }: {
   label?: string
   data?: any
   isLoading: boolean
+  room: string
 }) {
   const navigateTo = useNavigate()
   if (isLoading) return <SpinSVG />
@@ -29,7 +33,7 @@ export function TemperatureHumidity({
           size={'sm'}
           className="h-6 gap-0"
           variant={'ghost'}
-          onClick={() => navigateTo('/smart-home/temperature')}
+          onClick={() => navigateTo(`/smart-home/temperature?room=${room}`)}
         >
           <p className="text-xs">{label}</p>
           <PingSVG
@@ -39,7 +43,7 @@ export function TemperatureHumidity({
               <Thermometer
                 size={12}
                 color={isHot ? 'orange' : undefined}
-                // className={}
+              // className={}
               />
             }
           />
@@ -52,8 +56,8 @@ export function TemperatureHumidity({
             children={
               <Droplet
                 size={12}
-                // color={iconColor}
-                // className={}
+              // color={iconColor}
+              // className={}
               />
             }
           />

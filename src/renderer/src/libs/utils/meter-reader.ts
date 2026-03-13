@@ -1,6 +1,6 @@
 import { Schemas } from '@shared/types'
 import { addHours } from 'date-fns'
-import { useMemo } from 'react'
+
 
 type AppRecordedData = Schemas['AppRecordedData']
 
@@ -11,7 +11,7 @@ export function meterReadStatusData({ data }: { data: AppRecordedData }) {
   const electricityEndpoint = item.endpointsRes.find((e: any) => e.endpoint === 'electricity')
 
   return {
-    kwh: electricityEndpoint?.response?.data?.kwh,
+    kwh: (electricityEndpoint?.response?.data as any)?.kwh,
     dateTime: addHours(item.dateTime, 2)
   }
 }
@@ -33,7 +33,7 @@ export function formatDMeterReadHistoricData({
     ?.map((s: any) => {
       const tempEndpoint = s.endpointsRes.find((e: any) => e.endpoint === 'electricity')
       return tempEndpoint?.response?.code === 200
-        ? { kwh: tempEndpoint.response.data.kwh, date: addHours(s.date, 2) }
+        ? { kwh: (tempEndpoint.response.data as any).kwh, date: addHours(s.date, 2) }
         : null
     })
     .filter(Boolean)
