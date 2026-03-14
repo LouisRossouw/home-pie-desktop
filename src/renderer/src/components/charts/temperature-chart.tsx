@@ -22,12 +22,22 @@ type ChartData = {
   humidity_tv?: number | null
 }
 
-export default function TemperatureChart({ data, range }: { data: ChartData[]; range?: Range }) {
-  const values = data.flatMap((d) => [
-    d.temperature ?? undefined,
-    d.temperature_pc ?? undefined,
-    d.temperature_tv ?? undefined
-  ]).filter(v => v !== undefined) as number[]
+export default function TemperatureChart({
+  data,
+  range,
+  temperatureColour
+}: {
+  data: ChartData[]
+  range?: Range
+  temperatureColour?: { stroke: string; fill: string }
+}) {
+  const values = data
+    .flatMap((d) => [
+      d.temperature ?? undefined,
+      d.temperature_pc ?? undefined,
+      d.temperature_tv ?? undefined
+    ])
+    .filter((v) => v !== undefined) as number[]
 
   const minY = values.length > 0 ? Math.floor(Math.min(...values) - 2) : 0
   const maxY = values.length > 0 ? Math.ceil(Math.max(...values) + 2) : 40
@@ -49,13 +59,7 @@ export default function TemperatureChart({ data, range }: { data: ChartData[]; r
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart data={data ?? []} className="text-xs">
         <CartesianGrid stroke="#ccc" opacity={0.2} />
-        {data && (
-          <XAxis 
-            dataKey="date" 
-            tickFormatter={formatTick} 
-            minTickGap={30}
-          />
-        )}
+        {data && <XAxis dataKey="date" tickFormatter={formatTick} minTickGap={30} />}
         <YAxis domain={[minY, maxY]} width={30} />
         {data && <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />}
 
@@ -65,8 +69,8 @@ export default function TemperatureChart({ data, range }: { data: ChartData[]; r
         <Area
           type="monotone"
           dataKey="temperature"
-          stroke="lime"
-          fill="rgba(0, 255, 200, 0.2)"
+          stroke={temperatureColour?.stroke ?? '#00f2ff'}
+          fill={temperatureColour?.fill ?? 'rgba(0, 242, 255, 0.1)'}
           activeDot={{ r: 5, stroke: 'white', fill: 'red' }}
           dot={dotsVisible ? { r: 2 } : false}
           name="Temperature (°C)"

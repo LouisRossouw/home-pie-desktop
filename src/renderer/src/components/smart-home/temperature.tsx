@@ -1,7 +1,15 @@
 import { ReactNode, useMemo } from 'react'
 import { Range, AppRecordedData } from '@shared/types'
 import { useOutletContext, useSearchParams } from 'react-router'
-import { RefreshCcw, Thermometer, Droplets, ThermometerSun, ArrowUp, ArrowDown, Minus } from 'lucide-react'
+import {
+  RefreshCcw,
+  Thermometer,
+  Droplets,
+  ThermometerSun,
+  ArrowUp,
+  ArrowDown,
+  Minus
+} from 'lucide-react'
 
 import { getAllSearchParams } from '~/libs/utils/search-params'
 
@@ -11,7 +19,6 @@ import { RangeSelector } from '~/components/range-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
 import TemperatureChart from '~/components/charts/temperature-chart'
 import { IntervalSelector } from '~/components/interval-selector'
-
 
 // TODO; Show an overview of all on mr ping pings status, and the status of the projects it monitors.
 
@@ -42,11 +49,17 @@ export function Temperature() {
 
     temperatureData.forEach((roomData) => {
       roomData.appStatus.forEach((s) => {
-        const t = (s.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response?.data as any)
-          ?.temperature
-        const h = (s.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response?.data as any)
-          ?.humidity
-        allReadings.push({ date: new Date(s.date).getTime(), temp: typeof t === 'number' ? t : null, hum: typeof h === 'number' ? h : null })
+        const t = (
+          s.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response?.data as any
+        )?.temperature
+        const h = (
+          s.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response?.data as any
+        )?.humidity
+        allReadings.push({
+          date: new Date(s.date).getTime(),
+          temp: typeof t === 'number' ? t : null,
+          hum: typeof h === 'number' ? h : null
+        })
       })
     })
 
@@ -141,12 +154,17 @@ export function Temperature() {
   const roomDisplayName = room === 'both' ? 'Comparison' : room === 'tv' ? 'TV Room' : 'PC Room'
 
   // Get latest data for display
-  const latestData = temperatureData?.map(roomData => {
-    const lastStatus = roomData.appStatus[roomData.appStatus.length - 1];
+  const latestData = temperatureData?.map((roomData) => {
+    const lastStatus = roomData.appStatus[roomData.appStatus.length - 1]
     return {
       appName: roomData.appName,
-      temp: (lastStatus?.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response?.data as any)?.temperature,
-      hum: (lastStatus?.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response?.data as any)?.humidity
+      temp: (
+        lastStatus?.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response
+          ?.data as any
+      )?.temperature,
+      hum: (
+        lastStatus?.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response?.data as any
+      )?.humidity
     }
   })
 
@@ -159,10 +177,17 @@ export function Temperature() {
               {roomDisplayName}
             </Label>
             <div className="flex gap-4">
-              {latestData?.map(d => (
-                <div key={d.appName} className="flex flex-col items-start border-l pl-3 border-muted-foreground/30">
-                  <span className="text-[10px] uppercase opacity-50 font-bold tracking-wider">{d.appName.includes('02') ? 'TV Room' : 'PC Room'}</span>
-                  <span className="text-sm font-bold opacity-80">{d.temp ?? '--'} °C / {d.hum ?? '--'} %</span>
+              {latestData?.map((d) => (
+                <div
+                  key={d.appName}
+                  className="flex flex-col items-start border-l pl-3 border-muted-foreground/30"
+                >
+                  <span className="text-[10px] uppercase opacity-50 font-bold tracking-wider">
+                    {d.appName.includes('02') ? 'TV Room' : 'PC Room'}
+                  </span>
+                  <span className="text-sm font-bold opacity-80">
+                    {d.temp ?? '--'} °C / {d.hum ?? '--'} %
+                  </span>
                 </div>
               ))}
             </div>
@@ -231,7 +256,13 @@ export function Temperature() {
               title="Time Range Trend"
               value={Math.abs(stats.tempDiff).toFixed(1)}
               unit="°C"
-              subtitle={stats.tempDiff > 0.5 ? 'Warming up' : stats.tempDiff < -0.5 ? 'Cooling down' : 'Stable temperature'}
+              subtitle={
+                stats.tempDiff > 0.5
+                  ? 'Warming up'
+                  : stats.tempDiff < -0.5
+                    ? 'Cooling down'
+                    : 'Stable temperature'
+              }
               icon={
                 stats.tempDiff > 0.5 ? (
                   <ArrowUp className={`size-5 m-1.5 ${stats.trendColor}`} />
@@ -246,7 +277,15 @@ export function Temperature() {
         )}
 
         <div className="w-full min-h-[400px] flex-grow pt-4">
-          <TemperatureChart data={reshapeData} range={range} />
+          <TemperatureChart
+            data={reshapeData}
+            range={range}
+            temperatureColour={
+              room === 'tv'
+                ? { stroke: '#00f2ff', fill: 'rgba(0, 242, 255, 0.1)' }
+                : { stroke: '#ff00ea', fill: 'rgba(255, 0, 234, 0.1)' }
+            }
+          />
         </div>
       </div>
     </div>
@@ -269,10 +308,10 @@ function StatCard({
   return (
     <div className="p-4 rounded-xl border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md flex flex-col gap-1 relative overflow-hidden text-left">
       <div className="flex justify-between items-start z-10">
-        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{title}</span>
-        <div className=" rounded-md bg-muted/50 border shadow-sm">
-          {icon}
-        </div>
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          {title}
+        </span>
+        <div className=" rounded-md bg-muted/50 border shadow-sm">{icon}</div>
       </div>
       <div className="mt-1 flex items-baseline gap-1 z-10">
         <span className="text-3xl font-bold tracking-tight">{value}</span>
@@ -291,37 +330,42 @@ function handleReshapeData({ data }: { data: AppRecordedData[] }) {
     return data[0].appStatus.map((status: any) => ({
       date: status.date,
       temperature:
-        (status.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response.data as any)?.temperature ??
-        null,
+        (status.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response.data as any)
+          ?.temperature ?? null,
       humidity:
-        (status.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response.data as any)?.humidity ?? null
+        (status.endpointsRes.find((e: any) => e.endpoint === 'humidity')?.response.data as any)
+          ?.humidity ?? null
     }))
   }
 
   // Handle multiple rooms (both)
-  const combinedMap = new Map<string, any>();
+  const combinedMap = new Map<string, any>()
 
   data.forEach((roomData) => {
-    const isTV = roomData.appName.includes('02');
+    const isTV = roomData.appName.includes('02')
     roomData.appStatus.forEach((status: any) => {
       // Round to nearest minute to help align data points from different apps
-      const date = new Date(status.date);
-      date.setSeconds(0, 0);
-      const dateKey = date.toISOString();
+      const date = new Date(status.date)
+      date.setSeconds(0, 0)
+      const dateKey = date.toISOString()
 
       if (!combinedMap.has(dateKey)) {
-        combinedMap.set(dateKey, { date: dateKey, temperature_pc: null, temperature_tv: null });
+        combinedMap.set(dateKey, { date: dateKey, temperature_pc: null, temperature_tv: null })
       }
-      const entry = combinedMap.get(dateKey);
-      const temp = (status.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response.data as any)?.temperature;
+      const entry = combinedMap.get(dateKey)
+      const temp = (
+        status.endpointsRes.find((e: any) => e.endpoint === 'temperature')?.response.data as any
+      )?.temperature
 
       if (isTV) {
-        entry.temperature_tv = temp;
+        entry.temperature_tv = temp
       } else {
-        entry.temperature_pc = temp;
+        entry.temperature_pc = temp
       }
-    });
-  });
+    })
+  })
 
-  return Array.from(combinedMap.values()).sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  return Array.from(combinedMap.values()).sort(
+    (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
 }
