@@ -17,6 +17,8 @@ const prodWebBaseUrl = import.meta.env.VITE_PROD_WEB_BASEURL
 
 export const defaultDotSquadColour = 'rgb(20, 20, 20)'
 
+export const getOpenDevToolsOnStart = false
+
 // const ENV = 'env'
 // const env = process[ENV]
 
@@ -57,8 +59,6 @@ export enum dbIpcKey {
   setFinanceRecord = 'set-finance-record',
   getAllFinanceRecords = 'get-all-finance-records'
 }
-
-
 
 export enum appIpcKey {
   loadApp = 'load-app',
@@ -150,4 +150,4 @@ export const getWebSupportUrl = `${getAppBaseURL}/support`
 export const getWebDashboardUrl = `${getAppBaseURL}/dashboard`
 
 export const appOriginName = `${getAppName.toLowerCase()}-desktop-app`
-export const defaultProtocol = `homepie${isDevelopment() ? '-dev' : ''}`
+export const defaultProtocol = `homepie${isDevelopment() ? '-dev' : '-dev'}`

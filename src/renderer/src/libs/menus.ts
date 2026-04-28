@@ -9,7 +9,8 @@ import {
   Home,
   Shield,
   Settings,
-  HousePlug
+  HousePlug,
+  Network
 } from 'lucide-react'
 
 export const menus = [
@@ -58,6 +59,12 @@ export const menus = [
     icon: Server,
     route: 'servers',
     subMenus: [{ title: 'overview', icon: Eye, slug: 'servers', url: '/servers' }]
+  },
+  {
+    title: 'Tailnet Nodes',
+    icon: Network,
+    route: 'tailnet',
+    subMenus: [{ title: 'overview', icon: Eye, slug: 'tailnet', url: '/tailnet' }]
   },
   {
     title: 'GenGen',

@@ -4,8 +4,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { AppRecordedData } from '@shared/types'
 
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
 import { getAllSearchParams } from '~/libs/utils/search-params'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
 
 import { SmartHomeLayout } from './layout'
 
@@ -13,13 +13,13 @@ const tenMin = 1000 * 60 * 10
 
 export function SmartHome() {
   const queryClient = useQueryClient()
-  const { getAppRecordedData } = useMrPingPingService()
+  const { getAppRecordedData } = useMrPingPing()
 
   const [searchParams] = useSearchParams()
   const SP = getAllSearchParams(searchParams)
 
   const range = SP.range ?? 'hour'
-  const interval = SP.interval ?? 100
+  const interval = SP.interval ?? 24
   const room = SP.room ?? 'pc'
 
   const appNames = useMemo(() => {
@@ -41,7 +41,8 @@ export function SmartHome() {
         range,
         interval
       })
-    }
+    },
+    staleTime: tenMin
   })
 
   const cachedMeterReadRaw = queryClient.getQueryData(['meter_reader_api']) as AppRecordedData[]
@@ -64,8 +65,9 @@ export function SmartHome() {
     <SmartHomeLayout
       temperatureData={temperatureData ?? []}
       meterReadRaw={meterReadRaw ?? []}
-      isLoading={isPending || isFetching || meterReadIsPending}
+      isLoading={isPending || meterReadIsPending}
       refetch={refetch}
+      isFetching={isFetching}
     />
   )
 }

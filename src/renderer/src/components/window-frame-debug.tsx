@@ -11,10 +11,11 @@ import { useMrPingPing } from '~/libs/context/mr-ping-ping'
 import { calculateRenderTime } from '~/libs/hooks/use-render-timer'
 
 import { Button } from './ui/button'
-import { AppVersion } from './app-version'
-import { MrPingPingIndicator } from './mr-ping-ping'
 import { PowerStats } from './power-stats'
+import { AppVersion } from './app-version'
 import { TempHumStats } from './temperature-humidity-status'
+import { MrPingPingIndicator } from './mr-ping-ping'
+import { TailNetStats } from './tailnet-stats'
 
 export function WindowFrameDebug() {
   const { pathname } = useLocation()
@@ -77,6 +78,11 @@ export function WindowFrameDebug() {
           {appSettings?.debug && <p className="text-xs opacity-50">{pathname}</p>}
         </div>
         <div className="flex w-full justify-end items-center gap-4 px-4 opacity-50 hover:opacity-100 transition-all">
+          <TailNetStats />
+          {/* <div className="flex items-center gap-1">
+            <Server size={12} />
+            <p className="text-xs">6/8</p>
+          </div> */}
           <TempHumStats />
           <PowerStats />
         </div>
@@ -84,10 +90,11 @@ export function WindowFrameDebug() {
 
         <div className="flex col-span-1 justify-end items-center gap-4">
           <MrPingPingIndicator
-            resTime={status?.resTime}
-            lastPingedRaw={status?.lastPinged}
-            isLoading={status?.lastPinged ? false : true}
+            resTime={status?.elapsedTime}
+            lastPingedRaw={status?.datetime}
+            isOnline={status?.ok ? true : false}
           />
+
           {appSettings?.debug && (
             <>
               <p className="text-xs">{`${duration.toFixed(2)}ms`}</p>

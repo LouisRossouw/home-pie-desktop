@@ -3,7 +3,7 @@ import { paths } from '@shared/lib/generated/api'
 
 import { mainWindow } from '@main/.'
 import { getAllSessions, getSession, setSession } from './db/session'
-import { appIpcKey, generatedUserId, getApiBaseURL, oAuthClients } from '@shared/constants'
+import { appIpcKey, generatedUserId, getApiBaseURL } from '@shared/constants'
 import { getCoreSetting } from './db/core-settings'
 import { ResCheckAccessToken, ResFindNextActiveAccessToken } from '@shared/types'
 import { getOauthClientForUserAuthType } from '@shared/auth'
@@ -19,7 +19,7 @@ export async function requireSession(requireAuth: boolean = true) {
   )
   const accessToken = await getSession({ userId, key: 'accessToken' })
 
-  console.log('requireSession; userId', userId, "accessToken:", accessToken ? 'True' : 'False')
+  console.log('requireSession; userId', userId, 'accessToken:', accessToken ? 'True' : 'False')
 
   let validToken: string | undefined
 

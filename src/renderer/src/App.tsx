@@ -1,23 +1,21 @@
 import { useEffect, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { Middlewear } from './libs/middlewear'
-import { AppContextProvider } from './libs/context/app'
-// import { useRenderTimer } from './libs/hooks/use-render-timer'
-
-import { AppRoutes } from './app-routes'
-import { SplashRoute } from './routes/splash'
-import { LoaderRoute } from './routes/loader'
-
+import { DotSquadListener } from './libs/middlewear/dot-squad-listener'
 import { MrPingPingContextProvider } from './libs/context/mr-ping-ping'
 import { DotSquadContextProvider } from './libs/context/dot-squad'
-import { DotSquadListener } from './libs/middlewear/dot-squad-listener'
+import { SessionContextProvider } from './libs/context/session'
+import { AppContextProvider } from './libs/context/app'
 import { useAppOverlay } from './libs/context/overlay'
+import { Middlewear } from './libs/middlewear'
 
-import { WindowFrame } from './components/window-frame'
 import { WindowFrameDebug } from './components/window-frame-debug'
 import { LoadingIndicator } from './components/loading-indicator'
-import { SessionContextProvider } from './libs/context/session'
+import { WindowFrame } from './components/window-frame'
+
+import { LoaderRoute } from './routes/loader'
+import { SplashRoute } from './routes/splash'
+import { AppRoutes } from './app-routes'
 
 const queryClient = new QueryClient()
 
@@ -73,8 +71,8 @@ export default function App(): JSX.Element {
                   <WindowFrame />
                   {booted && loaded && <DotSquadListener />}
                 </DotSquadContextProvider>
-                <AppRoutes />
                 <MrPingPingContextProvider>
+                  <AppRoutes />
                   <WindowFrameDebug />
                   {booted && loaded && <Middlewear />}
                 </MrPingPingContextProvider>

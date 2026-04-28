@@ -5,7 +5,6 @@ import NoConnectionRoute from './routes/no-connection'
 
 import { AppLayout } from './routes/app-layout'
 
-
 import DebugRoute from './routes/debug'
 
 import Home from './routes/home'
@@ -37,6 +36,9 @@ import ServersOverviewRoute from './routes/servers/overview'
 import TimeInProgressConfigRoute from './routes/sub-projects/time-in-progress/config'
 import { TimeInProgressOverview } from './components/projects/time-in-progress/overview'
 import EnergyRoute from './routes/smart-home/energy'
+import EnergyReserveDetailRoute from './routes/smart-home/energy/reserve'
+import EnergyConsumptionDetailRoute from './routes/smart-home/energy/consumption'
+import EnergyTimeRemainingDetailRoute from './routes/smart-home/energy/time-remaining'
 import TemperatureRoute from './routes/smart-home/temperature'
 import YouTubeConfigRoute from './routes/sub-projects/yt-insights/config'
 import YouTubeInsightsRoute from './routes/sub-projects/yt-insights'
@@ -44,6 +46,8 @@ import YTInsightsRoute from './routes/sub-projects/yt-insights/insights'
 import YTInsightsOverviewRoute from './routes/sub-projects/yt-insights/overview'
 import CompleteAuthorizationRoute from './routes/authorize'
 import LoginRoute from './routes/login'
+import TailNetRoute from './routes/tailnet'
+import TailNetOverviewRoute from './routes/tailnet/overview'
 
 export function AppRoutes() {
   return <Routes>{renderRoutes(routesConfig)}</Routes>
@@ -127,6 +131,14 @@ const financeRoutes = [
   }
 ]
 
+const tailNetRoutes = [
+  {
+    path: 'tailnet',
+    element: <TailNetRoute />,
+    children: [{ index: true, element: <TailNetOverviewRoute /> }]
+  }
+]
+
 const serversRoutes = [
   {
     path: 'servers',
@@ -141,7 +153,15 @@ const smartHomeRoutes = [
     element: <SmartHomeRoute />,
     children: [
       { index: true, element: <SmartHomeOverviewRoute /> },
-      { path: 'energy', element: <EnergyRoute /> },
+      {
+        path: 'energy',
+        children: [
+          { index: true, element: <EnergyRoute /> },
+          { path: 'reserve', element: <EnergyReserveDetailRoute /> },
+          { path: 'consumption', element: <EnergyConsumptionDetailRoute /> },
+          { path: 'time-remaining', element: <EnergyTimeRemainingDetailRoute /> }
+        ]
+      },
       { path: 'temperature', element: <TemperatureRoute /> }
     ]
   }
@@ -175,6 +195,7 @@ const appRoutes = [
       { index: true, element: <Home /> },
       ...projectRoutes,
       ...financeRoutes,
+      ...tailNetRoutes,
       ...serversRoutes,
       ...gengenRoutes,
       ...pingPingRoutes,
