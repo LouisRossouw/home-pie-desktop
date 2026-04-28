@@ -1,9 +1,9 @@
 import { format } from 'date-fns'
 import { ReactNode, useMemo } from 'react'
-import { useOutletContext } from 'react-router'
-import { ArrowUp, Zap, Clock, AlertTriangle, Battery } from 'lucide-react'
+import { useOutletContext, useSearchParams } from 'react-router'
+import { ArrowUp, Zap, Clock, AlertTriangle, Battery, RefreshCcw } from 'lucide-react'
 
-import { AppRecordedData } from '@shared/types'
+import { AppRecordedData, Range } from '@shared/types'
 
 import {
   formatDMeterReadHistoricData,
@@ -11,24 +11,34 @@ import {
   HourlyUsage
 } from '~/libs/utils/meter-reader'
 import { cn } from '~/libs/utils/cn'
+import { useNav } from '~/libs/hooks/use-navigation'
+import { getAllSearchParams } from '~/libs/utils/search-params'
 
 import {
   EnergyBurnKwhChart,
-  EnerygyRemainingKwhChart
+  EnerygyRemainingKwhChart,
+  EnergyTimeRemainingChart
 } from '~/components/charts/energy-line-chart-compact'
-import { Badge } from '~/components/ui/badge'
-import { LoadingIndicator } from '~/components/loading-indicator'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-
-const tenMin = 1000 * 60 * 10
-const range = 'hour'
-const interval = 24
+import { LoadingIndicator } from '~/components/loading-indicator'
+import { IntervalSelector } from '~/components/interval-selector'
+import { RangeSelector } from '~/components/range-selector'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
 
 export function Energy() {
-  const { meterReadRaw, isLoading } = useOutletContext<{
+  const { navigateToFromPathname } = useNav()
+  const { meterReadRaw, isLoading, refetch } = useOutletContext<{
     meterReadRaw: AppRecordedData[]
     isLoading: boolean
+    refetch: () => void
   }>()
+
+  const [searchParams] = useSearchParams()
+  const SP = getAllSearchParams(searchParams)
+
+  const range = (SP.range as Range) ?? 'hour'
+  const interval = Number(SP.interval ?? 24)
 
   const calculatedElectricityData = useMemo(() => {
     const electricityData = formatDMeterReadHistoricData({ data: meterReadRaw, interval })
@@ -36,7 +46,15 @@ export function Energy() {
       kwh: electricityData?.kwh,
       kwhHistory: electricityData?.kwhHistory
     })
-  }, [meterReadRaw])
+  }, [meterReadRaw, interval])
+
+  const timeTrendData = useMemo(() => {
+    const currentBurnRate = calculatedElectricityData.burnRateKwhPerHour || 1
+    return calculatedElectricityData.cleanedHistory.map((h) => ({
+      date: h.date,
+      hoursLeft: h.kwh / currentBurnRate
+    }))
+  }, [calculatedElectricityData.cleanedHistory, calculatedElectricityData.burnRateKwhPerHour])
 
   const reversedAnomalies = useMemo(
     () => [...calculatedElectricityData.anomalies].reverse(),
@@ -56,50 +74,60 @@ export function Energy() {
     )
 
   return (
-    <div className="flex flex-col gap-4 p-4 mx-auto w-full h-[calc(100%-100px)] overflow-y-scroll scrollbar-hide">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="flex flex-col p-4 gap-4 mx-auto w-full h-full overflow-y-scroll scrollbar-hide animate-in fade-in duration-300 transition-all">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 px-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Energy Dashboard</h1>
           <p className="text-muted-foreground ">
             Real-time monitoring and analytics for your electricity consumption.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-yellow-400/10 text-yellow-600 px-4 py-2 rounded-full border border-yellow-400/20 text-sm font-medium">
-          <Zap className="size-4 animate-pulse" />
-          System Active: {format(new Date(), 'HH:mm')}
+
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2 items-center border rounded-lg px-4">
+            <RangeSelector selected={range} />
+            <IntervalSelector currentValue={interval} className="w-24" />
+            <Button variant={'ghost'} size={'icon'} onClick={() => refetch()}>
+              {isLoading ? <LoadingIndicator /> : <RefreshCcw className="size-4" />}
+            </Button>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm">
+            <Zap className="size-5 animate-pulse" />
+            System Active: {format(new Date(), 'HH:mm')}
+          </div>
         </div>
       </div>
 
       {/* NATURAL LANGUAGE SUMMARY */}
-      <Card className="bg-transparent border-primary/20  relative">
-        <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
-          <Zap className="size-32 text-primary" />
-        </div>
-        <CardContent className="p-6">
+      <Card className="bg-transparent  border-none relative p-0">
+        <CardContent className="px-4">
           <div className="flex flex-col md:flex-row md:items-center gap-4 relative">
             <div className="flex-1">
-              <h2 className="text-lg font-semibold flex items-center gap-2  text-primary">
-                <Clock className="size-5" /> Usage Projection
-              </h2>
               <p className="text-2xl font-medium leading-tight">
-                Your electricity is estimated to last for approximately{' '}
+                Electricity estimated to last around{' '}
                 <span className="text-primary font-bold">
                   {calculatedElectricityData.daysLeft.toFixed(1)} days
                 </span>
-                .
-              </p>
-              <p className="text-muted-foreground mt-1 text-sm">
-                Based on your current burn rate of {calculatedElectricityData.burnRateKwhPerHour.toFixed(3)} kWh/h.
               </p>
             </div>
             <div className="flex gap-4">
-              <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/10   min-w-[120px]">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Remaining</p>
-                <p className="text-2xl font-bold">{calculatedElectricityData.remainingKwh.toFixed(1)} <span className="text-sm font-normal text-muted-foreground">kWh</span></p>
+              <div className="text-center p-3 rounded-lg border min-w-[120px]">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Remaining
+                </p>
+                <p className="text-2xl font-bold">
+                  {calculatedElectricityData.remainingKwh.toFixed(1)}{' '}
+                  <span className="text-sm font-normal text-muted-foreground">kWh</span>
+                </p>
               </div>
-              <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/10  min-w-[120px]">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Average</p>
-                <p className="text-2xl font-bold">{calculatedElectricityData.projectedDailyUse.toFixed(1)} <span className="text-sm font-normal text-muted-foreground">/day</span></p>
+              <div className="text-center p-3 rounded-lg border min-w-[120px]">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Average
+                </p>
+                <p className="text-2xl font-bold">
+                  {calculatedElectricityData.projectedDailyUse.toFixed(1)}{' '}
+                  <span className="text-sm font-normal text-muted-foreground">/day</span>
+                </p>
               </div>
             </div>
           </div>
@@ -107,7 +135,7 @@ export function Energy() {
       </Card>
 
       {/* STATS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <ModernStatCard
           title="Current Reserve"
           icon={<Battery className="size-5" />}
@@ -116,6 +144,7 @@ export function Energy() {
           description="Available units"
           color="yellow"
           chart={<EnerygyRemainingKwhChart data={calculatedElectricityData.cleanedHistory} />}
+          onClick={() => navigateToFromPathname('/reserve')}
         />
 
         <ModernStatCard
@@ -126,6 +155,7 @@ export function Energy() {
           description="Average hourly burn"
           color="red"
           chart={<EnergyBurnKwhChart data={calculatedElectricityData.hourlyUsage} />}
+          onClick={() => navigateToFromPathname('/consumption')}
         />
 
         <ModernStatCard
@@ -135,17 +165,14 @@ export function Energy() {
           unit="hours"
           description={`${calculatedElectricityData.daysLeft.toFixed(2)} days left`}
           color="blue"
+          chart={<EnergyTimeRemainingChart data={timeTrendData} />}
+          onClick={() => navigateToFromPathname('/time-remaining')}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
         {/* HOURLY USAGE */}
-        <Card className="lg:col-span-2 border-primary/10 bg-transparent shadow-md">
-          <CardHeader className="bg-primary/5 pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg text-primary">
-              <Clock className="size-5" /> Hourly Consumption Log
-            </CardTitle>
-          </CardHeader>
+        <Card className="lg:col-span-2 bg-transparent shadow-md py-2">
           <CardContent className="p-0">
             <HourlyUsageBreakdown
               hourlyUsage={reversedHourlyUsage}
@@ -155,22 +182,22 @@ export function Energy() {
         </Card>
 
         {/* ANOMALIES */}
-        <div className="space-y-6">
+        <div className="space-y-0">
           {reversedAnomalies?.length > 0 ? (
-            <Card className="border-red-500/20 bg-transparent   shadow-lg shadow-red-500/5 overflow-hidden">
-              <CardHeader className="bg-red-500/5 pb-4 border-b border-red-500/10">
-                <CardTitle className="flex items-center gap-2 text-red-600 text-lg">
+            <Card className="bg-transparent shadow-lg py-4 shadow-red-500/5 overflow-hidden">
+              <CardHeader className="-mb-8">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   <AlertTriangle className="size-5" />
                   {reversedAnomalies?.length} Anomalies
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 max-h-[500px] overflow-y-auto">
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {reversedAnomalies.map((a, i) => (
-                    <div key={i} className="bg-red-500/5 border border-red-500/10 p-3 rounded-xl transition-all hover:bg-red-500/20">
-                      <p className="font-semibold text-red-700 text-sm leading-tight">{a.reason}</p>
+                    <div key={i} className="p-4 rounded-xl transition-all hover:bg-red-500/10">
+                      <p className="text-sm">{a.reason}</p>
                       {a.reading && (
-                        <p className="text-xs text-red-600/70 mt-1 font-mono">
+                        <p className="text-xs mt-1">
                           {a.reading.kwh} kWh at {format(new Date(a.reading.date), 'MMM d, HH:mm')}
                         </p>
                       )}
@@ -185,7 +212,7 @@ export function Energy() {
                 <div className="size-12 rounded-full bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20">
                   <Zap className="size-6 text-green-600" />
                 </div>
-                <h3 className="font-semibold text-green-800">No Anomalies Found</h3>
+                <h3 className="text-green-800">No Anomalies Found</h3>
                 <p className="text-sm text-green-700/60 mt-1">
                   Your energy usage patterns look stable and consistent.
                 </p>
@@ -206,7 +233,7 @@ function HourlyUsageBreakdown({
   medianTypicalUsage: number
 }): JSX.Element {
   return (
-    <div className="max-h-[600px] overflow-y-auto divide-y divide-primary/10">
+    <div className="max-h-[600px] overflow-y-auto divide-y">
       {hourlyUsage.map((entry, index) => {
         const isHigh = entry.kwhPerHour > medianTypicalUsage * 1.5
 
@@ -214,20 +241,26 @@ function HourlyUsageBreakdown({
           <div
             key={index}
             className={cn(
-              'p-4 flex items-center justify-between transition-colors hover:bg-primary/5 group',
+              'px-4 py-2 flex items-center justify-between transition-colors hover:bg-primary/5 group',
               isHigh && 'bg-red-500/[0.03]'
             )}
           >
             <div className="flex items-center gap-4">
-              <div className={cn(
-                "size-10 rounded-full flex items-center justify-center shrink-0 border transition-transform group-hover:scale-110",
-                isHigh ? "bg-red-100/50 border-red-200 text-red-600" : "bg-primary/10 border-primary/20 text-primary"
-              )}>
+              <div
+                className={cn(
+                  'size-5 rounded-full flex items-center justify-center shrink-0 border transition-transform group-hover:scale-110',
+                  isHigh
+                    ? 'bg-red-100/50 border-red-200 text-red-600'
+                    : 'bg-primary/10 border-primary/20 text-primary'
+                )}
+              >
                 {isHigh ? <ArrowUp className="size-5" /> : <Clock className="size-5" />}
               </div>
               <div>
                 <p className="font-bold text-sm">
-                  {format(new Date(entry.from), 'HH:mm')} <span className="text-muted-foreground font-normal mx-1">→</span> {format(new Date(entry.to), 'HH:mm')}
+                  {format(new Date(entry.from), 'HH:mm')}{' '}
+                  <span className="text-muted-foreground font-normal mx-1">→</span>{' '}
+                  {format(new Date(entry.to), 'HH:mm')}
                 </p>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   Duration: {entry.hours.toFixed(2)} hours
@@ -235,19 +268,28 @@ function HourlyUsageBreakdown({
               </div>
             </div>
 
-            <div className="text-right flex flex-col items-end gap-1">
-              <p className="font-mono font-bold text-lg leading-none">
-                {entry.kwhPerHour.toFixed(3)} <span className="text-[10px] font-normal text-muted-foreground tracking-tight uppercase">kWh/h</span>
-              </p>
+            <div className="text-right flex items-end gap-4 items-center">
               {isHigh ? (
-                <Badge variant="destructive" className="h-5 px-1.5 text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                <Badge
+                  variant="destructive"
+                  className="h-5 px-1.5 text-[10px] font-bold uppercase tracking-wider shadow-sm"
+                >
                   High Usage
                 </Badge>
               ) : (
-                <Badge variant="outline" className="h-5 px-1.5 text-[10px] uppercase tracking-wider bg-green-500/10 text-green-700 border-green-500/20 shadow-sm">
+                <Badge
+                  variant="outline"
+                  className="h-5 px-1.5 text-[10px] uppercase tracking-wider bg-green-500/10 text-green-700 border-green-500/20 shadow-sm"
+                >
                   Normal
                 </Badge>
               )}
+              <p className="font-mono font-bold text-lg leading-none">
+                {entry.kwhPerHour.toFixed(3)}{' '}
+                <span className="text-[10px] font-normal text-muted-foreground tracking-tight uppercase">
+                  kWh/h
+                </span>
+              </p>
             </div>
           </div>
         )
@@ -263,7 +305,8 @@ function ModernStatCard({
   unit,
   description,
   color,
-  chart
+  chart,
+  onClick
 }: {
   title: string
   icon: ReactNode
@@ -272,45 +315,53 @@ function ModernStatCard({
   description?: string
   color: 'yellow' | 'red' | 'blue'
   chart?: ReactNode
+  onClick?: () => void
 }): JSX.Element {
   const colorMap = {
-    yellow: 'border-yellow-500/20 text-yellow-500 hover:border-yellow-500/40 shadow-yellow-500/5',
-    red: 'border-red-500/20 text-red-500 hover:border-red-500/40 shadow-red-500/5',
-    blue: 'border-blue-500/20 text-blue-500 hover:border-blue-500/40 shadow-blue-500/5'
+    yellow: 'hover:border-yellow-500/40 shadow-yellow-500/5 hover:bg-yellow-500/5',
+    blue: 'hover:border-blue-500/40 shadow-blue-500/5 hover:bg-blue-500/5',
+    red: 'hover:border-red-500/40 shadow-red-500/5 hover:bg-red-500/5'
   }
 
   const iconBgMap = {
     yellow: 'bg-yellow-500/10',
-    red: 'bg-red-500/10',
-    blue: 'bg-blue-500/10'
+    blue: 'bg-blue-500/10',
+    red: 'bg-red-500/10'
   }
 
   return (
-    <Card className={cn("rounded-2xl border bg-transparent   transition-all hover:shadow-xl overflow-hidden shadow-sm", colorMap[color])}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-xs font-bold uppercase tracking-[0.1em] opacity-70 leading-none">{title}</CardTitle>
-        <div className={cn("p-2 rounded-xl border border-white/10 shadow-inner", iconBgMap[color])}>
+    <Card
+      onClick={onClick}
+      className={cn(
+        'rounded-2xl border bg-transparent transition-all hover:shadow-xl overflow-hidden shadow-sm gap-0',
+        colorMap[color],
+        onClick && 'cursor-pointer'
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <CardTitle className="text-xs font-bold uppercase tracking-[0.1em] opacity-70 leading-none">
+          {title}
+        </CardTitle>
+        <div className={cn('p-2 rounded-lg border border-white/10 shadow-inner', iconBgMap[color])}>
           {icon}
         </div>
       </CardHeader>
-      <CardContent className="pt-2">
-        <div className="flex flex-col gap-0.5">
+      <CardContent className="">
+        <div className="flex flex-col gap-0">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-4xl font-black tracking-tighter">
+            <span className="text-5xl font-black tracking-tighter">
               {isFinite(value) ? value.toFixed(2) : '--'}
             </span>
-            <span className="text-sm font-bold opacity-60 uppercase tracking-tight">{unit}</span>
+            <span className="text-sm font-bold opacity-70 uppercase tracking-tight">{unit}</span>
           </div>
-          {description && <p className="text-[10px] font-bold opacity-50 uppercase tracking-wide flex items-center gap-1">
-            {description}
-          </p>}
+          {description && <p className="text-xs font-bold opacity-70">{description}</p>}
         </div>
-        {chart && <div className="mt-5 -mx-6 -mb-6 bg-white/[0.03] border-t border-white/10 h-24">
-          {chart}
-        </div>}
+        {chart && (
+          <div className="mt-5 -mx-6 -mb-6 bg-white/[0.03] border-t border-white/10 h-24">
+            {chart}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
 }
-
-

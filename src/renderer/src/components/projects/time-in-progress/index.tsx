@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ApiTimeInProgressOverview } from '@shared/types'
 
 import { getAllSearchParams } from '~/libs/utils/search-params'
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
 
 import { LoadingIndicator } from '~/components/loading-indicator'
 
@@ -15,7 +15,7 @@ const tenMin = 1000 * 60 * 10
 
 export function TimeInProgress() {
   const [searchParams] = useSearchParams()
-  const { getAppStatus } = useMrPingPingService()
+  const { getAppStatus } = useMrPingPing()
 
   const SP = getAllSearchParams(searchParams)
 

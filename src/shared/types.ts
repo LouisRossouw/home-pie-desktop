@@ -160,9 +160,12 @@ export type ApiTimeInProgressInsertHistoricalData = {
 export type ApiMrPingPingStatus = {
   ok: boolean
   date: string
-  resTime: number
-  lastPinged: string
-  dbElapsedTime: number
+  datetime: string
+  elapsedTime: number
+  endpointsRes: any[]
+  pinged: string
+  success: boolean
+  timestamp: string
 }
 
 export type Platforms = 'instagram' | 'tiktok' | 'x-twitter' | 'youtube' | 'bluesky'
@@ -259,7 +262,17 @@ export type ApiMrPingPingAppStatusParams = paths['/api/mr-ping-ping/apps/status/
 export type ApiMrPingPingAppDataParams = paths['/api/mr-ping-ping/apps/data/{appName}']['get']['parameters'] // prettier-ignore
 
 export type AppRecordedData = Schemas['AppRecordedData']
-type AppStatus = Schemas['AppStatus']
+// type AppStatus = Schemas['AppStatus']
+type AppStatus = AppRecordedData['appStatus'][number]
+
+export type FlattenedAppRecordedData = {
+  appName: AppRecordedData['appName']
+  dateTime: AppStatus['date']
+  pinged: string
+  success: boolean
+  endpointsRes: AppStatus['endpointsRes']
+}
+
 // type Config = Schemas['ConfigRequest']
 // *
 // **
@@ -341,7 +354,11 @@ export type ApiSetFinanceSettingFunc = (v: { key: string; value: any }) => Promi
 export type ApiGetAllFinanceSettingsFunc = () => Promise<Record<string, any>>
 export type ApiGetFinanceRecordsFunc = () => Promise<ApiFinanceRecord[]>
 export type ApiGetFinanceRecordFunc = (v: { month: number; year: number }) => Promise<any>
-export type ApiSetFinanceRecordFunc = (v: { month: number; year: number; value: any }) => Promise<boolean>
+export type ApiSetFinanceRecordFunc = (v: {
+  month: number
+  year: number
+  value: any
+}) => Promise<boolean>
 // ***
 // **
 // *
@@ -377,11 +394,11 @@ export type SavingGoal = {
 export type DebtItem = {
   id: string
   label: string
-  totalAmount: number      // original total debt
+  totalAmount: number // original total debt
   monthlyAllocation: number // how much paid per month
-  interestRate: number     // annual % interest
-  startMonth: number       // month tracking started (0-11)
-  startYear: number        // year tracking started
+  interestRate: number // annual % interest
+  startMonth: number // month tracking started (0-11)
+  startYear: number // year tracking started
 }
 
 export type FinanceData = {

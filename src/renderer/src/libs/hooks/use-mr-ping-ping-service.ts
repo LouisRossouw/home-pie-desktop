@@ -7,6 +7,7 @@ export function useMrPingPingService() {
   async function handleGetStatus() {
     const res = await window.api.external.apiMrPingPingStatus()
     setStatus(res)
+    return res
   }
 
   async function getAppStatus({ appNames }: { appNames: string[] }) {
@@ -35,11 +36,16 @@ export function useMrPingPingService() {
     return res.flatMap((item) => item)
   }
 
+  async function getPingPingAppsConfig() {
+    return await window.api.external.apiMrPingPingAppsConfig()
+  }
+
   return {
     status,
     setStatus,
     handleGetStatus,
     getAppStatus,
-    getAppRecordedData
+    getAppRecordedData,
+    getPingPingAppsConfig
   }
 }

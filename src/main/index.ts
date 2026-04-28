@@ -6,7 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import { startPolling } from './src/poll'
 import { registerIpcHandlers } from './src/ipc'
 import { currentRoute, handleDeepLink, suppressResizeEvent } from './src/app'
-import { appIpcKey, defaultProtocol } from '@shared/constants'
+import { appIpcKey, defaultProtocol, getOpenDevToolsOnStart } from '@shared/constants'
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
@@ -52,6 +52,11 @@ function createWindow(): void {
       mainWindow?.webContents.send(appIpcKey.windowResized, { hasMoved: true })
     }
   })
+
+  // Force open dev tools when the app is not loading at all.
+  if (getOpenDevToolsOnStart) {
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
+  }
 
   // mainWindow.on('move', () => {
   //   if (!ignoreRoutes.includes(currentRoute)) {

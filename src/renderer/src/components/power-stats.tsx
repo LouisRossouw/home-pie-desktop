@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-
-import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
-import { formatDMeterReadHistoricData, calcKwhAnalytics } from '~/libs/utils/meter-reader'
 import { format } from 'date-fns'
-import { TooltipInfo } from './tooltip-info'
-import { Button } from './ui/button'
-import { PingSVG } from './svg-icons'
 import { Dot } from 'lucide-react'
 import { useNavigate } from 'react-router'
+import { useQuery } from '@tanstack/react-query'
+
+import { formatDMeterReadHistoricData, calcKwhAnalytics } from '~/libs/utils/meter-reader'
+import { useMrPingPing } from '~/libs/context/mr-ping-ping'
+
+import { TooltipInfo } from './tooltip-info'
+import { PingSVG } from './svg-icons'
+import { Button } from './ui/button'
 
 const tenMin = 1000 * 60 * 10
 const range = 'hour'
@@ -16,7 +17,7 @@ const interval = 24
 
 export function PowerStats() {
   const navigateTo = useNavigate()
-  const { getAppRecordedData } = useMrPingPingService()
+  const { getAppRecordedData } = useMrPingPing()
 
   const { data: meterReadRaw, isPending } = useQuery({
     queryKey: ['meter-read-stat'],

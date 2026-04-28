@@ -1,25 +1,45 @@
 import { useContext, createContext, PropsWithChildren } from 'react'
-import { useMrPingPingService } from '../hooks/use-mr-ping-ping-service'
-import { ApiMrPingPingStatus } from '@shared/types'
+import { ApiMrPingPingStatus, FlattenedAppRecordedData, Range } from '@shared/types'
+
+import { useMrPingPingService } from '~/libs/hooks/use-mr-ping-ping-service'
+import { components } from '@shared/lib/generated/api'
 
 type MrPingPing = {
   status?: ApiMrPingPingStatus
   handleGetStatus: () => Promise<void>
+  getAppStatus: ({ appNames }: { appNames: string[] }) => Promise<FlattenedAppRecordedData[]>
+  getAppRecordedData: ({
+    appNames,
+    range,
+    interval
+  }: {
+    appNames: string[]
+    range: Range
+    interval: number
+  }) => Promise<
+    {
+      appName: string
+      appStatus: components['schemas']['AppStatus'][]
+    }[]
+  >
+  getPingPingAppsConfig: () => Promise<void>
 }
 
 export const MrPingPingContext = createContext<MrPingPing>({
   status: undefined,
-  handleGetStatus: async () => {}
+  handleGetStatus: async () => {},
+  getAppStatus: async () => [],
+  getAppRecordedData: async () => [],
+  getPingPingAppsConfig: async () => []
 })
 
 export const MrPingPingContextProvider = ({ children }: PropsWithChildren) => {
-  const { status, handleGetStatus } = useMrPingPingService()
+  const pingService = useMrPingPingService()
 
   return (
     <MrPingPingContext.Provider
       value={{
-        status,
-        handleGetStatus
+        ...pingService
       }}
     >
       {children}

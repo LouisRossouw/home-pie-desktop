@@ -13,9 +13,8 @@ import { TooltipInfo } from '~/components/tooltip-info'
 import { RangeSelector } from '~/components/range-selector'
 import { IntervalSelector } from '~/components/interval-selector'
 import { LoadingIndicator } from '~/components/loading-indicator'
-
-import { PingSVG } from '~/components/svg-icons'
 import { ProjectMenuDropdown } from '~/components/project-menu'
+import { PingSVG } from '~/components/svg-icons'
 
 export function TimeInProgressLayout({
   data,

@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: '-'
+productName: 'home-pie'
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: '-'
+  executableName: 'home-pie'
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
