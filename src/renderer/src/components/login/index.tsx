@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 
 import { useApp } from '~/libs/context/app'
 import { usePoll } from '~/libs/hooks/use-poll-counter'
+import { useNav } from '~/libs/hooks/use-navigation'
 
 import { Button } from '~/components/ui/button'
 import { getAppName } from '@shared/constants'
@@ -16,6 +17,7 @@ export function Login() {
   const { windowControl } = useApp()
 
   const { startPolling } = usePoll()
+  const { navigateTo } = useNav()
 
   const [searchParams] = useSearchParams()
 
@@ -58,10 +60,22 @@ export function Login() {
   return (
     <div className="flex w-full h-[calc(100vh-64px)] items-center justify-center p-4 bg-background ">
       {waitingAuth && (
-        <div>
-          <div className="w-full text-center space-y-4">
+        <div className="grid items-center justify-center h-full w-full">
+          <div className="w-full max-w-sm mx-auto text-center space-y-4">
             <p>Your default browser should open, you can sign in there.</p>
-            <div className="flex items-center justify-center">
+            
+            <Button 
+               variant="default" 
+               className="w-full"
+               onClick={() => navigateTo('/complete-auth-app?intent=completed-auth-app')}
+            >
+              I've signed in
+            </Button>
+            <p className="text-xs opacity-70">
+              (Click this if the app didn't automatically open after signing in)
+            </p>
+
+            <div className="flex items-center justify-center pt-8">
               <Button variant={'ghost'} onClick={reset}>
                 <ArrowLeft />
               </Button>
