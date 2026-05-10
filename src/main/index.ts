@@ -10,6 +10,13 @@ import { appIpcKey, defaultProtocol, getOpenDevToolsOnStart } from '@shared/cons
 
 export let mainWindow: BrowserWindow | undefined = undefined
 
+const isARM = process.arch === 'arm64' || process.arch === 'arm'
+const isPi = isARM && process.platform === 'linux'
+
+if (isPi) {
+  app.disableHardwareAcceleration()
+}
+
 const ignoreRoutes = ['splash', 'login', 'no-connection']
 
 function createWindow(): void {
