@@ -1,5 +1,10 @@
 appId: com.electron.app
 productName: 'home-pie'
+protocols:
+  - name: home-pie-protocol
+    schemes:
+      - homepie-dev
+      - homepie
 directories:
   buildResources: build
 files:
