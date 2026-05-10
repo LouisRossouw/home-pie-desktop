@@ -124,7 +124,11 @@ app.whenReady().then(() => {
       ])
     }
   } else {
-    app.setAsDefaultProtocolClient(defaultProtocol)
+    if (process.platform === 'linux' && process.env.APPIMAGE) {
+      app.setAsDefaultProtocolClient(defaultProtocol, process.env.APPIMAGE)
+    } else {
+      app.setAsDefaultProtocolClient(defaultProtocol)
+    }
   }
 
   app.on('activate', function () {
